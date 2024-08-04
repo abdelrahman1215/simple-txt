@@ -18,6 +18,7 @@ void simple_str_delete(simple_str *str_ptr , size_t index , size_t count);
 
 
 char *simple_str_get_string(simple_str *str_ptr);
+size_t simple_str_get_strlen(simple_str *str_ptr);
 
 
 #endif

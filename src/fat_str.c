@@ -15,7 +15,10 @@ simple_str *new_simple_str(char *src){
     simple_str *ret = calloc(1 , sizeof(simple_str));
     if(ret == NULL) return NULL;
 
-    size_t len = strnlen(src , 9223372036854775807);
+    size_t len = 0;
+    if(src != NULL){
+        len = strnlen(src , 9223372036854775807);
+    }
 
     size_t actual_size = len + (chunck_size - (len % chunck_size));
 
@@ -96,6 +99,12 @@ void destroy_simple_str(simple_str *str_ptr){
 
     free(str_ptr -> str);
     free(str_ptr);
+}
+
+size_t simple_str_get_strlen(simple_str *str_ptr){
+    if(str_ptr == NULL) return 0;
+
+    return str_ptr -> strlen;
 }
 
 char *simple_str_get_string(simple_str *str_ptr){
