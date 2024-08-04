@@ -1,4 +1,4 @@
-#include "../headers/fat_str.h"
+#include "../headers/simple_str.h"
 
 #include <stdlib.h>
 #include <string.h>
