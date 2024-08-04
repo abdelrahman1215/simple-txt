@@ -12,5 +12,6 @@ void destroy_file(simple_file *file_ptr);
 
 size_t simple_file_get_line_no(simple_file *file_ptr);
 char *simple_file_get_line(simple_file *file_ptr , size_t index);
+dynamic_array *simple_file_get_content(simple_file *file_str);
 
 #endif

@@ -178,6 +178,12 @@ size_t simple_file_get_line_no(simple_file *file_ptr){
     return file_ptr -> line_no;
 }
 
+dynamic_array *simple_file_get_content(simple_file *file_ptr){
+    if(file_ptr == NULL) return NULL;
+
+    return file_ptr -> lines;
+}
+
 char *simple_file_get_line(simple_file *file_ptr , size_t index){
     if(file_ptr == NULL) return NULL;
     if(index > file_ptr -> line_no - 1) return NULL;

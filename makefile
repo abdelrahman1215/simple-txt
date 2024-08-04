@@ -7,7 +7,7 @@ test : simple_str.o load_file.o
 simple_str.o : src/simple_str.c bin/
 	$(CC) -g3 -c src/simple_str.c -o bin/simple_str.o
 
-load_file.o : simple_str.o bin/ dynamic_array
+load_file.o : src/load_file.c simple_str.o bin/ dynamic_array
 	$(CC) -c src/load_file.c -o bin/load_file.o
 
 dynamic_array :
