@@ -11,7 +11,6 @@ struct file_struct{
     char *file_name;
 
     dynamic_array *lines;
-    size_t line_no;
 };
 
 bool is_dir(const char *file_name){
@@ -85,8 +84,6 @@ simple_file *load_file(const char *file_name , loading_err *get_err){
         return NULL;
     }
 
-    ret -> line_no = 0;
-
     char *buff = calloc(buff_size + 1 , sizeof(char));
     if(buff == NULL){
         destroy_dynamic_array(ret -> lines);
@@ -149,21 +146,52 @@ simple_file *load_file(const char *file_name , loading_err *get_err){
             dynamic_array_add_element(ret -> lines , &line);
 
             line_start = i + 1;
-
-            ret -> line_no ++;
         }
     }
 
 
     line = new_simple_str(file_text + line_start);
     dynamic_array_add_element(ret -> lines , &line);    
-    ret -> line_no ++;
 
     if(total_read_bytes > 0){
         free(file_text);
     }
     fclose(target_file);
     return ret;
+}
+
+void save_file(simple_file *file_ptr){
+    if(file_ptr == NULL) return ;
+
+    FILE *target_file = fopen(file_ptr -> file_name , "w");
+    simple_str **line_ptr;
+    char *tmp;
+    size_t len = 0;
+
+    for(size_t i = 0 ; i < simple_file_get_line_no(file_ptr) - 1 ; i++){
+        line_ptr = (simple_str **)dynamic_array_get_element(file_ptr -> lines , i);
+        len = simple_str_get_strlen(*line_ptr);
+        tmp = simple_str_get_string(*line_ptr);
+        tmp[len] = '\n';
+        
+
+        fwrite(tmp , sizeof(char) , len + 1 , target_file);
+    
+        free(line_ptr);
+        free(tmp);
+    } 
+
+    line_ptr = (simple_str **)dynamic_array_get_element(file_ptr -> lines , simple_file_get_line_no(file_ptr) - 1);
+
+    len = simple_str_get_strlen(*line_ptr);
+    tmp = simple_str_get_string(*line_ptr);
+    
+    fwrite(tmp , sizeof(char) , len , target_file);
+
+    free(line_ptr);
+    free(tmp);
+
+    fclose(target_file);
 }
 
 void destroy_file(simple_file *file_ptr){
@@ -175,7 +203,7 @@ void destroy_file(simple_file *file_ptr){
 size_t simple_file_get_line_no(simple_file *file_ptr){
     if(file_ptr == NULL) return 0;
 
-    return file_ptr -> line_no;
+    return dynamic_array_get_elements_no(file_ptr -> lines);
 }
 
 dynamic_array *simple_file_get_content(simple_file *file_ptr){
@@ -186,7 +214,7 @@ dynamic_array *simple_file_get_content(simple_file *file_ptr){
 
 char *simple_file_get_line(simple_file *file_ptr , size_t index){
     if(file_ptr == NULL) return NULL;
-    if(index > file_ptr -> line_no - 1) return NULL;
+    if(index > simple_file_get_line_no(file_ptr) - 1) return NULL;
 
     simple_str **str = (simple_str **)dynamic_array_get_element(file_ptr -> lines , index);
     char *ret = simple_str_get_string(*str);

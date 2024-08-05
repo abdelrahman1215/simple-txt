@@ -110,7 +110,7 @@ size_t simple_str_get_strlen(simple_str *str_ptr){
 char *simple_str_get_string(simple_str *str_ptr){
     if(str_ptr == NULL) return NULL;
 
-    char *dest = calloc(str_ptr -> strlen + 1 , sizeof(char));
+    char *dest = calloc(str_ptr -> strlen + 2 , sizeof(char));
     if(dest == NULL) return NULL;
 
     return strncpy(dest , str_ptr -> str , str_ptr -> strlen);
