@@ -1,11 +1,10 @@
 #include <string.h>
 #include <stdlib.h>
-#include <stddef.h>
 #include <stdio.h>
 
-#include "../headers/div_str.h"
-#include "../headers/load_file.h"
-#include "../headers/simple_str.h"
+#include "../../headers/simple_file.h"
+#include "../../headers/simple_str.h"
+#include "../../headers/div_str.h"
 
 void simple_file_add_empty_lines(simple_file *file_ptr , size_t line_no , size_t line_index){
     if(file_ptr == NULL) return ;
@@ -71,4 +70,32 @@ void simple_file_add(simple_file *file_ptr , size_t line_index , size_t pos_inde
 
     free(divided[0]);
     free(divided);
+}
+
+void simple_file_delete(simple_file *file_ptr , size_t line_index , size_t start_pos , size_t count){
+    if(file_ptr == NULL) return ;
+    if(line_index > simple_file_get_line_no(file_ptr) - 1 || count == 0) return ;
+
+    dynamic_array *content = simple_file_get_content(file_ptr);
+    simple_str **target_line_ptr = (simple_str **)dynamic_array_get_element(content , line_index);
+
+    size_t len = simple_str_get_strlen(*target_line_ptr);
+    if(start_pos + count > len){
+        free(target_line_ptr);
+
+        return ;
+    }
+
+    simple_str_delete(*target_line_ptr , start_pos , count);
+}
+
+void simple_file_delete_lines(simple_file *file_ptr , size_t line_index , size_t line_count){
+    if(file_ptr == NULL) return ;
+    if(line_index + line_count > simple_file_get_line_no(file_ptr)) return ;
+
+    dynamic_array *content = simple_file_get_content(file_ptr);
+
+    for(size_t i = line_index ; i < line_index + line_count ; i++){
+        dynamic_array_remove_element(content , line_index);
+    }
 }

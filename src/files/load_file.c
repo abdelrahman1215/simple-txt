@@ -1,6 +1,6 @@
-#include "../c_datastructures/headers/dynamic_array.h"
-#include "../headers/simple_str.h"
-#include "../headers/load_file.h"
+#include "../../c_datastructures/headers/dynamic_array.h"
+#include "../../headers/simple_file.h"
+#include "../../headers/simple_str.h"
 
 #include <sys/stat.h>
 #include <stddef.h>
