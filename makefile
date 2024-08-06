@@ -7,11 +7,11 @@ test : simple_str.o load_file.o edit_file.o div_str.o
 simple_str.o : src/simple_str.c bin/
 	$(CC) -g3 -c src/simple_str.c -o bin/simple_str.o
 
-load_file.o : src/files/load_file.c simple_str.o bin/ dynamic_array
-	$(CC) -g3 -c src/files/load_file.c -o bin/load_file.o
+load_file.o : src/file_processing/load_file.c simple_str.o bin/ dynamic_array
+	$(CC) -g3 -c src/file_processing/load_file.c -o bin/load_file.o
 
-edit_file.o : src/files/edit_file.c simple_str.o bin/ dynamic_array
-	$(CC) -g3 -c src/files/edit_file.c -o bin/edit_file.o
+edit_file.o : src/file_processing/edit_file.c simple_str.o bin/ dynamic_array
+	$(CC) -g3 -c src/file_processing/edit_file.c -o bin/edit_file.o
 
 div_str.o : src/div_str.c bin
 	$(CC) -g3 -c src/div_str.c -o bin/div_str.o
