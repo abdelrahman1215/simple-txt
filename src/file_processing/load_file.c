@@ -219,5 +219,7 @@ char *simple_file_get_line(simple_file *file_ptr , size_t index){
     simple_str **str = (simple_str **)dynamic_array_get_element(file_ptr -> lines , index);
     char *ret = simple_str_get_string(*str);
 
+    free(str);
+
     return ret;
 }

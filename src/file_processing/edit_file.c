@@ -49,14 +49,24 @@ void simple_file_add(simple_file *file_ptr , size_t line_index , size_t pos_inde
 
     simple_str **target = (simple_str **)dynamic_array_get_element(contents , line_index);
     size_t len = simple_str_get_strlen(*target);
-    if(pos_index > len) return ;
+    if(pos_index > len){
+        free(target);
+
+        return;
+    }
 
     size_t line_no;
     char **divided = div_str_into_lines(source , &line_no);
     
-    if(line_no == 0) return ;
+    if(line_no == 0){
+        free(target);
+
+        return;
+    }
 
     simple_str_add(*target , divided[0] , pos_index);
+
+    free(target);
     if(line_no > 0){
         simple_file_add_empty_lines(file_ptr , line_no - 1 , line_index + 1);
 
@@ -87,6 +97,8 @@ void simple_file_delete(simple_file *file_ptr , size_t line_index , size_t start
     }
 
     simple_str_delete(*target_line_ptr , start_pos , count);
+
+    free(target_line_ptr);
 }
 
 void simple_file_delete_lines(simple_file *file_ptr , size_t line_index , size_t line_count){
