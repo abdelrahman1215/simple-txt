@@ -1,11 +1,11 @@
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-
 #include "../../headers/simple_file.h"
 #include "../../headers/simple_str.h"
 #include "../../headers/div_str.h"
 #include "simple_file_struct.c"
+
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 void simple_file_add_empty_lines(simple_file *file_ptr , size_t line_no , size_t line_index){
     if(file_ptr == NULL) return ;
@@ -106,7 +106,7 @@ void simple_file_delete_lines(simple_file *file_ptr , size_t line_index , size_t
     if(file_ptr == NULL) return ;
     if(line_index + line_count > simple_file_get_line_no(file_ptr)) return ;
 
-    dynamic_array *content = file_ptr -> lines;
+    dynamic_array *content = file_ptr ->lines;
 
     for(size_t i = line_index ; i < line_index + line_count ; i++){
         dynamic_array_remove_element(content , line_index);
