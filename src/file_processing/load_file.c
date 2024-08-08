@@ -1,17 +1,11 @@
-#include "../../c_datastructures/headers/dynamic_array.h"
 #include "../../headers/simple_file.h"
 #include "../../headers/simple_str.h"
+#include "simple_file_struct.c"
 
 #include <sys/stat.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-struct file_struct{
-    char *file_name;
-
-    dynamic_array *lines;
-};
 
 bool is_dir(const char *file_name){
     struct stat file_stat;
