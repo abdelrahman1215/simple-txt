@@ -1,5 +1,5 @@
 #include "../c_datastructures/headers/linked_list.h"
-#include "../headers/errors.h"
+#include "../headers/error_format.h"
 
 #include <string.h>
 
@@ -46,11 +46,11 @@ void loading_error(const char *file_name ,  loading_err error_type){
 
     switch(error_type){
         case Is_Dir :
-            error = strncat(error , " is a directory" , strlen(" is a directory"));
+            error = strncat(error , " is a directory. " , strlen(" is a directory."));
             break;
 
         case File_Not_Found :
-            error = strncat(error , " doesn't exist" , strlen(" doesn't exist"));
+            error = strncat(error , " doesn't exist. " , strlen(" doesn't exist."));
             break;
 
         default : return ;
