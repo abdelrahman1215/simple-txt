@@ -151,6 +151,29 @@ simple_file *load_file(const char *file_name , loading_err *get_err){
         free(file_text);
     }
     fclose(target_file);
+
+    ret -> changes_stack = new_linked_list();
+    if(ret -> changes_stack == NULL){
+        destroy_dynamic_array(ret -> lines);
+        free(ret -> file_name);
+        free(ret);
+
+        *get_err = Alloc_Err;
+        return NULL;
+    }
+
+    ret -> undone_stack = new_linked_list();
+    if(ret -> undone_stack == NULL){
+        destroy_dynamic_array(ret -> lines);
+        destroy_linked_list(ret -> changes_stack);
+
+        free(ret -> file_name);
+        free(ret);
+
+        *get_err = Alloc_Err;
+        return NULL;
+    }
+
     return ret;
 }
 
