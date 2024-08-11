@@ -95,7 +95,7 @@ file_change *pull_last_change(simple_file *file_ptr){
 
     linked_list_delete_node(linked_list_get_node_no(file_ptr -> changes_stack) - 1 , file_ptr -> changes_stack);
     free(temp);
-    
+
     return ret;
 }
 
@@ -113,6 +113,14 @@ file_change *pull_last_undone_change(simple_file *file_ptr){
     free(temp);
 
     return ret;
+}
+
+void clear_undone_stack(simple_file *file_ptr){
+    linked_list *tmp = new_linked_list();
+    if(tmp == NULL) return ;
+
+    destroy_linked_list(file_ptr -> undone_stack);
+    file_ptr -> undone_stack = tmp;
 }
 
 void log_addition(simple_file *file_ptr , size_t start_line , size_t start_pos , size_t end_line , size_t end_pos){
