@@ -1,3 +1,6 @@
+#ifndef FILE_STRUCT
+#define FILE_STRUCT
+
 #include "../../c_datastructures/headers/dynamic_array.h"
 #include "../../c_datastructures/headers/linked_list.h"
 
@@ -9,3 +12,5 @@ struct file_struct{
     linked_list *changes_stack;
     linked_list *undone_stack;
 };
+
+#endif

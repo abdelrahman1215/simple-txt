@@ -24,34 +24,35 @@ typedef struct file_change {
     void *change_info;
 } file_change;
 
-void free_change_struct(struct file_change *change_ptr){
+void free_change_struct(void *change){
+    file_change *change_ptr = (file_change *)change;
     if(change_ptr -> change_type == deletion){
         struct file_deletion *tmp = (struct file_deletion *) change_ptr -> change_info;
 
         free(tmp -> deleted_text);
     }
 
-    free(change_ptr -> change_info);
+    free((file_change *)change_ptr -> change_info);
 
     free(change_ptr);
 }
 
-inline void push_change(simple_file *file_ptr , file_change change){
-    linked_list_add_node(&change , sizeof(file_change) , NULL , file_ptr -> changes_stack);
+void push_change(simple_file *file_ptr , file_change change){
+    linked_list_add_node(&change , sizeof(file_change) , free_change_struct , file_ptr -> changes_stack);
 
     if(linked_list_get_node_no(file_ptr -> changes_stack) == changes_limit){
         linked_list_delete_node(0 , file_ptr -> changes_stack);
     }
 }
 
-inline file_change *pull_last_change(simple_file *file_ptr){
+file_change *pull_last_change(simple_file *file_ptr){
     node *tmp = linked_list_get_last_node(file_ptr -> changes_stack);
 
     file_change *ret = (file_change *)linked_list_get_obj(tmp);
     return ret;
 }
 
-inline void log_addition(simple_file *file_ptr , size_t start_line , size_t start_pos , size_t end_line , size_t end_pos){
+void log_addition(simple_file *file_ptr , size_t start_line , size_t start_pos , size_t end_line , size_t end_pos){
     if(start_line > end_line  || (start_line == end_line && start_pos >= end_pos)) return ;
     if(end_line >= simple_file_get_line_no(file_ptr)) return;
 
@@ -67,7 +68,7 @@ inline void log_addition(simple_file *file_ptr , size_t start_line , size_t star
     push_change(file_ptr , change);
 }
 
-inline void log_deletion(simple_file *file_ptr , size_t line_index , size_t position , char *deleted_text){
+void log_deletion(simple_file *file_ptr , size_t line_index , size_t position , char *deleted_text){
     if(deleted_text == NULL || line_index >= simple_file_get_line_no(file_ptr)) return ;
 
     file_deletion *del_ptr = malloc(sizeof(file_deletion));
