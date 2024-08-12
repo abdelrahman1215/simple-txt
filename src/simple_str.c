@@ -73,7 +73,7 @@ void simple_str_add(simple_str *str_ptr , char *source , size_t index){
 
 void simple_str_delete(simple_str *str_ptr , size_t index , size_t count){
     if(str_ptr == NULL) return ;
-    if(index > str_ptr -> strlen - 1 || index + count > str_ptr -> strlen) return;
+    if(index >= str_ptr -> strlen || index + count > str_ptr -> strlen) return;
 
     char *target = str_ptr -> str + index;
     strncpy(target , target + count , str_ptr -> strlen - (index + count));

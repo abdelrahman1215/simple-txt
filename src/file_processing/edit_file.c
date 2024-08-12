@@ -10,7 +10,7 @@
 
 void simple_file_add_empty_lines(simple_file *file_ptr , size_t line_no , size_t line_index){
     if(file_ptr == NULL) return ;
-    if(line_index > simple_file_get_line_no(file_ptr) - 1) return ;
+    if(line_index >= simple_file_get_line_no(file_ptr)) return ;
 
     dynamic_array *contents = file_ptr -> lines;
     size_t initial_line_no = simple_file_get_line_no(file_ptr);
@@ -48,7 +48,7 @@ typedef struct add_end{
 add_end _add_(simple_file *file_ptr , size_t line_index , size_t pos_index , char *source){
     add_end empty_pair = {.end_line = 0 , .end_pos = 0};
     if(file_ptr == NULL) return empty_pair;
-    if(line_index > simple_file_get_line_no(file_ptr) - 1) return empty_pair;
+    if(line_index >= simple_file_get_line_no(file_ptr)) return empty_pair;
     if(source == NULL) return empty_pair;
     if(*source == '\000') return empty_pair;
 
@@ -90,19 +90,17 @@ add_end _add_(simple_file *file_ptr , size_t line_index , size_t pos_index , cha
     if(line_no > 1){
         char *text;
         text = simple_str_get_string(*target);
+        size_t added_lines_no = 0;
 
-        if(line_no > 2){
-            simple_file_add_empty_lines(file_ptr , line_no - 2 , line_index + 1);
-        }else if(line_no == 2 && divided[1][0] == '\0'){
-            simple_file_add_empty_lines(file_ptr , line_no - 1 , line_index + 1);
-        }
+        added_lines_no = line_no - 1;
+        simple_file_add_empty_lines(file_ptr , added_lines_no , line_index + 1);
 
         if(dd){
-            simple_str_delete(*target , pos_index + strlen(divided[0]) , init_len);
+            simple_str_delete(*target , pos_index + strlen(divided[0]) , init_len - pos_index);
             free(target);
 
-            target = (simple_str **)dynamic_array_get_element(contents , line_index + 1);
-            simple_str_add(*target , text + line_index + strlen(divided[0]) , 0);
+            target = (simple_str **)dynamic_array_get_element(contents , line_index + added_lines_no);
+            simple_str_add(*target , text + pos_index + strlen(divided[0]) , 0);
             free(target);
             free(text);
         }
@@ -149,7 +147,7 @@ void simple_file_add(simple_file *file_ptr , size_t line_index , size_t pos_inde
 
 char *_delete_(simple_file *file_ptr , size_t line_index , size_t start_pos , size_t count){
     if(file_ptr == NULL) return NULL;
-    if(line_index > simple_file_get_line_no(file_ptr) - 1 || count == 0) return NULL;
+    if(line_index >= simple_file_get_line_no(file_ptr) || count == 0) return NULL;
 
     dynamic_array *content = file_ptr -> lines;
     simple_str **target_line_ptr = (simple_str **)dynamic_array_get_element(content , line_index);
@@ -197,6 +195,8 @@ void simple_file_delete(simple_file *file_ptr , size_t line_index , size_t start
     clear_undone_stack(file_ptr);
 }
 
+//if a logical error happens in the future look at the else statement
+
 char *_delete_lines_(simple_file *file_ptr , size_t line_index , size_t line_count){
     if(file_ptr == NULL) return NULL;
     if(line_index + line_count > simple_file_get_line_no(file_ptr)) return NULL;
@@ -234,6 +234,55 @@ char *_delete_lines_(simple_file *file_ptr , size_t line_index , size_t line_cou
     destroy_simple_str(deleted_lines);
 
     return ret;
+}
+
+void simple_file_delete_from_to(simple_file *file_ptr , size_t start_line , size_t start_pos , size_t end_line , size_t end_pos){
+    if(file_ptr == NULL) return ;
+    if((start_line == end_line && start_pos >= end_pos) || start_line > end_line) return ;
+    if(start_line >= simple_file_get_line_no(file_ptr) || end_line >= simple_file_get_line_no(file_ptr)) return ;
+    if(start_pos >= simple_file_get_line_len(file_ptr , start_line) || end_pos > simple_file_get_line_len(file_ptr , end_line)) return ;
+
+    char *deleted_text;
+    if(start_line == end_line){
+        deleted_text = _delete_(file_ptr , start_line , start_pos , end_pos - start_pos);
+    }else{
+        simple_str *buff = new_simple_str(NULL);
+        size_t last_line_len = simple_file_get_line_len(file_ptr , end_line);
+        char *tmp;
+
+        tmp = _delete_(file_ptr , start_line , start_pos , simple_file_get_line_len(file_ptr , start_line) - start_pos);
+        simple_str_add(buff , tmp , simple_str_get_strlen(buff));
+        free(tmp);
+
+
+        if(end_line - start_line > 1){
+            tmp = _delete_lines_(file_ptr , start_line + 1 , end_line - start_line - 1);
+            simple_str_add(buff , tmp , simple_str_get_strlen(buff));
+            free(tmp);
+        }else{
+            simple_str_add(buff , "\n" , simple_str_get_strlen(buff));
+        }
+
+        //if a logical error happens in the future add + 1 after end_pos
+        tmp = _delete_(file_ptr , end_line , 0 , end_pos );
+        simple_str_add(buff , tmp , simple_str_get_strlen(buff));
+        free(tmp);
+
+        if(end_pos != last_line_len){
+            tmp = simple_file_get_line(file_ptr , start_line + 1);
+            _add_(file_ptr , start_line , simple_file_get_line_len(file_ptr , start_line) , tmp);
+            free(tmp);
+
+            tmp = _delete_lines_(file_ptr , start_line + 1 , 1);
+            free(tmp);
+        }
+
+        deleted_text = simple_str_get_string(buff);
+        destroy_simple_str(buff);
+    }
+
+    log_deletion(file_ptr , start_line , start_pos , deleted_text , false);
+    free(deleted_text);
 }
 
 void simple_file_delete_lines(simple_file *file_ptr , size_t line_index , size_t line_count){

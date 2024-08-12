@@ -185,7 +185,8 @@ void save_file(simple_file *file_ptr){
     char *tmp;
     size_t len = 0;
 
-    for(size_t i = 0 ; i < simple_file_get_line_no(file_ptr) - 1 ; i++){
+    size_t line_no = simple_file_get_line_no(file_ptr);
+    for(size_t i = 0 ; i + 1 < line_no ; i++){
         line_ptr = (simple_str **)dynamic_array_get_element(file_ptr -> lines , i);
         len = simple_str_get_strlen(*line_ptr);
         tmp = simple_str_get_string(*line_ptr);
@@ -234,7 +235,7 @@ dynamic_array *simple_file_get_content(simple_file *file_ptr){
 
 char *simple_file_get_line(simple_file *file_ptr , size_t index){
     if(file_ptr == NULL) return NULL;
-    if(index > simple_file_get_line_no(file_ptr) - 1) return NULL;
+    if(index >= simple_file_get_line_no(file_ptr)) return NULL;
 
     simple_str **str = (simple_str **)dynamic_array_get_element(file_ptr -> lines , index);
     char *ret = simple_str_get_string(*str);
@@ -246,7 +247,7 @@ char *simple_file_get_line(simple_file *file_ptr , size_t index){
 
 size_t simple_file_get_line_len(simple_file *file_ptr , size_t index){
     if(file_ptr == NULL) return 0;
-    if(index > simple_file_get_line_no(file_ptr) - 1) return 0;
+    if(index >= simple_file_get_line_no(file_ptr)) return 0;
 
     simple_str **str = (simple_str **)dynamic_array_get_element(file_ptr -> lines , index);
     size_t ret = simple_str_get_strlen(*str);
