@@ -45,6 +45,7 @@ simple_str *new_simple_str(char *src){
 void simple_str_add(simple_str *str_ptr , char *source , size_t index){
     if(str_ptr == NULL) return ;
     if(index > str_ptr -> strlen) return ;
+    if(source == NULL) return ;
 
     size_t len = strnlen(source , 9223372036854775807);
 
