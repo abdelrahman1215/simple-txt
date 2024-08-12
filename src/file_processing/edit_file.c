@@ -182,6 +182,7 @@ char *_delete_(simple_file *file_ptr , size_t line_index , size_t start_pos , si
     simple_str_delete(*target_line_ptr , start_pos , count);
 
     free(target_line_ptr);
+    free(text);
 
     return ret;
 }
@@ -310,6 +311,8 @@ void simple_file_undo(simple_file *file_ptr){
 
         char *deleted_text = _undo_addition_(tmp , file_ptr);
         log_deletion(file_ptr , tmp -> start_line , tmp -> start_pos , deleted_text , true);
+
+        free(deleted_text);
     }
 
     else if(last_change -> change_type == deletion){
@@ -332,6 +335,8 @@ void simple_file_redo(simple_file *file_ptr){
 
         char *deleted_text = _undo_addition_(tmp , file_ptr);
         log_deletion(file_ptr , tmp -> start_line , tmp -> start_pos , deleted_text , false);
+
+        free(deleted_text);
     }
 
     else if(last_undone -> change_type == deletion){
