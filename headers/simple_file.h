@@ -16,9 +16,12 @@ void destroy_file(simple_file *file_ptr);
 
 size_t simple_file_get_line_no(simple_file *file_ptr);
 char *simple_file_get_line(simple_file *file_ptr , size_t index);
+size_t simple_file_get_line_len(simple_file *file_ptr , size_t index);
 
 void simple_file_add(simple_file *file_ptr , size_t line_index , size_t pos_index , char *source);
 void simple_file_delete(simple_file *file_ptr , size_t line_index , size_t start_pos , size_t count);
 void simple_file_delete_lines(simple_file *file_ptr , size_t line_index , size_t line_count);
+
+void simple_file_undo(simple_file *file_ptr);
 
 #endif

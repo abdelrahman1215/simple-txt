@@ -15,7 +15,7 @@ bool is_dir(const char *file_name){
     return (bool) S_ISDIR(file_stat.st_mode);
 }
 
-#define buff_size 20//(8 * 1024 * 1024) - 1
+#define buff_size (8 * 1024 * 1024) - 1
 
 void free_simple_str(simple_str **str_ptr_ptr){
     destroy_simple_str(*str_ptr_ptr);
@@ -238,6 +238,18 @@ char *simple_file_get_line(simple_file *file_ptr , size_t index){
 
     simple_str **str = (simple_str **)dynamic_array_get_element(file_ptr -> lines , index);
     char *ret = simple_str_get_string(*str);
+
+    free(str);
+
+    return ret;
+}
+
+size_t simple_file_get_line_len(simple_file *file_ptr , size_t index){
+    if(file_ptr == NULL) return 0;
+    if(index > simple_file_get_line_no(file_ptr) - 1) return 0;
+
+    simple_str **str = (simple_str **)dynamic_array_get_element(file_ptr -> lines , index);
+    size_t ret = simple_str_get_strlen(*str);
 
     free(str);
 
