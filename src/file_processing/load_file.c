@@ -211,7 +211,7 @@ void save_file(simple_file *file_ptr){
     fclose(target_file);
 }
 
-void destroy_file(simple_file *file_ptr){
+void destroy_simple_file(simple_file *file_ptr){
     destroy_dynamic_array(file_ptr -> lines);
     destroy_linked_list(file_ptr -> changes_stack);
     destroy_linked_list(file_ptr -> undone_stack);

@@ -321,3 +321,25 @@ void simple_file_undo(simple_file *file_ptr){
 
     free_change_struct(last_change);
 }
+
+void simple_file_redo(simple_file *file_ptr){
+    if(file_ptr == NULL) return ;
+    if(linked_list_get_node_no(file_ptr -> undone_stack) == 0) return ;
+
+    file_change *last_undone = pull_last_undone_change(file_ptr);
+    if(last_undone -> change_type == addition){
+        file_addition *tmp = last_undone -> change_info;
+
+        char *deleted_text = _undo_addition_(tmp , file_ptr);
+        log_deletion(file_ptr , tmp -> start_line , tmp -> start_pos , deleted_text , false);
+    }
+
+    else if(last_undone -> change_type == deletion){
+        file_deletion *tmp = last_undone -> change_info;
+
+        add_end end = _undo_deletion_(tmp , file_ptr);
+        log_addition(file_ptr , tmp -> line_index ,tmp -> position , end.end_line , end.end_pos , false);
+    }
+
+    free_change_struct(last_undone);
+}

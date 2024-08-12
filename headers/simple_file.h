@@ -12,7 +12,7 @@ bool is_dir(const char *file_name);
 
 simple_file *load_file(const char *file_name , loading_err *get_err);
 void save_file(simple_file *file_ptr);
-void destroy_file(simple_file *file_ptr);
+void destroy_simple_file(simple_file *file_ptr);
 
 size_t simple_file_get_line_no(simple_file *file_ptr);
 char *simple_file_get_line(simple_file *file_ptr , size_t index);
@@ -23,5 +23,6 @@ void simple_file_delete(simple_file *file_ptr , size_t line_index , size_t start
 void simple_file_delete_lines(simple_file *file_ptr , size_t line_index , size_t line_count);
 
 void simple_file_undo(simple_file *file_ptr);
+void simple_file_redo(simple_file *file_ptr);
 
 #endif
