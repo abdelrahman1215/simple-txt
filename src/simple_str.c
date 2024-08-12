@@ -63,7 +63,7 @@ void simple_str_add(simple_str *str_ptr , char *source , size_t index){
     }
 
     char *target = str_ptr -> str + index;
-    strncpy(target + len , target , str_ptr -> strlen - index);
+    memmove(target + len , target , str_ptr -> strlen - index);
     strncpy(target , source , len);
 
     str_ptr -> strlen += len;
