@@ -123,7 +123,7 @@ void clear_undone_stack(simple_file *file_ptr){
     file_ptr -> undone_stack = tmp;
 }
 
-void log_addition(simple_file *file_ptr , size_t start_line , size_t start_pos , size_t end_line , size_t end_pos){
+void log_addition(simple_file *file_ptr , size_t start_line , size_t start_pos , size_t end_line , size_t end_pos , bool undone){
     if(start_line > end_line  || (start_line == end_line && start_pos >= end_pos)) return ;
     if(end_line >= simple_file_get_line_no(file_ptr)) return;
 
@@ -136,24 +136,37 @@ void log_addition(simple_file *file_ptr , size_t start_line , size_t start_pos ,
     add_ptr -> end_pos = end_pos;
 
     file_change change = {.change_type = addition , .change_info = (void *)add_ptr};
-    push_change(file_ptr , change);
+
+    if(undone){
+        push_undone_change(file_ptr , change);
+    }else{
+        push_change(file_ptr , change);
+    }
 }
 
-void log_deletion(simple_file *file_ptr , size_t line_index , size_t position , char *deleted_text){
+void log_deletion(simple_file *file_ptr , size_t line_index , size_t position , char *deleted_text , bool undone){
     if(deleted_text == NULL || line_index >= simple_file_get_line_no(file_ptr)) return ;
 
     file_deletion *del_ptr = malloc(sizeof(file_deletion));
     if(del_ptr == NULL) return ;
 
-    del_ptr -> deleted_text = calloc(strlen(deleted_text) + 1 , sizeof(char));
+    size_t len = strlen(deleted_text);
+    del_ptr -> deleted_text = calloc(len + 1 , sizeof(char));
     if(del_ptr -> deleted_text == NULL){
         free(del_ptr);
         return;
     }
 
+    strncpy(del_ptr -> deleted_text , deleted_text , len);
+
     del_ptr -> line_index = line_index;
     del_ptr -> position = position;
 
     file_change change = {.change_type = deletion , .change_info = (void *)del_ptr};
-    push_change(file_ptr , change);
+
+    if(undone){
+        push_undone_change(file_ptr , change);
+    }else{
+        push_change(file_ptr , change);
+    }
 }
