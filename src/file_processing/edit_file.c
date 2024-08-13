@@ -236,11 +236,11 @@ char *_delete_lines_(simple_file *file_ptr , size_t line_index , size_t line_cou
     return ret;
 }
 
-void simple_file_delete_from_to(simple_file *file_ptr , size_t start_line , size_t start_pos , size_t end_line , size_t end_pos){
-    if(file_ptr == NULL) return ;
-    if((start_line == end_line && start_pos >= end_pos) || start_line > end_line) return ;
-    if(start_line >= simple_file_get_line_no(file_ptr) || end_line >= simple_file_get_line_no(file_ptr)) return ;
-    if(start_pos >= simple_file_get_line_len(file_ptr , start_line) || end_pos > simple_file_get_line_len(file_ptr , end_line)) return ;
+char *_delete_from_to_(simple_file *file_ptr , size_t start_line , size_t start_pos , size_t end_line , size_t end_pos){
+    if(file_ptr == NULL) return NULL;
+    if((start_line == end_line && start_pos >= end_pos) || start_line > end_line) return NULL;
+    if(start_line >= simple_file_get_line_no(file_ptr) || end_line >= simple_file_get_line_no(file_ptr)) return NULL;
+    if(start_pos >= simple_file_get_line_len(file_ptr , start_line) || end_pos > simple_file_get_line_len(file_ptr , end_line)) return NULL;
 
     char *deleted_text;
     if(start_line == end_line){
@@ -281,6 +281,14 @@ void simple_file_delete_from_to(simple_file *file_ptr , size_t start_line , size
         destroy_simple_str(buff);
     }
 
+    return deleted_text;
+}
+
+void simple_file_delete_from_to(simple_file *file_ptr , size_t start_line , size_t start_pos , size_t end_line , size_t end_pos){
+    char *deleted_text = _delete_from_to_(file_ptr  , start_line , start_pos , end_line , end_pos);
+
+    if(deleted_text == NULL) return ;
+
     log_deletion(file_ptr , start_line , start_pos , deleted_text , false);
     free(deleted_text);
 }
@@ -305,43 +313,9 @@ void simple_file_delete_lines(simple_file *file_ptr , size_t line_index , size_t
 
 char *_undo_addition_(file_addition *addition_info , simple_file *file_ptr){
     if(addition_info -> end_line == 0 && addition_info->end_pos == 0) return NULL;
-    simple_str *deleted_text = new_simple_str(NULL);
+    char *deleted_text = _delete_from_to_(file_ptr , addition_info -> start_line , addition_info -> start_pos , addition_info -> end_line , addition_info -> end_pos);
 
-    if(addition_info -> start_line == addition_info -> end_line){
-        char *tmp = _delete_(file_ptr , addition_info -> start_line , addition_info -> start_pos , addition_info -> end_pos - addition_info -> start_pos);
-        simple_str_add(deleted_text , tmp , simple_str_get_strlen(deleted_text));
-        free(tmp);
-    }else{
-        size_t len = simple_file_get_line_len(file_ptr , addition_info -> start_line);
-        char *tmp = NULL;
-
-        tmp = _delete_(file_ptr , addition_info -> start_line , addition_info -> start_pos , len - addition_info -> start_pos);
-        simple_str_add(deleted_text , tmp , simple_str_get_strlen(deleted_text));
-        if(tmp != NULL){
-            free(tmp);
-        }
-
-        tmp = _delete_lines_(file_ptr , addition_info -> start_line + (addition_info -> start_pos != 0) , addition_info -> end_line - addition_info -> start_line - (addition_info -> start_pos != 0));
-        simple_str_add(deleted_text , tmp , simple_str_get_strlen(deleted_text));
-        if(tmp != NULL){
-            free(tmp);
-        }
-
-        tmp = _delete_(file_ptr , addition_info -> end_line , 0 , addition_info -> end_pos);
-        simple_str_add(deleted_text , tmp , simple_str_get_strlen(deleted_text));
-        if(tmp != NULL){
-            free(tmp);
-        }
-    }
-
-    char *ret = simple_str_get_string(deleted_text);
-    if(ret == NULL){
-        return NULL;
-    }
-
-    destroy_simple_str(deleted_text);
-
-    return ret;
+    return deleted_text;
 }
 
 add_end _undo_deletion_(file_deletion *deletion_info , simple_file *file_ptr){
@@ -359,6 +333,12 @@ void simple_file_undo(simple_file *file_ptr){
         file_addition *tmp = last_change -> change_info;
 
         char *deleted_text = _undo_addition_(tmp , file_ptr);
+        if(deleted_text == NULL){
+            free_change_struct(last_change);
+
+            return ;
+        }
+        
         log_deletion(file_ptr , tmp -> start_line , tmp -> start_pos , deleted_text , true);
 
         free(deleted_text);
