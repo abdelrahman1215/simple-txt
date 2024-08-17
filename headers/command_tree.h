@@ -1,6 +1,8 @@
 #ifndef COMMAND_TREE
 #define COMMAND_TREE
 
+#include <stddef.h>
+
 typedef void(command_func) (char **tokens);
 
 typedef struct command_info{
