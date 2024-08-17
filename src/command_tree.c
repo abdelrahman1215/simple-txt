@@ -67,6 +67,10 @@ void destroy_command_tree(command_tree *tree_ptr){
     if(tree_ptr == NULL) return ;
 
     for(int i = 0 ; i < 52 ; i++){
+        if(tree_ptr -> root_nodes[i] == NULL){
+            continue;
+        }
+
         free_subtree(tree_ptr -> root_nodes[i]);
     }
     free(tree_ptr);
@@ -82,43 +86,51 @@ void command_tree_add_node(command_tree *tree_ptr , const char *command , unsign
     if(new_node == NULL) return ;
 
     command_node **nd = &(tree_ptr -> root_nodes[command[0] - 'A' - ((islower(command[0]) != 0) * 6)]/*to deal with the diference in value between 'Z' and 'a'*/);
-    for(; ; nd = &((*nd) -> first_offspring)){
+    int str_diff = 0;
+    size_t min_len;
+    while(1){
         if(*nd == NULL){
             *nd = new_node;//done
             return;
-        }
-
-        if(new_node -> info.command_len == (*nd) -> info.command_len){
-            break;
         }
 
         if(new_node -> info.command_len < (*nd) -> info.command_len){
             new_node -> first_offspring = *nd;
+
+            for(command_node **node = nd ; *node != NULL ; node = &((*node) -> next_sibling)){
+                if(strncmp((*node) -> info.command , command , new_node -> info.command_len) != 0){
+                    new_node -> next_sibling = *node;
+                    *node = NULL;
+
+                    break;
+                }
+            }
+
             *nd = new_node;//done
             return;
         }
+
+        for( ; (*nd) != NULL ; nd = &((*nd) -> next_sibling)){
+            min_len = (*nd) -> info.command_len < new_node -> info.command_len ? (*nd) -> info.command_len : new_node -> info.command_len;
+            str_diff = strncmp((*nd) -> info.command , command , min_len);
+
+            if(str_diff == 0){
+                if((*nd) -> info.command_len == new_node -> info.command_len){
+                    free_subtree(new_node);
+                    return;
+                }
+
+                break;
+            }
+        }
+
+        if(*nd == NULL ) continue;
+        if(new_node -> info.command_len < (*nd) -> info.command_len) continue;
+
+        nd = &((*nd) -> first_offspring);
     }
 
-    for(int str_diff = 0 ; ; nd = &((*nd) -> next_sibling)){
-        if(*nd == NULL){
-            *nd = new_node;//done
-            return;
-        }
-
-        str_diff = strcmp((*nd) -> info.command , command);
-        if(str_diff == 0){//the command already exists
-            free_subtree(new_node);
-            return;
-        }
-
-        if(str_diff > 0){
-            new_node -> next_sibling = *nd;
-            new_node -> first_offspring = (*nd) -> first_offspring;
-            (*nd) -> first_offspring = NULL;
-            *nd = new_node;//done
-            return;
-        }
-    }
+    free_subtree(new_node);
 }
 
 command_node **_command_tree_find_node_ptr_(command_tree *tree_ptr , const char *command){
@@ -130,17 +142,36 @@ command_node **_command_tree_find_node_ptr_(command_tree *tree_ptr , const char 
     command_node **ret;
     size_t len = strlen(command);
 
+    int str_diff;
+    size_t min_len;
     for(ret = &(tree_ptr -> root_nodes[command[0] - 'A']) ; *ret != NULL ; ret = &((*ret) -> first_offspring)){
-        if((*ret) -> info.command_len == len) break;
-        if((*ret) -> info.command_len > len) return NULL;
+        //if((*ret) -> info.command_len == len) break;
+        //if((*ret) -> info.command_len > len) return NULL;
+
+        while(1){
+            min_len = (*ret) -> info.command_len < len ? (*ret) -> info.command_len : len;
+            str_diff = strncmp((*ret) -> info.command , command , min_len);
+
+            if(str_diff == 0){
+                if((*ret) -> info.command_len == len){
+                    return ret;
+                }
+
+                break;
+            }
+
+            if((*ret) -> next_sibling == NULL){
+                break;
+            }
+
+            ret = &((*ret) -> next_sibling);
+        }
+
+        if((*ret) -> first_offspring == NULL){
+            break;
+        }
     }
 
-    int str_diff = 0;
-    for( ; *ret != NULL ; ret = &((*ret) -> next_sibling)){
-        str_diff = strcmp((*ret) -> info.command , command);
-        if(str_diff == 0) return ret;
-        if(str_diff > 0) return NULL;
-    }
 
     return NULL;
 }
