@@ -18,7 +18,7 @@ struct command_tree{
 };
 
 command_node *create_command_node(const char *command , short token_no , command_func *command_exec){
-    if(command == NULL/* || command_exec == NULL*/) return NULL;
+    if(command == NULL || command_exec == NULL) return NULL;
     if(command[0] == '\000') return NULL;
 
     command_node *ret = malloc(sizeof(command_node));
@@ -77,7 +77,7 @@ void destroy_command_tree(command_tree *tree_ptr){
 }
 
 void command_tree_add_node(command_tree *tree_ptr , const char *command , unsigned short token_no , command_func *command_exec){
-    if(tree_ptr == NULL || command == NULL/* || command_exec == NULL*/) return ;
+    if(tree_ptr == NULL || command == NULL || command_exec == NULL) return ;
     for(size_t i = 0 ; command[i] ; i++){
         if(isalpha(command[i] == 0)) return ;
     }
@@ -85,7 +85,7 @@ void command_tree_add_node(command_tree *tree_ptr , const char *command , unsign
     command_node *new_node = create_command_node(command , token_no , command_exec);
     if(new_node == NULL) return ;
 
-    command_node **nd = &(tree_ptr -> root_nodes[command[0] - 'A' - ((islower(command[0]) != 0) * 6)]/*to deal with the diference in value between 'Z' and 'a'*/);
+    command_node **nd = &(tree_ptr -> root_nodes[command[0] - 'A' - ((islower(command[0]) != 0) * 6)])/*to deal with the diference in value between 'Z' and 'a'*/;
     int str_diff = 0;
     size_t min_len;
     while(1){
