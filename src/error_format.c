@@ -49,10 +49,6 @@ void loading_error(const char *file_name ,  loading_err error_type){
             error = strncat(error , " is a directory. " , strlen(" is a directory."));
             break;
 
-        case File_Not_Found :
-            error = strncat(error , " doesn't exist. " , strlen(" doesn't exist."));
-            break;
-
         default : return ;
     }
 

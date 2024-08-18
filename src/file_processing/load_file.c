@@ -47,8 +47,7 @@ simple_file *load_file(const char *file_name , loading_err *get_err){
     FILE *target_file = fopen(file_name , "r");
     if(target_file == NULL){
         *get_err = File_Not_Found;
-
-        return NULL;
+        target_file = fopen(file_name , "w+");
     }
 
     simple_file *ret = malloc(sizeof(simple_file));
