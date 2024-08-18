@@ -144,10 +144,7 @@ command_node **_command_tree_find_node_ptr_(command_tree *tree_ptr , const char 
 
     int str_diff;
     size_t min_len;
-    for(ret = &(tree_ptr -> root_nodes[command[0] - 'A']) ; *ret != NULL ; ret = &((*ret) -> first_offspring)){
-        //if((*ret) -> info.command_len == len) break;
-        //if((*ret) -> info.command_len > len) return NULL;
-
+    for(ret = &(tree_ptr -> root_nodes[command[0] - 'A' - ((islower(command[0]) != 0) * 6)]) ; *ret != NULL ; ret = &((*ret) -> first_offspring)){
         while(1){
             min_len = (*ret) -> info.command_len < len ? (*ret) -> info.command_len : len;
             str_diff = strncmp((*ret) -> info.command , command , min_len);
@@ -176,6 +173,40 @@ command_node **_command_tree_find_node_ptr_(command_tree *tree_ptr , const char 
     return NULL;
 }
 
+command_node *_command_tree_find_nearest_in_subtree_ptr_(command_node *subtree , const char *command){
+    if(subtree == NULL || command == NULL) return NULL;
+    for(size_t i = 0 ; command[i] ; i++){
+        if(isalpha(command[i] == 0)) return NULL;
+    }
+
+    command_node *ret;
+    size_t len = strlen(command);
+
+    int str_diff;
+    size_t min_len;
+    for(ret = subtree ; ret != NULL ; ret = ret -> first_offspring){
+        while(1){
+            str_diff = strncmp(ret -> info.command , command , len);
+
+            if(str_diff == 0){
+                return ret;
+            }
+
+            if(ret -> next_sibling == NULL){
+                break;
+            }
+
+            ret = ret -> next_sibling;
+        }
+
+        if(ret -> first_offspring == NULL){
+            break;
+        }
+    }
+
+    return NULL;
+}
+
 void command_tree_delete_node(command_tree *tree_ptr , const char *command){
     command_node **target_node_ptr = _command_tree_find_node_ptr_(tree_ptr , command);
     if(target_node_ptr == NULL) return ;
@@ -199,4 +230,29 @@ command_info command_tree_find_command(command_tree *tree_ptr , const char *comm
     if(target_node_ptr == NULL) return (command_info){.command = NULL , .command_exec = NULL , .command_len = 0 , .token_no = 0};
 
     return (*target_node_ptr) -> info;
+}
+
+void _add_subtree_to_list_(command_node *subtree , linked_list *list){
+    if(subtree == NULL) return;
+
+    linked_list_add_node(&(subtree -> info) , sizeof(command_info) , NULL , list);
+    _add_subtree_to_list_(subtree -> first_offspring , list);
+    _add_subtree_to_list_(subtree -> next_sibling , list);
+}
+
+linked_list *command_tree_nearest_commands_list(command_tree *tree_ptr , const char *command){
+    if(tree_ptr == NULL || command == NULL) return NULL;
+    for(const char *ch = command ; *ch ; ch++){
+        if(!isalpha(*ch)) return NULL;
+    }
+
+    linked_list *ret = new_linked_list();
+    if(ret == NULL) return NULL;
+
+    command_node *subtree = tree_ptr -> root_nodes[command[0] - 'A' - ((islower(command[0]) != 0) * 6)];
+    subtree = _command_tree_find_nearest_in_subtree_ptr_(subtree , command);
+    _add_subtree_to_list_(subtree , ret);
+    
+
+    return ret;
 }

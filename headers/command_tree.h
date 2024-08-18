@@ -1,6 +1,8 @@
 #ifndef COMMAND_TREE
 #define COMMAND_TREE
 
+#include "../c_datastructures/headers/linked_list.h"
+
 #include <stddef.h>
 
 typedef void(command_func) (char **tokens);
@@ -23,5 +25,6 @@ void command_tree_add_node(command_tree *tree_ptr , const char *command , unsign
 void command_tree_delete_node(command_tree *tree_ptr , const char *command);
 
 command_info command_tree_find_command(command_tree *tree_ptr , const char *command);
+linked_list *command_tree_nearest_commands_list(command_tree *tree_ptr , const char *command);
 
 #endif
