@@ -3,9 +3,11 @@
 
 #include "../../c_datastructures/headers/dynamic_array.h"
 #include "../../c_datastructures/headers/linked_list.h"
+#include <stddef.h>
 
 struct file_struct{
     char *file_name;
+    bool changes_saved;
 
     dynamic_array *lines;
 

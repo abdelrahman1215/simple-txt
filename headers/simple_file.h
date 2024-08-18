@@ -17,6 +17,7 @@ void destroy_simple_file(simple_file *file_ptr);
 size_t simple_file_get_line_no(simple_file *file_ptr);
 char *simple_file_get_line(simple_file *file_ptr , size_t index);
 size_t simple_file_get_line_len(simple_file *file_ptr , size_t index);
+bool simple_file_changes_saved(simple_file *file_ptr);
 
 void simple_file_add(simple_file *file_ptr , size_t line_index , size_t pos_index , char *source);
 void simple_file_delete(simple_file *file_ptr , size_t line_index , size_t start_pos , size_t count);

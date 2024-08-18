@@ -77,6 +77,28 @@ simple_file *load_file(const char *file_name , loading_err *get_err){
         *get_err = Alloc_Err;
         return NULL;
     }
+    
+    ret -> changes_stack = new_linked_list();
+    if(ret -> changes_stack == NULL){
+        destroy_dynamic_array(ret -> lines);
+        free(ret -> file_name);
+        free(ret);
+
+        *get_err = Alloc_Err;
+        return NULL;
+    }
+
+    ret -> undone_stack = new_linked_list();
+    if(ret -> undone_stack == NULL){
+        destroy_dynamic_array(ret -> lines);
+        destroy_linked_list(ret -> changes_stack);
+
+        free(ret -> file_name);
+        free(ret);
+
+        *get_err = Alloc_Err;
+        return NULL;
+    }
 
     char *buff = calloc(buff_size + 1 , sizeof(char));
     if(buff == NULL){
@@ -152,27 +174,8 @@ simple_file *load_file(const char *file_name , loading_err *get_err){
     }
     fclose(target_file);
 
-    ret -> changes_stack = new_linked_list();
-    if(ret -> changes_stack == NULL){
-        destroy_dynamic_array(ret -> lines);
-        free(ret -> file_name);
-        free(ret);
 
-        *get_err = Alloc_Err;
-        return NULL;
-    }
-
-    ret -> undone_stack = new_linked_list();
-    if(ret -> undone_stack == NULL){
-        destroy_dynamic_array(ret -> lines);
-        destroy_linked_list(ret -> changes_stack);
-
-        free(ret -> file_name);
-        free(ret);
-
-        *get_err = Alloc_Err;
-        return NULL;
-    }
+    ret -> changes_saved = true;
 
     return ret;
 }
@@ -210,6 +213,8 @@ void save_file(simple_file *file_ptr){
     free(tmp);
 
     fclose(target_file);
+
+    file_ptr -> changes_saved = true;
 }
 
 void destroy_simple_file(simple_file *file_ptr){
@@ -255,4 +260,10 @@ size_t simple_file_get_line_len(simple_file *file_ptr , size_t index){
     free(str);
 
     return ret;
+}
+
+bool simple_file_changes_saved(simple_file *file_ptr){
+    if(file_ptr == NULL) return false;
+
+    return file_ptr -> changes_saved;
 }

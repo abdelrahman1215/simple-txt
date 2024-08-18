@@ -85,6 +85,8 @@ void push_change(simple_file *file_ptr , file_change change){
     if(linked_list_get_node_no(file_ptr -> changes_stack) == changes_limit){
         linked_list_delete_node(0 , file_ptr -> changes_stack);
     }
+
+    file_ptr -> changes_saved = false;
 }
 
 file_change *pull_last_change(simple_file *file_ptr){
@@ -96,11 +98,14 @@ file_change *pull_last_change(simple_file *file_ptr){
     linked_list_delete_node(linked_list_get_node_no(file_ptr -> changes_stack) - 1 , file_ptr -> changes_stack);
     free(temp);
 
+    file_ptr -> changes_saved = (linked_list_get_node_no(file_ptr -> changes_stack) == 0);
+
     return ret;
 }
 
 void push_undone_change(simple_file *file_ptr , file_change change){
     linked_list_add_node(&change , sizeof(file_change) , free_change_struct , file_ptr -> undone_stack);
+    file_ptr -> changes_saved = false;
 }
 
 file_change *pull_last_undone_change(simple_file *file_ptr){
