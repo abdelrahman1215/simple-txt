@@ -5,7 +5,7 @@
 
 #include <stddef.h>
 
-typedef void(command_func) (char **tokens);
+typedef void *(command_func) (char **tokens);
 
 typedef struct command_info{
     char *command;
