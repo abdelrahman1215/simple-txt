@@ -33,10 +33,6 @@ simple_str *new_simple_str(char *src){
 
     if(src != NULL){
         strncpy(ret -> str , src , ret -> strlen);
-
-        //for(size_t i = 0 , ch = src[0] ; i < init_len && ch != '\000' ; i++ , ch = src[i]){
-            //ret -> str[i] = ch;
-        //}
     }
 
     return ret;
