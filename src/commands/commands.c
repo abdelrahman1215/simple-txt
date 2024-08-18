@@ -4,25 +4,19 @@
 
 #include <stdlib.h>
 
-//command : "w"
-//tokens_no : 0
 void *write_to_current_file(char **args){
-    save_file(current_file);
+    save_file(Current_File);
 
     return NULL;
 }
 
-//command : "q"
-//tokens_no : 0
 void *quit(char **args){
-    destroy_simple_file(current_file);
+    destroy_simple_file(Current_File);
     exit(0);
 
     return NULL;
 }
 
-//command : "wq"
-//tokens_no : 0
 void *write_and_quit(char **args){
     write_to_current_file(args);
     quit(args);
@@ -30,16 +24,14 @@ void *write_and_quit(char **args){
     return NULL;
 }
 
-//command : "edit"
-//tokens_no : 1
 void *edit_file(char **args){
     loading_err error;
     simple_file *tmp = load_file(args[0] , &error);
 
     if(error == OK){
-        save_file(current_file);
-        destroy_simple_file(current_file);
-        current_file = tmp;
+        save_file(Current_File);
+        destroy_simple_file(Current_File);
+        Current_File = tmp;
     } else loading_error(args[0] , error);
 
     return NULL;
