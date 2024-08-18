@@ -10,7 +10,7 @@
 
 void simple_file_add_empty_lines(simple_file *file_ptr , size_t line_no , size_t line_index){
     if(file_ptr == NULL) return ;
-    if(line_index >= simple_file_get_line_no(file_ptr)) return ;
+    if(line_index > simple_file_get_line_no(file_ptr)) return ;
 
     dynamic_array *contents = file_ptr -> lines;
     size_t initial_line_no = simple_file_get_line_no(file_ptr);
