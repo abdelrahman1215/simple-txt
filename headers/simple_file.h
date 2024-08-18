@@ -1,7 +1,6 @@
 #ifndef SIMPLE_FILE
 #define SIMPLE_FILE
 
-#include "../c_datastructures/headers/dynamic_array.h"
 #include <stddef.h>
 
 typedef enum loading_err {OK = 0 , Is_Dir = 1 , File_Not_Found = 2 , Alloc_Err = 3 , Invalid_Arg = 4} loading_err;
