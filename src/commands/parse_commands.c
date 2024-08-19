@@ -42,18 +42,27 @@ void parse_command(char *input){
     if(input == NULL) return ;
     if(input[0] == '\000') return ;
 
+    size_t len = strlen(input);
+    char *copy = calloc(strlen(input) + 1 , sizeof(char));
+    strncpy(copy , input , len);
+
     if(Command_Tree == NULL) init_command_tree();
 
     char delimeters[] = " ";
     char **tokens = malloc(sizeof(char *));
-    if(tokens == NULL) return;
-    char *token = strtok(input , delimeters);
+    if(tokens == NULL){
+        free(copy);
+
+        return;
+    }
+    char *token = strtok(copy , delimeters);
     unsigned short tokens_no = 0;
     for(char **tmp ; token != NULL ; token = strtok(NULL , delimeters) , tokens_no++){
         size_t size = (tokens_no + 1) * sizeof(char *);
         tmp = realloc(tokens , size);
         if(tmp == NULL){
             free(tokens);
+            free(copy);
             return ;
         }
 
@@ -68,4 +77,5 @@ void parse_command(char *input){
     run_commands(tokens , tokens_no);
 
     free(tokens);
+    free(copy);
 }
