@@ -1,3 +1,4 @@
+#include "../../headers/error_format.h"
 #include "init_command_tree.c"
 
 #include <string.h>
@@ -14,10 +15,18 @@ void run_commands(char **tokens , unsigned short token_no){
     for(unsigned short i = 0 ; i < token_no ; i++){
         info = command_tree_find_command(Command_Tree , tokens[i]);
 
-        if(info.command == NULL) return;//TODO : make a functions that formats and pushes commands errors
+        if(info.command == NULL){
+            parsing_error(tokens[i] , Command_Not_Found);
+
+            return ;
+        }
 
         if(info.token_no > 0){
-            if(token_no - i < info.token_no) return ;//error msg here
+            if(token_no - i < info.token_no){
+                parsing_error(tokens[i] , Not_Enough_Args);
+                
+                return ;
+            }
 
             args = malloc(info.token_no * sizeof(char *));
             if(args == NULL) return ;
