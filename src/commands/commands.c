@@ -4,27 +4,27 @@
 
 #include <stdlib.h>
 
-void *write_to_current_file(char **args){
+void write_to_current_file(char **args){
     save_file(Current_File);
 
-    return NULL;
+    return ;
 }
 
-void *quit(char **args){
+void quit(char **args){
     destroy_simple_file(Current_File);
     exit(0);
 
-    return NULL;
+    return ;
 }
 
-void *write_and_quit(char **args){
+void write_and_quit(char **args){
     write_to_current_file(args);
     quit(args);
 
-    return NULL;
+    return ;
 }
 
-void *edit_file(char **args){
+void edit_file(char **args){
     loading_err error;
     simple_file *tmp = load_file(args[0] , &error);
 
@@ -34,5 +34,5 @@ void *edit_file(char **args){
         Current_File = tmp;
     } else loading_error(args[0] , error);
 
-    return NULL;
+    return ;
 }
