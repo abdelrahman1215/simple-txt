@@ -79,10 +79,6 @@ void parse_command(char *input){
         tokens[tokens_no] = token;
     }
 
-    //char *check[tokens_no];
-    //for(int i = 0 ; i < tokens_no ; i++){
-    //    check[i] = tokens[i];
-    //}
     run_commands(tokens , tokens_no);
 
     free(tokens);
