@@ -38,7 +38,7 @@ void loading_error(const char *file_name ,  loading_err error_type){
     if(file_name == NULL) return ;
     if(file_name[0] == '\000') return ;
 
-    char *error = alloca(strlen("loading error : ") + 1);
+    char error[] = "loading error : ";
     memset(error , 0 , strlen("loading error : ") + 1);
     strncpy(error , "loading error : " , strlen("loading error : "));
 
@@ -46,9 +46,38 @@ void loading_error(const char *file_name ,  loading_err error_type){
 
     switch(error_type){
         case Is_Dir :
-            error = strncat(error , " is a directory. " , strlen(" is a directory."));
+            strncat(error , " is a directory. " , strlen(" is a directory."));
             break;
 
+        default : return ;
+    }
+
+    enqueue_error(error);
+}
+
+void parsing_error(const char *command ,  parsing_errors error_type){
+    if(command == NULL) return ;
+    if(command[0] == '\000') return ;
+
+    char error[100] = "parsing error : \000";
+    memset(error , 0 , strlen("parsing error : ") + 1);
+    strncpy(error , "parsing error : " , strlen("parsing error : "));
+
+    switch(error_type){
+        case Command_Not_Found :
+            strncat(error , "the command \" " , strlen("the command \""));
+            strncat(error , command , strlen(command));
+            strncat(error , "\" was not found. " , strlen("\" was not found."));
+
+            break;
+
+        case Not_Enough_Args :
+            strncat(error , "too few arguments for the command \" " , strlen("too few arguments for the command \""));
+            strncat(error , command , strlen(command));
+            strncat(error , "\". " , strlen("\"."));
+
+            break;
+            
         default : return ;
     }
 
