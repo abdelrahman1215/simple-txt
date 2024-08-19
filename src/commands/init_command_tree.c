@@ -7,7 +7,7 @@ command_info command_arr[] = {
     {.command = "w" , .command_exec = write_to_current_file , .token_no = 0} ,
     {.command = "q" , .command_exec = quit , .token_no = 0} ,
     {.command = "wq" , .command_exec = write_and_quit , .token_no = 0} ,
-    {.command = "edit" , .command_exec = edit_file , .token_no = 0}
+    {.command = "edit" , .command_exec = edit_file , .token_no = 1}
 };
 
 command_tree *Command_Tree = NULL;
