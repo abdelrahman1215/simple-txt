@@ -181,6 +181,7 @@ simple_file *load_file(const char *file_name , loading_err *get_err){
 
 void save_file(simple_file *file_ptr){
     if(file_ptr == NULL) return ;
+    if(file_ptr -> changes_saved == true) return ;
 
     FILE *target_file = fopen(file_ptr -> file_name , "w");
     simple_str **line_ptr;
@@ -217,6 +218,8 @@ void save_file(simple_file *file_ptr){
 }
 
 void destroy_simple_file(simple_file *file_ptr){
+    if(file_ptr == NULL) return ;
+
     destroy_dynamic_array(file_ptr -> lines);
     destroy_linked_list(file_ptr -> changes_stack);
     destroy_linked_list(file_ptr -> undone_stack);
