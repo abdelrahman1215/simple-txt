@@ -2,6 +2,7 @@
 #include "../headers/error_format.h"
 
 #include <string.h>
+#include <stdio.h>
 
 linked_list *error_queue = NULL;
 
@@ -38,8 +39,7 @@ void loading_error(const char *file_name ,  loading_err error_type){
     if(file_name == NULL) return ;
     if(file_name[0] == '\000') return ;
 
-    char error[] = "loading error : ";
-    memset(error , 0 , strlen("loading error : ") + 1);
+    char error[128] = "loading error : ";
     strncpy(error , "loading error : " , strlen("loading error : "));
 
     strncat(error , file_name , strlen(file_name));
@@ -59,8 +59,7 @@ void parsing_error(const char *command ,  parsing_errors error_type){
     if(command == NULL) return ;
     if(command[0] == '\000') return ;
 
-    char error[100] = "parsing error : \000";
-    memset(error , 0 , strlen("parsing error : ") + 1);
+    char error[128] = "parsing error : \000";
     strncpy(error , "parsing error : " , strlen("parsing error : "));
 
     switch(error_type){
@@ -77,6 +76,22 @@ void parsing_error(const char *command ,  parsing_errors error_type){
             strncat(error , "\". " , strlen("\"."));
 
             break;
+            
+        default : return ;
+    }
+
+    enqueue_error(error);
+}
+
+void term_arg_error(const char *arg ,  parsing_term_errors error_type){
+    if(arg == NULL) return ;
+    if(arg[0] == '\000') return ;
+
+    char error[128] = {0};
+
+    switch(error_type){
+        case File_Is_Dir :
+            sprintf(error , "%s is a directory , use open_dir to open it" , arg);
             
         default : return ;
     }
