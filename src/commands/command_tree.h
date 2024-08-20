@@ -1,7 +1,7 @@
 #ifndef COMMAND_TREE
 #define COMMAND_TREE
 
-#include "../c_datastructures/headers/linked_list.h"
+#include "../../c_datastructures/headers/linked_list.h"
 
 #include <stddef.h>
 

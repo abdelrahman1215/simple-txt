@@ -16,8 +16,8 @@ edit_file.o : src/file_processing/edit_file.c simple_str.o div_str.o bin/ dynami
 error_format.o : src/error_format.c bin/ linked_list
 	$(CC) -g3 -c src/error_format.c -o bin/error_format.o
 
-command_tree.o : src/command_tree.c bin/
-	$(CC) -g3 -c src/command_tree.c -o bin/command_tree.o
+command_tree.o : src/commands/command_tree.c bin/
+	$(CC) -g3 -c src/commands/command_tree.c -o bin/command_tree.o
 
 commands.o : load_file.o edit_file.o error_format.o bin/
 	$(CC) -g3 -c src/commands/commands.c -o bin/commands.o

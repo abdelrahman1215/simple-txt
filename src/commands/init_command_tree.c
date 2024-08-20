@@ -1,4 +1,4 @@
-#include "../../headers/command_tree.h"
+#include "command_tree.h"
 #include "commands.h"
 
 #include <string.h>
