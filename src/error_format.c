@@ -59,7 +59,7 @@ void parsing_error(const char *command ,  parsing_errors error_type){
     if(command == NULL) return ;
     if(command[0] == '\000') return ;
 
-    char error[128] = "parsing error : \000";
+    char error[128] = "parsing error : ";
     strncpy(error , "parsing error : " , strlen("parsing error : "));
 
     switch(error_type){
@@ -87,7 +87,8 @@ void term_arg_error(const char *arg ,  parsing_term_errors error_type){
     if(arg == NULL) return ;
     if(arg[0] == '\000') return ;
 
-    char error[128] = {0};
+    char error[128];
+    memset(error , 0 , 128 * sizeof(char));
 
     switch(error_type){
         case File_Is_Dir :
