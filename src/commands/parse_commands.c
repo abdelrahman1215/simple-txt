@@ -31,8 +31,8 @@ void run_commands(char **tokens , unsigned short token_no){
             args = malloc(info.token_no * sizeof(char *));
             if(args == NULL) return ;
 
-            for(unsigned short j = 0 ; j < info.token_no ; j++){
-                args[j] = tokens[i + j + 1];
+            for(unsigned short j = i + 1  , k = 0 ; j < info.token_no ; j++ , k++){
+                args[k] = tokens[j];
             }
 
 
