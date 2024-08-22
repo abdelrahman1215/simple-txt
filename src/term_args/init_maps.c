@@ -3,16 +3,17 @@
 
 hashmap *flags_map = NULL , *options_map = NULL;
 
-typedef void (exec_func) (char **tokens);
+typedef void (opt_func) (char **tokens);
+typedef void (flag_func) ();
 
 typedef struct option_info{
-    unsigned short tokken_no;
+    unsigned short token_no;
 
-    exec_func *option_exec;
+    opt_func *option_exec;
 }option_info;
 
 typedef struct flag_info{
-    exec_func *flag_exec;
+    flag_func *flag_exec;
 }flag_info;
 
 char *option_names[] = {};
