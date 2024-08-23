@@ -92,7 +92,14 @@ void term_arg_error(const char *arg ,  parsing_term_errors error_type){
 
     switch(error_type){
         case File_Is_Dir :
-            sprintf(error , "%s is a directory , use open_dir to open it" , arg);
+            sprintf(error , "%s is a directory" , arg);
+
+            break;
+        
+        case Too_Few_Args :
+            sprintf(error , "too few arguments for option \"%s\"");
+
+            break;
             
         default : return ;
     }

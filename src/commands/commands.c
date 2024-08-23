@@ -28,10 +28,14 @@ void edit_file(char **args){
     loading_err error;
     simple_file *tmp = load_file(args[0] , &error);
 
-    if(error == OK){
+    if(error == OK || error == File_Not_Found){
         save_file(Current_File);
         destroy_simple_file(Current_File);
         Current_File = tmp;
+
+        if(error == File_Not_Found){
+            
+        }
     } else loading_error(args[0] , error);
 
     return ;

@@ -30,7 +30,9 @@ void parse_term_args(int argc , char **argv){
             if(op_inf != NULL){
                 if(op_inf -> token_no > 0){
                     if(argc - i < op_inf -> token_no){
-                        return ;//TODO : add an error for too few args
+                        term_arg_error(argv[i] , Too_Few_Args);
+
+                        return ;
                     }
 
                     char *args[op_inf -> token_no];

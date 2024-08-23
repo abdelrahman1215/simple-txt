@@ -11,7 +11,7 @@ void open_file(char *file_name){
         save_file(Current_File);
         destroy_simple_file(Current_File);
         Current_File = tmp;
-    } else if(error == Is_Dir){
+    }else if(error == Is_Dir){
         term_arg_error(file_name , File_Is_Dir);
     }else{
         loading_error(file_name , error);
