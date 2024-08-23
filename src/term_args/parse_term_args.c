@@ -8,6 +8,8 @@ void parse_term_args(int argc , char **argv){
     if(argc == 1){
         open_file("new_file");
     }else{
+        unsigned char opened_files_no = 0;
+
         entry *op_entry = NULL;
         option_info *op_inf = NULL;
 
@@ -50,7 +52,13 @@ void parse_term_args(int argc , char **argv){
                 continue;
             }
 
+            if(opened_files_no == 1){
+                term_arg_error(argv[i] , Too_Many_Files);
+                
+                return ;
+            }
             open_file(argv[i]);
+            opened_files_no ++;
             return;
         }
     }

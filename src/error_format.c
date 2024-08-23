@@ -97,7 +97,12 @@ void term_arg_error(const char *arg ,  parsing_term_errors error_type){
             break;
         
         case Too_Few_Args :
-            sprintf(error , "too few arguments for option \"%s\"");
+            sprintf(error , "too few arguments for option \"%s\"" , arg);
+
+            break;
+
+        case Too_Many_Files : 
+            sprintf(error , "too many files , only one was loaded");
 
             break;
             
