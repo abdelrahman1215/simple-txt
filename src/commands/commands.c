@@ -1,6 +1,7 @@
 #include "../../headers/simple_globals.h"
 #include "../../headers/error_format.h"
 #include "../../headers/simple_file.h"
+#include "../../headers/msg_format.h"
 
 #include <stdlib.h>
 
@@ -34,7 +35,7 @@ void edit_file(char **args){
         Current_File = tmp;
 
         if(error == File_Not_Found){
-            
+            loading_msg(args[0] , File_Not_Found);
         }
     } else loading_error(args[0] , error);
 
