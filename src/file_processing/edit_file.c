@@ -240,7 +240,7 @@ char *_delete_from_to_(simple_file *file_ptr , size_t start_line , size_t start_
     if(file_ptr == NULL) return NULL;
     if((start_line == end_line && start_pos >= end_pos) || start_line > end_line) return NULL;
     if(start_line >= simple_file_get_line_no(file_ptr) || end_line >= simple_file_get_line_no(file_ptr)) return NULL;
-    if(start_pos >= simple_file_get_line_len(file_ptr , start_line) || end_pos > simple_file_get_line_len(file_ptr , end_line)) return NULL;
+    if(start_pos > simple_file_get_line_len(file_ptr , start_line) || end_pos > simple_file_get_line_len(file_ptr , end_line)) return NULL;
 
     char *deleted_text;
     if(start_line == end_line){
