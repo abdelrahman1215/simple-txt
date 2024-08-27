@@ -16,6 +16,8 @@ void open_file(char *file_name){
         if(error == File_Not_Found){
             loading_msg(file_name , error);
         }
+
+        Txt_Start_Line = 0;
     }else{
         loading_error(file_name , error);
     }
