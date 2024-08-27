@@ -2,8 +2,8 @@ CC = gcc
 C_Flags = -g3
 Data_Structures_Path = c_datastructures/bin/
 
-test : load_file.o edit_file.o error_format.o command_tree.o commands.o parse_commands.o parse_term_args.o
-	$(CC) $(C_Flags) -o test test.c bin/*.o -L$(Data_Structures_Path) -ldynamic_array -llinked_list -lhashmap
+test : load_file.o edit_file.o error_format.o msg_format.o command_tree.o commands.o parse_commands.o parse_term_args.o
+	$(CC) $(C_Flags) -o test test.c bin/*.o -lpdcurses -L$(Data_Structures_Path) -ldynamic_array -llinked_list -lhashmap
 
 simple_str.o : src/simple_str.c bin/
 	$(CC) $(C_Flags) -c src/simple_str.c -o bin/simple_str.o
@@ -16,6 +16,9 @@ edit_file.o : src/file_processing/edit_file.c simple_str.o div_str.o bin/ dynami
 
 error_format.o : src/error_format.c bin/ linked_list
 	$(CC) $(C_Flags) -c src/error_format.c -o bin/error_format.o
+
+msg_format.o : src/msg_format.c bin/ linked_list
+	$(CC) $(C_Flags) -c src/msg_format.c -o bin/msg_format.o
 
 command_tree.o : src/commands/command_tree.c bin/
 	$(CC) $(C_Flags) -c src/commands/command_tree.c -o bin/command_tree.o
