@@ -1,5 +1,5 @@
-#include "command_tree.h"
-#include "commands.h"
+#include "command_tree.c"
+#include "commands.c"
 
 #include <string.h>
 

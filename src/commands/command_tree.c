@@ -1,17 +1,31 @@
-#include "command_tree.h"
+#include "../../c_datastructures/headers/linked_list.h"
 
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
 typedef struct command_node command_node;
 
-struct command_node{
+typedef void (command_func) (char **tokens);
+
+typedef struct command_info{
+    char *command;
+    size_t command_len;
+    //specifies the number of tokens that should follow a command and be given to it
+    unsigned short token_no;
+
+    command_func *command_exec;
+}command_info;
+
+typedef struct command_tree command_tree;
+
+typedef struct command_node{
     command_info info;
 
     command_node *next_sibling;
     command_node *first_offspring;
-};
+}command_node;
 
 struct command_tree{
     command_node *root_nodes[52];

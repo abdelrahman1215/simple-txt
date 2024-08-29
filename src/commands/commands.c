@@ -5,12 +5,16 @@
 
 #include <stdlib.h>
 
+//command : "w"
+//tokens_no : 0
 void write_to_current_file(char **args){
     save_file(Current_File);
 
     return ;
 }
 
+//command : "q"
+//tokens_no : 0
 void quit(char **args){
     destroy_simple_file(Current_File);
     exit(0);
@@ -18,6 +22,8 @@ void quit(char **args){
     return ;
 }
 
+//command : "wq"
+//tokens_no : 0
 void write_and_quit(char **args){
     write_to_current_file(args);
     quit(args);
@@ -25,6 +31,8 @@ void write_and_quit(char **args){
     return ;
 }
 
+//command : "edit"
+//tokens_no : 1
 void edit_file(char **args){
     loading_err error;
     simple_file *tmp = load_file(args[0] , &error);
