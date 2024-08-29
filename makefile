@@ -2,25 +2,25 @@ CC = gcc
 C_Flags = -g3
 Data_Structures_Path = c_datastructures/bin/
 
-test : simple_file.o error_format.o msg_format.o parse_commands.o parse_term_args.o
+test : simple_file.o error_format.o msg_format.o parse_commands.o parse_term_args.o dynamic_array linked_list hashmap
 	$(CC) $(C_Flags) -o test test.c bin/*.o -lpdcurses -L$(Data_Structures_Path) -ldynamic_array -llinked_list -lhashmap
 
 simple_str.o : src/simple_str.c bin/
 	$(CC) $(C_Flags) -c src/simple_str.c -o bin/simple_str.o
 
-simple_file.o : src/file_processing/load_file.c src/file_processing/edit_file.c bin/ simple_str.o div_str.o dynamic_array
+simple_file.o : src/file_processing/load_file.c src/file_processing/edit_file.c bin/ simple_str.o div_str.o
 	$(CC) $(C_Flags) -c src/file_processing/simple_file.c -o bin/simple_file.o
 
-error_format.o : src/error_format.c bin/ linked_list
+error_format.o : src/error_format.c bin/
 	$(CC) $(C_Flags) -c src/error_format.c -o bin/error_format.o
 
-msg_format.o : src/msg_format.c bin/ linked_list
+msg_format.o : src/msg_format.c bin/ 
 	$(CC) $(C_Flags) -c src/msg_format.c -o bin/msg_format.o
 
 parse_commands.o : src/commands/parse_commands.c src/commands/commands.c src/commands/command_tree.c bin/
 	$(CC) $(C_Flags) -c src/commands/parse_commands.c -o bin/parse_commands.o
 
-parse_term_args.o : src/term_args/parse_term_args.c hashmap
+parse_term_args.o : src/term_args/parse_term_args.c
 	$(CC) $(C_Flags) -c src/term_args/parse_term_args.c -o bin/parse_term_args.o
 
 div_str.o : src/div_str.c bin/
