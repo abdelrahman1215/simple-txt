@@ -18,12 +18,16 @@ void update_text_display(){
     }
 
     char *tmp = NULL;
+    size_t len;
     unsigned int used_rows = 0;
     for(unsigned int i = 0 ; i < row_no ; i++ , used_rows++){
+        len = simple_file_get_line_len(Current_File , i + Txt_Start_Line);
+        if(Txt_Disp_Indent >= len) continue;
+        
         tmp = simple_file_get_line(Current_File , i + Txt_Start_Line);
         if(tmp == NULL) break;
 
-        strncpy(rows[i] , tmp , max_len);
+        strncpy(rows[i] , tmp + Txt_Disp_Indent , max_len);
 
         free(tmp);
     }
