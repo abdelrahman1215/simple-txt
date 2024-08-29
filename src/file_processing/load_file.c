@@ -269,3 +269,9 @@ bool simple_file_changes_saved(simple_file *file_ptr){
 
     return file_ptr -> changes_saved;
 }
+
+const char *simple_file_get_name(simple_file *file_ptr){
+    if(file_ptr == NULL) return NULL;
+
+    return file_ptr -> file_name;
+}

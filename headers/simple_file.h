@@ -14,6 +14,7 @@ simple_file *load_file(const char *file_name , loading_err *get_err);
 void save_file(simple_file *file_ptr);
 void destroy_simple_file(simple_file *file_ptr);
 
+const char *simple_file_get_name(simple_file *file_ptr);
 size_t simple_file_get_line_no(simple_file *file_ptr);
 char *simple_file_get_line(simple_file *file_ptr , size_t index);
 size_t simple_file_get_line_len(simple_file *file_ptr , size_t index);
