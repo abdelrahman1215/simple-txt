@@ -11,6 +11,7 @@ void update_text_display(){
 
     unsigned int row_no = Txt_Disp_End_Y - Txt_Disp_Start_Y;
     unsigned int max_len = (Txt_Disp_End_X - Txt_Disp_Start_X);
+    
     char rows[row_no][max_len + 1];
     for(unsigned int i = 0 ; i < row_no ; i++){
         memset(rows[i] , 0 , max_len + 1);

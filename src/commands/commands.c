@@ -38,7 +38,7 @@ void edit_file(char **args){
             loading_msg(args[0] , File_Not_Found);
         }
 
-        Txt_Start_Line = 0;
+        Txt_Start_Line = Col_Pos = Line_Pos = 0;
     } else loading_error(args[0] , error);
 
     return ;
