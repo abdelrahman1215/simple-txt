@@ -89,7 +89,7 @@ void push_change(simple_file *file_ptr , file_change change){
     file_ptr -> changes_saved = false;
 }
 
-file_change *pull_last_change(simple_file *file_ptr){
+file_change *pop_change(simple_file *file_ptr){
     node *tmp = linked_list_get_last_node(file_ptr -> changes_stack);
 
     file_change *temp = (file_change *)linked_list_get_obj(tmp);

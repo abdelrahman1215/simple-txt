@@ -328,7 +328,7 @@ void simple_file_undo(simple_file *file_ptr){
     if(file_ptr == NULL) return ;
     if(linked_list_get_node_no(file_ptr -> changes_stack) == 0) return ;
 
-    file_change *last_change = pull_last_change(file_ptr);
+    file_change *last_change = pop_change(file_ptr);
     if(last_change -> change_type == addition){
         file_addition *tmp = last_change -> change_info;
 
