@@ -7,6 +7,7 @@
 
 void update_text_display(){
     if(stdscr == NULL) return ;
+
     if(Current_File == NULL) return ;
 
     unsigned int row_no = Txt_Disp_End_Y - Txt_Disp_Start_Y;
@@ -36,7 +37,13 @@ void update_text_display(){
         rows[i][0] = '~';
     }
 
+    curs_set(0);
+
     for(unsigned int i = 0 ; i < row_no ; i++){
         mvprintw(Txt_Disp_Start_Y + i , Txt_Disp_Start_X , "%s" , rows[i]);
     }
+
+    curs_set(1);
+
+    move(Txt_Disp_Start_Y , Txt_Disp_Start_X);
 }
