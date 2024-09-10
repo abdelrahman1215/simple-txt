@@ -64,9 +64,10 @@ void move_nlines_down(size_t lines){
     if(Col_Pos > line_len){
         Col_Pos = line_len;
 
-        if(Txt_Start_Col > 0 && Txt_Start_Col + Least_H_Distance >= line_len){
-            if(line_len > Least_H_Distance){
-                Txt_Start_Col = line_len - Least_H_Distance;
+        unsigned int disp_width = Txt_Disp_End_X - Txt_Disp_Start_X;
+        if(Txt_Start_Col > 0 && Txt_Start_Col + Least_H_Distance > line_len){
+            if(Col_Pos > disp_width - Least_H_Distance){
+                Txt_Start_Col = line_len - (disp_width - Least_H_Distance);
             }else{
                 Txt_Start_Col = 0;
             }
@@ -97,9 +98,10 @@ void move_nlines_up(size_t lines){
     if(Col_Pos > line_len){
         Col_Pos = line_len;
 
-        if(Txt_Start_Col > 0 && Txt_Start_Col + Least_H_Distance >= line_len){
-            if(line_len > Least_H_Distance){
-                Txt_Start_Col = line_len - Least_H_Distance;
+        unsigned int disp_width = Txt_Disp_End_X - Txt_Disp_Start_X;
+        if(Txt_Start_Col > 0 && Txt_Start_Col + Least_H_Distance > line_len){
+            if(Col_Pos > disp_width - Least_H_Distance){
+                Txt_Start_Col = line_len - (disp_width - Least_H_Distance);
             }else{
                 Txt_Start_Col = 0;
             }
