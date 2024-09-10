@@ -1,5 +1,6 @@
 #include "../headers/simple_globals.h"
 #include "../headers/simple_file.h"
+#include "../headers/display_txt.h"
 
 #include <pdcurses.h>
 #include <stdbool.h>
@@ -9,7 +10,6 @@
 
 size_t Txt_Start_Line = 0 , Txt_Start_Col = 0;
 int Cursor_X = -1 , Cursor_Y = -1;
-bool display_started = false;
 
 void update_values(){
     unsigned int disp_width = Txt_Disp_End_X - Txt_Disp_Start_X;
@@ -57,62 +57,6 @@ void update_values(){
     Cursor_Y = Txt_Disp_Start_Y + (Line_Pos - Txt_Start_Line);
 }
 
-void move_ncols_right(size_t cols){
-    if(display_started == false) return ;
-    if(cols == 0) return ;
-    if(Col_Pos + cols > simple_file_get_line_len(Current_File , Line_Pos)) return ;
-
-    Col_Pos += cols;
-}
-
-void move_ncols_left(size_t cols){
-    if(display_started == false) return ;
-    if(cols == 0) return ;
-    if(cols > Col_Pos) return ;
-
-    Col_Pos -= cols;
-}
-
-void move_nlines_down(size_t lines){
-    if(display_started == false) return ;
-    if(lines == 0) return ;
-    if(Line_Pos + lines >= simple_file_get_line_no(Current_File)) return ;
-
-    Line_Pos += lines;
-}
-
-void move_nlines_up(size_t lines){
-    if(display_started == false) return ;
-    if(lines == 0) return ;
-    if(Line_Pos == 0) return ;
-
-    Line_Pos -= lines;
-}
-
-void move_to_pos(size_t line_index , size_t col_index){
-    if(display_started == false) return ;
-    if(line_index == Line_Pos && col_index == Col_Pos) return ;
-
-    if(line_index >= simple_file_get_line_no(Current_File)) return ;
-    if(col_index > simple_file_get_line_len(Current_File , line_index)) return ;
-
-    if(line_index != Line_Pos){
-        if(line_index > Line_Pos){
-            move_nlines_down(line_index - Line_Pos);
-        }else{
-            move_nlines_up(Line_Pos - line_index);
-        }
-    }
-
-    if(col_index != Col_Pos){
-        if(col_index > Col_Pos){
-            move_ncols_right(col_index - Col_Pos);
-        }else{
-            move_ncols_left(Col_Pos - col_index);
-        }
-    }
-}
-
 void update_text_display(){
     if(stdscr == NULL) return ;
 
@@ -157,6 +101,4 @@ void update_text_display(){
     }
 
     move(Cursor_Y , Cursor_X);
-
-    display_started = true;
 }
