@@ -1,0 +1,2 @@
+add a function to load a simple file from an str
+add a arg in load_file which tells it to create the file if not found or no 
