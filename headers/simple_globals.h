@@ -8,7 +8,6 @@
 #define SIMPLE_GLOBAL __attribute__((__common__))
 
 SIMPLE_GLOBAL simple_file *Current_File;
-SIMPLE_GLOBAL size_t Txt_Start_Line , Txt_Start_Col;
 SIMPLE_GLOBAL unsigned int Txt_Disp_Start_X , Txt_Disp_Start_Y , Txt_Disp_End_X , Txt_Disp_End_Y;
 SIMPLE_GLOBAL unsigned int Least_H_Distance , Least_V_Distance;
 SIMPLE_GLOBAL size_t Col_Pos , Line_Pos;//to know our position in the file

@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+size_t Txt_Start_Line = 0 , Txt_Start_Col = 0;
 int Cursor_X = -1 , Cursor_Y = -1;
 bool display_started = false;
 
