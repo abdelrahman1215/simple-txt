@@ -4,8 +4,17 @@
 #include "simple_file.h"
 
 #include <stddef.h>
+#include <pdcurses.h>
 
 #define SIMPLE_GLOBAL __attribute__((__common__))
+
+#define DEFAULT_BACKGROUND_COLOR 0xEB
+#define DEFAULT_UPPER_STRIP_COLOR 0xEC
+#define DEFAULT_TEXT_COLOR COLOR_WHITE
+
+#define TEXT 1
+#define BACKGROUND 2
+#define UPPER_STRIP 3
 
 SIMPLE_GLOBAL simple_file *Current_File;
 SIMPLE_GLOBAL unsigned int Txt_Disp_Start_X , Txt_Disp_Start_Y , Txt_Disp_End_X , Txt_Disp_End_Y;
