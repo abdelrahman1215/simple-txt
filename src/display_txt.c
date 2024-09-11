@@ -90,10 +90,13 @@ void update_text_display(){
         rows[i][0] = '~';
     }
 
+    attron(COLOR_PAIR(TEXT));
 
     for(unsigned int i = 0 ; i < row_no ; i++){
         mvprintw(Txt_Disp_Start_Y + i , Txt_Disp_Start_X , "%s" , rows[i]);
     }
+
+    attron(COLOR_PAIR(TEXT));
 
     if(Cursor_X == -1 && Cursor_Y == -1){
         Cursor_X = Txt_Disp_Start_X;
