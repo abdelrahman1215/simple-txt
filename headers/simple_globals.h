@@ -8,12 +8,12 @@
 
 #define SIMPLE_GLOBAL __attribute__((__common__))
 
-#define DEFAULT_BACKGROUND_COLOR 0xEB
-#define DEFAULT_UPPER_STRIP_COLOR 0xEC
+#define DEFAULT_OUTLINE_COLOR 0xEC
+#define DEFAULT_BACKGROUND_COLOR 0xEA
 #define DEFAULT_TEXT_COLOR COLOR_WHITE
 
 #define TEXT 1
-#define BACKGROUND 2
+#define SIDE_STRIPS 2
 #define UPPER_STRIP 3
 
 SIMPLE_GLOBAL simple_file *Current_File;
