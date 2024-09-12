@@ -1,6 +1,6 @@
-#include "../headers/simple_globals.h"
-#include "../headers/simple_file.h"
-#include "../headers/file_pos.h"
+#include "../../headers/simple_globals.h"
+#include "../../headers/simple_file.h"
+#include "../../headers/display.h"
 
 void move_ncols_right(size_t cols){
     if(cols == 0) return ;

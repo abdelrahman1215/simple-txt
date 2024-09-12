@@ -1,6 +1,6 @@
-#include "../headers/simple_globals.h"
-#include "../headers/simple_file.h"
-#include "../headers/display_txt.h"
+#include "../../headers/simple_globals.h"
+#include "../../headers/simple_file.h"
+#include "../../headers/display.h"
 
 #include <pdcurses.h>
 #include <stdbool.h>
