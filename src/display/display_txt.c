@@ -10,7 +10,7 @@
 #include <math.h>
 
 size_t Txt_Start_Line = 0 , Txt_Start_Col = 0;
-int Cursor_X = -1 , Cursor_Y = -1;
+int Cursor_X = 0 , Cursor_Y = 0;
 unsigned int Text_Start_X = 0 , Indent = 0;
 
 void update_values(){

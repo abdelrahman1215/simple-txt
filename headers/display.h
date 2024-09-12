@@ -1,6 +1,8 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+void init_color_pairs();
+
 void move_ncols_right(size_t cols);
 void move_ncols_left(size_t cols);
 void move_nlines_down(size_t lines);
