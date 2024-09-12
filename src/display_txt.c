@@ -134,19 +134,24 @@ void update_text_display(){
 
     attron(COLOR_PAIR(SIDE_STRIPS));
 
-    char empty_number[log_of_line_no + 2];
-    memset(empty_number , ' ' , log_of_line_no + 1);
-    empty_number[log_of_line_no + 1] = '\000';
+    size_t number_len = log_of_line_no + 2;
+    char empty_number[number_len];
+    char number[number_len];
+    memset(empty_number , ' ' , number_len);
+    memset(number , ' ' , number_len);
+    empty_number[number_len - 1] = '\000';
+    number[number_len - 1] = '\000';
 
     for(unsigned int i = 0 ; i < row_no ; i++){
         if(Txt_Start_Line + i >= line_no){
             mvprintw(Txt_Disp_Start_Y + i , Txt_Disp_Start_X , "%s" , empty_number);
         }else{
-            mvprintw(Txt_Disp_Start_Y + i , Txt_Disp_Start_X , "%i " , Txt_Start_Line + i + 1);
+            itoa(Txt_Start_Line + i + 1 , number + (log_of_line_no - (int)log10(Txt_Start_Line + i + 1)) , 10);
+            mvprintw(Txt_Disp_Start_Y + i , Txt_Disp_Start_X , "%s" , number);
         }
     }
 
-    mvvline(Txt_Disp_Start_Y , Txt_Disp_Start_X + Indent , 0 , Screen_Height - Txt_Disp_Start_Y);
+    mvvline(Txt_Disp_Start_Y , Txt_Disp_Start_X + log_of_line_no + 1 , 0 , Screen_Height - Txt_Disp_Start_Y);
     attroff(COLOR_PAIR(SIDE_STRIPS));
 
     if(Cursor_X == -1 && Cursor_Y == -1){
