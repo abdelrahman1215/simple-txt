@@ -10,11 +10,14 @@
 
 #define DEFAULT_OUTLINE_COLOR 0xEC
 #define DEFAULT_BACKGROUND_COLOR 0xEA
+#define DEFAULT_LINE_HIGHLIGHT_COLOR 0xEB
 #define DEFAULT_TEXT_COLOR COLOR_WHITE
 
 #define TEXT 1
 #define SIDE_STRIPS 2
 #define BACKGROUND 3
+#define LINE_HIGHLIGHT 4
+#define LINE_HIGHLIGHT_BACKGROUND 5
 
 SIMPLE_GLOBAL simple_file *Current_File;
 SIMPLE_GLOBAL unsigned int Txt_Disp_Start_X , Txt_Disp_Start_Y , Txt_Disp_End_X , Txt_Disp_End_Y;

@@ -7,12 +7,14 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 size_t Txt_Start_Line = 0 , Txt_Start_Col = 0;
 int Cursor_X = -1 , Cursor_Y = -1;
+unsigned int Text_Start_X = 0 , Indent = 0;
 
 void update_values(){
-    unsigned int disp_width = Txt_Disp_End_X - Txt_Disp_Start_X;
+    unsigned int disp_width = Txt_Disp_End_X - Text_Start_X;
     size_t line_len = simple_file_get_line_len(Current_File , Line_Pos);
 
     if(Col_Pos >= Txt_Start_Col + disp_width - Least_H_Distance){
@@ -28,7 +30,7 @@ void update_values(){
     if(Col_Pos > line_len){
         Col_Pos = line_len;
 
-        unsigned int disp_width = Txt_Disp_End_X - Txt_Disp_Start_X;
+        unsigned int disp_width = Txt_Disp_End_X - Text_Start_X;
         if(Txt_Start_Col > 0 && Txt_Start_Col + Least_H_Distance > line_len){
             if(Col_Pos > disp_width - Least_H_Distance){
                 Txt_Start_Col = line_len - (disp_width - Least_H_Distance);
@@ -37,10 +39,10 @@ void update_values(){
             }
         }
 
-        Cursor_X = Txt_Disp_Start_X + (line_len - Txt_Start_Col);
+        Cursor_X = Text_Start_X + (line_len - Txt_Start_Col);
     }
 
-    Cursor_X = (Col_Pos - Txt_Start_Col) + Txt_Disp_Start_X;
+    Cursor_X = (Col_Pos - Txt_Start_Col) + Text_Start_X;
 
     unsigned int disp_height = Txt_Disp_End_Y - Txt_Disp_Start_Y;
 
@@ -61,10 +63,16 @@ void update_text_display(){
     if(stdscr == NULL) return ;
 
     if(Current_File == NULL) return ;
+
+    size_t line_no = simple_file_get_line_no(Current_File);
+    int log_of_line_no = (int)log10(line_no);
+    Indent = log_of_line_no + 1;
+
+    if(Text_Start_X != Txt_Disp_Start_X + Indent) Text_Start_X = Txt_Disp_Start_X + Indent + 1;
     update_values();
 
     unsigned int row_no = Txt_Disp_End_Y - Txt_Disp_Start_Y;
-    unsigned int max_len = Txt_Disp_End_X - Txt_Disp_Start_X;
+    unsigned int max_len = Txt_Disp_End_X - Text_Start_X;
     
     char rows[row_no][max_len + 1];
     for(unsigned int i = 0 ; i < row_no ; i++){
@@ -90,16 +98,60 @@ void update_text_display(){
         rows[i][0] = '~';
     }
 
+
     attron(COLOR_PAIR(TEXT));
 
     for(unsigned int i = 0 ; i < row_no ; i++){
-        mvprintw(Txt_Disp_Start_Y + i , Txt_Disp_Start_X , "%s" , rows[i]);
+        if(Txt_Start_Line + i == Line_Pos){
+            attroff(COLOR_PAIR(TEXT));
+
+            attron(COLOR_PAIR(LINE_HIGHLIGHT_BACKGROUND));
+
+            mvhline(Txt_Disp_Start_Y + i , Text_Start_X , 0 , Txt_Disp_End_X - Text_Start_X + 1);
+            
+            attroff(COLOR_PAIR(LINE_HIGHLIGHT_BACKGROUND));
+
+            attron(COLOR_PAIR(LINE_HIGHLIGHT));
+
+            mvprintw(Txt_Disp_Start_Y + i , Text_Start_X , "%s" , rows[i]);
+            
+            attroff(COLOR_PAIR(LINE_HIGHLIGHT));
+            attron(COLOR_PAIR(TEXT));
+        }else{
+            attroff(COLOR_PAIR(TEXT));
+            attron(COLOR_PAIR(BACKGROUND));
+
+            mvhline(Txt_Disp_Start_Y + i , 0 , 0 , Screen_Width);
+
+            attroff(COLOR_PAIR(BACKGROUND));
+            attron(COLOR_PAIR(TEXT));
+
+            mvprintw(Txt_Disp_Start_Y + i , Text_Start_X , "%s" , rows[i]);
+        }
     }
 
     attron(COLOR_PAIR(TEXT));
 
+    attron(COLOR_PAIR(SIDE_STRIPS));
+
+    char empty_number[log_of_line_no + 2];
+    memset(empty_number , ' ' , log_of_line_no + 1);
+    empty_number[log_of_line_no + 1] = '\000';
+
+    for(unsigned int i = 0 ; i < row_no ; i++){
+        if(Txt_Start_Line + i >= line_no){
+            mvprintw(Txt_Disp_Start_Y + i , Txt_Disp_Start_X , "%s" , empty_number);
+        }else{
+            mvprintw(Txt_Disp_Start_Y + i , Txt_Disp_Start_X , "%i " , Txt_Start_Line + i + 1);
+        }
+    }
+
+    mvvline(Txt_Disp_Start_Y , Txt_Disp_Start_X + Indent , 0 , Screen_Height - Txt_Disp_Start_Y);
+    //mvvline(Txt_Disp_Start_Y , Txt_Disp_End_X , 0 , Screen_Height);
+    attroff(COLOR_PAIR(SIDE_STRIPS));
+
     if(Cursor_X == -1 && Cursor_Y == -1){
-        Cursor_X = Txt_Disp_Start_X;
+        Cursor_X = Text_Start_X;
         Cursor_Y = Txt_Disp_Start_Y;
     }
 
