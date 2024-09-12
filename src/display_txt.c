@@ -147,7 +147,6 @@ void update_text_display(){
     }
 
     mvvline(Txt_Disp_Start_Y , Txt_Disp_Start_X + Indent , 0 , Screen_Height - Txt_Disp_Start_Y);
-    //mvvline(Txt_Disp_Start_Y , Txt_Disp_End_X , 0 , Screen_Height);
     attroff(COLOR_PAIR(SIDE_STRIPS));
 
     if(Cursor_X == -1 && Cursor_Y == -1){
