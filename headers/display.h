@@ -9,4 +9,6 @@ void move_to_pos(size_t line_index , size_t col_index);
 
 void update_text_display();
 
+void update_background();
+
 #endif
