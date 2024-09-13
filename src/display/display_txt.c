@@ -58,8 +58,6 @@ void update_values(){
     }
 
     Cursor_Y = Txt_Disp_Start_Y + (Line_Pos - Txt_Start_Line);
-
-    Text_Start_X = Txt_Disp_Start_X + Indent + 1;
 }
 
 void update_text_display(){
@@ -70,6 +68,7 @@ void update_text_display(){
     size_t line_no = simple_file_get_line_no(Current_File);
     int log_of_line_no = (int)log10(line_no);
     Indent = log_of_line_no + 1;
+    Text_Start_X = Txt_Disp_Start_X + Indent + 1;
 
     update_values();
 
