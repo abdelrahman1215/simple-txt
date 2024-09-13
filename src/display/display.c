@@ -28,26 +28,25 @@ void display_file_name(){
 
     char *file_name = strtok(file_path , "/\\");
     for(char *tmp = strtok(NULL , "/\\") ; tmp != NULL ; file_name = tmp , tmp = strtok(NULL , "/\\")){}
+    free(file_path);
 
     size_t name_len = strlen(file_name);
-    if(name_len > (Txt_Disp_End_X - Txt_Disp_Start_X) - 6){
-        file_name[(Txt_Disp_End_X - Txt_Disp_Start_X) - 6] = '\000';
-        file_name[(Txt_Disp_End_X - Txt_Disp_Start_X) - 7] = '.';
-        file_name[(Txt_Disp_End_X - Txt_Disp_Start_X) - 8] = '.';
-        file_name[(Txt_Disp_End_X - Txt_Disp_Start_X) - 9] = '.';
+    if(name_len + 6 > (Txt_Disp_End_X - Text_Start_X)){
+        if((Txt_Disp_End_X - Text_Start_X) < 6){
+            return;
+        }
+        file_name[(Txt_Disp_End_X - Text_Start_X) - 6] = '\000';
     }
 
     attron(COLOR_PAIR(TITLE));
 
     curs_set(0);
 
-    mvprintw(Txt_Disp_Start_Y - 1 , ((Txt_Disp_End_X - Txt_Disp_Start_X)/2) - (strlen(file_name)/2) + 1 , "%s" , file_name);
+    mvprintw(Txt_Disp_Start_Y - 1 , Text_Start_X + ((Txt_Disp_End_X - Text_Start_X)/2) - (strlen(file_name)/2) , "%s" , file_name);
     
     curs_set(1);
 
     attroff(COLOR_PAIR(TITLE));
-
-    free(file_path);
 }
 
 void init_color_pairs(){

@@ -58,6 +58,8 @@ void update_values(){
     }
 
     Cursor_Y = Txt_Disp_Start_Y + (Line_Pos - Txt_Start_Line);
+
+    Text_Start_X = Txt_Disp_Start_X + Indent + 1;
 }
 
 void update_text_display(){
@@ -69,7 +71,6 @@ void update_text_display(){
     int log_of_line_no = (int)log10(line_no);
     Indent = log_of_line_no + 1;
 
-    if(Text_Start_X != Txt_Disp_Start_X + Indent) Text_Start_X = Txt_Disp_Start_X + Indent + 1;
     update_values();
 
     unsigned int row_no = Txt_Disp_End_Y - Txt_Disp_Start_Y;
@@ -117,6 +118,7 @@ void update_text_display(){
             mvprintw(Txt_Disp_Start_Y + i , Text_Start_X , "%s" , rows[i]);
             
             attroff(COLOR_PAIR(LINE_HIGHLIGHT));
+            
             attron(COLOR_PAIR(TEXT));
         }else{
             attroff(COLOR_PAIR(TEXT));
