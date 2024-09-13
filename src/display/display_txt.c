@@ -16,8 +16,9 @@ unsigned int Text_Start_X = 0 , Indent = 0;
 void update_values(){
     unsigned int disp_width = Txt_Disp_End_X - Text_Start_X;
     size_t line_len = simple_file_get_line_len(Current_File , Line_Pos);
+    size_t line_no = simple_file_get_line_no(Current_File);
 
-    if(Col_Pos >= Txt_Start_Col + disp_width - Least_H_Distance){
+    if(Col_Pos >= Txt_Start_Col + disp_width - Least_H_Distance && Txt_Start_Col + disp_width < line_len){
         Txt_Start_Col = Col_Pos - (disp_width - Least_H_Distance);
     }else if(Col_Pos <= Txt_Start_Col + Least_H_Distance && Txt_Start_Col > 0){
         if(Col_Pos < Least_H_Distance){
@@ -46,7 +47,7 @@ void update_values(){
 
     unsigned int disp_height = Txt_Disp_End_Y - Txt_Disp_Start_Y;
 
-    if(Line_Pos >= Txt_Start_Line + disp_height - Least_V_Distance){
+    if(Line_Pos >= Txt_Start_Line + disp_height - Least_V_Distance && Txt_Start_Line + disp_height < line_no){
         Txt_Start_Line = Line_Pos - (disp_height - Least_V_Distance) + 1;
     }else if(Line_Pos <= Txt_Start_Line + Least_V_Distance && Txt_Start_Line > 0){
         if(Line_Pos < Least_V_Distance){
