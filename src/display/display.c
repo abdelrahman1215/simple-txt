@@ -15,7 +15,7 @@ void render_background(){
 }
 
 void display_file_name(){
-    if(Current_File == NULL) return ;
+    if(Current_File == NULL || Txt_Disp_Start_Y == 0) return ;
 
     char *file_path;
     {
@@ -41,7 +41,7 @@ void display_file_name(){
 
     curs_set(0);
 
-    mvprintw(0 , ((Txt_Disp_End_X - Txt_Disp_Start_X)/2) - (strlen(file_name)/2) + 1 , "%s" , file_name);
+    mvprintw(Txt_Disp_Start_Y - 1 , ((Txt_Disp_End_X - Txt_Disp_Start_X)/2) - (strlen(file_name)/2) + 1 , "%s" , file_name);
     
     curs_set(1);
 
