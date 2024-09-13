@@ -1,6 +1,8 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+void update_values();
+
 void init_color_pairs();
 
 void display_file_name();
