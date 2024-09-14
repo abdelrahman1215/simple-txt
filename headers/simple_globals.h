@@ -18,8 +18,7 @@
 #define SIDE_STRIPS 2
 #define BACKGROUND 3
 #define LINE_HIGHLIGHT 4
-#define LINE_HIGHLIGHT_BACKGROUND 5
-#define TITLE 6
+#define TITLE 5
 
 SIMPLE_GLOBAL simple_file *Current_File;
 SIMPLE_GLOBAL unsigned int Txt_Disp_Start_X , Txt_Disp_Start_Y , Txt_Disp_End_X , Txt_Disp_End_Y;
