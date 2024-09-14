@@ -131,6 +131,14 @@ add_end _add_(simple_file *file_ptr , size_t line_index , size_t pos_index , cha
         free(target);
     }
 
+    file_ptr -> line = line_index + line_no - 1;
+
+    if(line_no > 1){
+        file_ptr -> column = strlen(divided[line_no - 1]);
+    }else{
+        file_ptr -> column = pos_index + strlen(divided[0]);
+    }
+
     free(divided[0]);
     free(divided);
 
@@ -148,6 +156,7 @@ void simple_file_add(simple_file *file_ptr , size_t line_index , size_t pos_inde
 char *_delete_(simple_file *file_ptr , size_t line_index , size_t start_pos , size_t count){
     if(file_ptr == NULL) return NULL;
     if(line_index >= simple_file_get_line_no(file_ptr) || count == 0) return NULL;
+    if(start_pos + count > simple_file_get_line_len(file_ptr , line_index)) return NULL;
 
     dynamic_array *content = file_ptr -> lines;
     simple_str **target_line_ptr = (simple_str **)dynamic_array_get_element(content , line_index);
@@ -168,19 +177,13 @@ char *_delete_(simple_file *file_ptr , size_t line_index , size_t start_pos , si
 
     strncpy(ret , text + start_pos , count);
 
-    size_t len = simple_str_get_strlen(*target_line_ptr);
-    if(start_pos + count > len){
-        free(target_line_ptr);
-        free(text);
-        free(ret);
-
-        return NULL;
-    }
-
     simple_str_delete(*target_line_ptr , start_pos , count);
 
     free(target_line_ptr);
     free(text);
+
+    file_ptr -> line = line_index;
+    file_ptr -> column = start_pos;
 
     return ret;
 }
@@ -199,7 +202,7 @@ void simple_file_delete(simple_file *file_ptr , size_t line_index , size_t start
 
 char *_delete_lines_(simple_file *file_ptr , size_t line_index , size_t line_count){
     if(file_ptr == NULL) return NULL;
-    if(line_index + line_count > simple_file_get_line_no(file_ptr)) return NULL;
+    if(line_index + line_count >= simple_file_get_line_no(file_ptr)) return NULL;
 
     dynamic_array *content = file_ptr ->lines;
 
@@ -232,6 +235,12 @@ char *_delete_lines_(simple_file *file_ptr , size_t line_index , size_t line_cou
 
     char *ret = simple_str_get_string(deleted_lines);
     destroy_simple_str(deleted_lines);
+
+    file_ptr -> line = line_index;
+    size_t next_line_len = simple_file_get_line_len(file_ptr , line_index + 1);
+    if(file_ptr -> column > next_line_len){
+        file_ptr -> column = next_line_len;
+    }
 
     return ret;
 }
@@ -280,6 +289,9 @@ char *_delete_from_to_(simple_file *file_ptr , size_t start_line , size_t start_
         deleted_text = simple_str_get_string(buff);
         destroy_simple_str(buff);
     }
+
+    file_ptr -> line = start_line;
+    file_ptr -> column = start_pos;
 
     return deleted_text;
 }

@@ -181,13 +181,15 @@ simple_file *load_file(const char *file_name , loading_err *get_err){
 
 
     ret -> changes_saved = true;
+    ret -> column = 0;
+    ret -> line = 0;
 
     return ret;
 }
 
 void save_file(simple_file *file_ptr){
     if(file_ptr == NULL) return ;
-    if(file_ptr -> changes_saved == true) return ;
+    if(file_ptr -> changes_saved == true || file_ptr -> file_name == NULL) return ;
 
     FILE *target_file = fopen(file_ptr -> file_name , "w");
     simple_str **line_ptr;
