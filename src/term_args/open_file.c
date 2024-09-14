@@ -17,7 +17,6 @@ void open_file(char *file_name){
             loading_msg(file_name , error);
         }
 
-        Line_Pos = Col_Pos = 0;
     }else{
         loading_error(file_name , error);
     }

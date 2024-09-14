@@ -45,8 +45,6 @@ void edit_file(char **args){
         if(error == File_Not_Found){
             loading_msg(args[0] , File_Not_Found);
         }
-
-        Line_Pos = Col_Pos = 0;
     } else loading_error(args[0] , error);
 
     return ;
