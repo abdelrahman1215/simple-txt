@@ -28,4 +28,13 @@ void simple_file_delete_lines(simple_file *file_ptr , size_t line_index , size_t
 void simple_file_undo(simple_file *file_ptr);
 void simple_file_redo(simple_file *file_ptr);
 
+void simple_file_move_ncols_right(simple_file *file_ptr , size_t cols);
+void simple_file_move_ncols_left(simple_file *file_ptr , size_t cols);
+void simple_file_move_nlines_down(simple_file *file_ptr , size_t lines);
+void simple_file_move_nlines_up(simple_file *file_ptr , size_t lines);
+void simple_file_move_to_xy(simple_file *file_ptr , size_t line_index , size_t column_index);
+
+size_t simple_file_get_curr_line(simple_file *file_ptr);
+size_t simple_file_get_curr_column(simple_file *file_ptr);
+
 #endif
