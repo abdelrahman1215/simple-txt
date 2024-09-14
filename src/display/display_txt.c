@@ -9,73 +9,152 @@
 #include <string.h>
 #include <math.h>
 
-size_t Txt_Start_Line = 0 , Txt_Start_Col = 0;
-int Cursor_X = 0 , Cursor_Y = 0;
-unsigned int Text_Start_X = 0 , Indent = 0;
+typedef struct text_display_info{
+    simple_file *file;
+    size_t line_pos , col_pos;
+    size_t start_line , start_col;
 
-void update_values(){
-    unsigned int disp_width = Txt_Disp_End_X - Text_Start_X;
-    size_t line_len = simple_file_get_line_len(Current_File , Line_Pos);
-    size_t line_no = simple_file_get_line_no(Current_File);
+    unsigned int cursor_x , cursor_y;
+    unsigned int disp_start_x , disp_start_y;
+    unsigned int disp_end_x , disp_end_y;
+    unsigned int txt_start_x , txt_start_y;
+    unsigned int indent;
 
-    if(Col_Pos >= Txt_Start_Col + disp_width - Least_H_Distance && Txt_Start_Col + disp_width < line_len){
-        Txt_Start_Col = Col_Pos - (disp_width - Least_H_Distance);
-    }else if(Col_Pos <= Txt_Start_Col + Least_H_Distance && Txt_Start_Col > 0){
-        if(Col_Pos < Least_H_Distance){
-            Txt_Start_Col = 0;
+    bool display_line_no , display_file_name;
+}text_display_info;
+
+void update_values(text_display_info *info_ptr){
+    info_ptr -> line_pos = simple_file_get_curr_line(info_ptr -> file) , info_ptr -> col_pos = simple_file_get_curr_column(info_ptr -> file);
+    size_t line_len = simple_file_get_line_len(info_ptr -> file , info_ptr -> line_pos);
+    size_t line_no = simple_file_get_line_no(info_ptr -> file);
+
+    if(info_ptr -> display_line_no){
+        int log_of_line_no = (int)log10(line_no);
+        info_ptr -> indent = log_of_line_no + 1;
+    }else{
+        info_ptr -> indent = 0;
+    }
+
+    info_ptr -> txt_start_x = info_ptr -> disp_start_x + info_ptr -> indent + (info_ptr -> display_file_name == true);
+    info_ptr -> txt_start_y = info_ptr -> disp_start_y + info_ptr -> display_file_name;
+
+    unsigned int disp_width = info_ptr -> disp_end_x - info_ptr -> txt_start_x;
+
+
+    if(info_ptr -> col_pos >= info_ptr -> start_col + disp_width - Least_H_Distance){
+        if(info_ptr -> start_col + disp_width >= line_len){
+            info_ptr -> start_col = line_len - disp_width;
         }else{
-            Txt_Start_Col = Col_Pos - Least_H_Distance;
+            info_ptr -> start_col = info_ptr -> col_pos - (disp_width - Least_H_Distance);
         }
-    }
-    
-    if(Col_Pos > line_len){
-        Col_Pos = line_len;
-
-        unsigned int disp_width = Txt_Disp_End_X - Text_Start_X;
-        if(Txt_Start_Col > 0 && Txt_Start_Col + Least_H_Distance > line_len){
-            if(Col_Pos > disp_width - Least_H_Distance){
-                Txt_Start_Col = line_len - (disp_width - Least_H_Distance);
-            }else{
-                Txt_Start_Col = 0;
-            }
-        }
-
-        Cursor_X = Text_Start_X + (line_len - Txt_Start_Col);
-    }
-
-    Cursor_X = (Col_Pos - Txt_Start_Col) + Text_Start_X;
-
-    unsigned int disp_height = Txt_Disp_End_Y - Txt_Disp_Start_Y;
-
-    if(Line_Pos >= Txt_Start_Line + disp_height - Least_V_Distance && Txt_Start_Line + disp_height < line_no){
-        Txt_Start_Line = Line_Pos - (disp_height - Least_V_Distance) + 1;
-    }else if(Line_Pos <= Txt_Start_Line + Least_V_Distance && Txt_Start_Line > 0){
-        if(Line_Pos < Least_V_Distance){
-            Txt_Start_Line = 0;
+    }else if(info_ptr -> col_pos <= info_ptr -> start_col + Least_H_Distance && info_ptr -> start_col > 0){
+        if(info_ptr -> col_pos < Least_H_Distance){
+            info_ptr -> start_col = 0;
         }else{
-            Txt_Start_Line = Line_Pos - Least_V_Distance;
+            info_ptr -> start_col = info_ptr -> col_pos - Least_H_Distance;
         }
     }
 
-    Cursor_Y = Txt_Disp_Start_Y + (Line_Pos - Txt_Start_Line);
+    info_ptr -> cursor_x = (info_ptr -> col_pos - info_ptr -> start_col) + info_ptr -> txt_start_x;
 
-    int log_of_line_no = (int)log10(line_no);
-    Indent = log_of_line_no + 1;
-    Text_Start_X = Txt_Disp_Start_X + Indent + 1;
+    unsigned int disp_height = info_ptr -> disp_end_y - info_ptr -> txt_start_y;
+
+    if(info_ptr -> line_pos >= info_ptr -> start_line + disp_height - Least_V_Distance){
+        if(info_ptr -> start_line + disp_height >= line_no){
+            info_ptr -> start_line = line_no - disp_height;
+        }else{
+            info_ptr -> start_line = info_ptr -> line_pos - (disp_height - Least_V_Distance) + 1;
+        }
+    }else if(info_ptr -> line_pos <= info_ptr -> start_line + Least_V_Distance && info_ptr -> start_line > 0){
+        if(info_ptr -> line_pos < Least_V_Distance){
+            info_ptr -> start_line = 0;
+        }else{
+            info_ptr -> start_line = info_ptr -> line_pos - Least_V_Distance;
+        }
+    }
+
+    info_ptr -> cursor_y = info_ptr -> txt_start_y + (info_ptr -> line_pos - info_ptr -> start_line);
 }
 
-void update_text_display(){
+void disp_file_name(text_display_info *info_ptr){
+    if(info_ptr -> file == NULL) return ;
+
+    char *file_path;
+    {
+        const char *tmp = (char *)simple_file_get_name(info_ptr -> file);
+        if(tmp == NULL){
+            return;
+        }
+
+        size_t path_len = strlen(tmp) + 1;
+
+        file_path = calloc(path_len + 1 , sizeof(char));
+        strncpy(file_path , tmp , path_len);
+    }
+
+    char *file_name = strtok(file_path , "/\\");
+    for(char *tmp = strtok(NULL , "/\\") ; tmp != NULL ; file_name = tmp , tmp = strtok(NULL , "/\\")){}
+
+    size_t name_len = strlen(file_name);
+    if(name_len + 6 > (info_ptr -> disp_end_x - info_ptr -> disp_start_x)){
+        if((info_ptr -> disp_end_x - info_ptr -> disp_start_x) < 6){
+            free(file_path);
+
+            return;
+        }
+        file_name[(info_ptr -> disp_end_x - info_ptr -> disp_start_x) - 6] = '\000';
+    }
+
+    attron(COLOR_PAIR(TITLE));
+
+    curs_set(0);
+
+    mvprintw(info_ptr -> disp_start_y , info_ptr -> disp_start_x + ((info_ptr -> disp_end_x - info_ptr -> disp_start_x)/2) - (strlen(file_name)/2) , "%s" , file_name);
+    
+    curs_set(1);
+
+    attroff(COLOR_PAIR(TITLE));
+
+    free(file_path);
+}
+
+void update_text_display(simple_file *file_ptr , bool display_line_no , bool display_file_name , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y){
     if(stdscr == NULL) return ;
+    if(file_ptr == NULL) return ;
+    if(start_x >= end_x || start_y >= end_y || (start_y + 1 > end_y && display_file_name == true)) return ;
+    if(end_x > Screen_Width || end_y > Screen_Height) return ;
 
-    if(Current_File == NULL) return ;
+    static simple_file *last_displayed_file = NULL;
 
-    size_t line_no = simple_file_get_line_no(Current_File);
+    static text_display_info info;
+    if(file_ptr != last_displayed_file){
+        info.start_col = 0;
+        info.start_line = 0;
+        info.file = file_ptr;
+
+        last_displayed_file = file_ptr;
+    }
+
+    info.display_line_no = display_line_no;
+    info.display_file_name = display_file_name;
+
+    info.disp_start_x = start_x;
+    info.disp_end_x = end_x;
+
+    info.disp_start_y = start_y;
+    info.disp_end_y = end_y;
+
+    size_t line_no = simple_file_get_line_no(file_ptr);
     int log_of_line_no = (int)log10(line_no);
 
-    update_values();
+    if(log_of_line_no + 2 >= end_x - start_x) info.display_line_no = false;
 
-    unsigned int row_no = Txt_Disp_End_Y - Txt_Disp_Start_Y;
-    unsigned int max_len = Txt_Disp_End_X - Text_Start_X;
+    update_values(&info);
+
+    if(info.txt_start_x >= end_x || info.txt_start_y >= end_y) return ;
+
+    unsigned int row_no = info.disp_end_y - info.txt_start_y;
+    size_t max_len = info.disp_end_x - info.txt_start_x;
     
     char rows[row_no][max_len + 1];
     for(unsigned int i = 0 ; i < row_no ; i++){
@@ -87,12 +166,12 @@ void update_text_display(){
     unsigned int used_rows = 0;
     size_t line_len;
     for(unsigned int i = 0 ; i < row_no ; i++ , used_rows++){
-        tmp = simple_file_get_line(Current_File , i + Txt_Start_Line);
+        tmp = simple_file_get_line(file_ptr , i + info.start_line);
         if(tmp == NULL) break;
-        line_len = simple_file_get_line_len(Current_File , i + Txt_Start_Line);
-        if(Txt_Start_Col >= line_len) continue;
+        line_len = simple_file_get_line_len(file_ptr , i + info.start_line);
+        if(info.start_col >= line_len) continue;
 
-        strncpy(rows[i] , tmp + Txt_Start_Col , max_len > (line_len - Txt_Start_Col) ? (line_len - Txt_Start_Col) : max_len);
+        strncpy(rows[i] , tmp + info.start_col , max_len > (line_len - info.start_col) ? (line_len - info.start_col) : max_len);
 
         free(tmp);
     }
@@ -101,67 +180,70 @@ void update_text_display(){
         rows[i][0] = '~';
     }
 
+    attron(COLOR_PAIR(BACKGROUND));
+
+    for(unsigned int i = 0 ; i < (info.disp_end_y - info.disp_start_y) ; i++){
+        mvhline(info.disp_start_y + i , info.disp_start_x , 0 , info.disp_end_x - info.disp_start_x);
+    }
+
+    attroff(COLOR_PAIR(BACKGROUND));
 
     attron(COLOR_PAIR(TEXT));
-
     for(unsigned int i = 0 ; i < row_no ; i++){
-        if(Txt_Start_Line + i == Line_Pos){
+        if(info.start_line + i == info.line_pos){
             attroff(COLOR_PAIR(TEXT));
-
-            attron(COLOR_PAIR(LINE_HIGHLIGHT_BACKGROUND));
-
-            mvhline(Txt_Disp_Start_Y + i , Text_Start_X , 0 , Txt_Disp_End_X - Text_Start_X + 1);
-            
-            attroff(COLOR_PAIR(LINE_HIGHLIGHT_BACKGROUND));
 
             attron(COLOR_PAIR(LINE_HIGHLIGHT));
 
-            mvprintw(Txt_Disp_Start_Y + i , Text_Start_X , "%s" , rows[i]);
+            mvprintw(info.txt_start_y + i , info.txt_start_x , "%s" , rows[i]);
             
             attroff(COLOR_PAIR(LINE_HIGHLIGHT));
             
             attron(COLOR_PAIR(TEXT));
         }else{
-            attroff(COLOR_PAIR(TEXT));
-            attron(COLOR_PAIR(BACKGROUND));
-
-            mvhline(Txt_Disp_Start_Y + i , 0 , 0 , Screen_Width);
-
-            attroff(COLOR_PAIR(BACKGROUND));
-            attron(COLOR_PAIR(TEXT));
-
-            mvprintw(Txt_Disp_Start_Y + i , Text_Start_X , "%s" , rows[i]);
+            mvprintw(info.txt_start_y + i , info.txt_start_x , "%s" , rows[i]);
         }
     }
 
-    attron(COLOR_PAIR(TEXT));
+    attroff(COLOR_PAIR(TEXT));
 
-    attron(COLOR_PAIR(SIDE_STRIPS));
+    if(info.display_line_no == true){
+        attron(COLOR_PAIR(SIDE_STRIPS));
 
-    size_t number_len = log_of_line_no + 2;
-    char empty_number[number_len];
-    char number[number_len];
-    memset(empty_number , ' ' , number_len);
-    memset(number , ' ' , number_len);
-    empty_number[number_len - 1] = '\000';
-    number[number_len - 1] = '\000';
+        size_t number_len = log_of_line_no + 2;
+        char empty_number[number_len];
+        char number[number_len];
+        
+        memset(empty_number , ' ' , number_len);
+        memset(number , ' ' , number_len);
 
-    for(unsigned int i = 0 ; i < row_no ; i++){
-        if(Txt_Start_Line + i >= line_no){
-            mvprintw(Txt_Disp_Start_Y + i , Txt_Disp_Start_X , "%s" , empty_number);
-        }else{
-            itoa(Txt_Start_Line + i + 1 , number + (log_of_line_no - (int)log10(Txt_Start_Line + i + 1)) , 10);
-            mvprintw(Txt_Disp_Start_Y + i , Txt_Disp_Start_X , "%s" , number);
-        }
+        empty_number[number_len - 1] = '\000';
+        number[number_len - 1] = '\000';
+
+        for(unsigned int i = 0 ; i < row_no ; i++){
+            if(info.start_line + i >= line_no){
+                mvprintw(info.txt_start_y + i , info.disp_start_x , "%s" , empty_number);
+            }else{
+                itoa(info.start_line + i + 1 , number + (log_of_line_no - (int)log10(info.start_line + i + 1)) , 10);
+                mvprintw(info.txt_start_y + i , info.disp_start_x , "%s" , number);
+            }
+        }   
+
+        mvvline(info.txt_start_y , info.disp_start_x + log_of_line_no + 1 , 0 , Screen_Height - info.txt_start_y);
+
+        attroff(COLOR_PAIR(SIDE_STRIPS));
     }
 
-    mvvline(Txt_Disp_Start_Y , Txt_Disp_Start_X + log_of_line_no + 1 , 0 , Screen_Height - Txt_Disp_Start_Y);
-    attroff(COLOR_PAIR(SIDE_STRIPS));
-
-    if(Cursor_X == -1 && Cursor_Y == -1){
-        Cursor_X = Text_Start_X;
-        Cursor_Y = Txt_Disp_Start_Y;
+    if(display_file_name == true){
+        disp_file_name(&info);
     }
 
-    move(Cursor_Y , Cursor_X);
+    if(info.cursor_x == -1 && info.cursor_y == -1){
+        info.cursor_x = info.txt_start_x;
+        info.cursor_y = info.txt_start_y;
+    }
+
+    move(info.cursor_y , info.cursor_x);
+
+    last_displayed_file = file_ptr;
 }
