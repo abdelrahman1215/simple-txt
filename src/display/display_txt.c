@@ -192,20 +192,18 @@ void update_text_display(simple_file *file_ptr , bool display_line_no , bool dis
     for(unsigned int i = 0 ; i < row_no ; i++){
         if(info.start_line + i == info.line_pos){
             attroff(COLOR_PAIR(TEXT));
-
             attron(COLOR_PAIR(LINE_HIGHLIGHT));
+        }
 
-            mvprintw(info.txt_start_y + i , info.txt_start_x , "%s" , rows[i]);
-            
+        mvprintw(info.txt_start_y + i , info.txt_start_x , "%s" , rows[i]);
+
+        if(info.start_line + i == info.line_pos){
             attroff(COLOR_PAIR(LINE_HIGHLIGHT));
-            
             attron(COLOR_PAIR(TEXT));
-        }else{
-            mvprintw(info.txt_start_y + i , info.txt_start_x , "%s" , rows[i]);
         }
     }
-
     attroff(COLOR_PAIR(TEXT));
+
 
     if(info.display_line_no == true){
         attron(COLOR_PAIR(SIDE_STRIPS));
