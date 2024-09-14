@@ -35,7 +35,7 @@ void update_values(text_display_info *info_ptr){
         info_ptr -> indent = 0;
     }
 
-    info_ptr -> txt_start_x = info_ptr -> disp_start_x + info_ptr -> indent + (info_ptr -> display_file_name == true);
+    info_ptr -> txt_start_x = info_ptr -> disp_start_x + info_ptr -> indent + (info_ptr -> display_line_no == true);
     info_ptr -> txt_start_y = info_ptr -> disp_start_y + info_ptr -> display_file_name;
 
     unsigned int disp_width = info_ptr -> disp_end_x - info_ptr -> txt_start_x;
