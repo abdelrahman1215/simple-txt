@@ -1,6 +1,8 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include "simple_file.h"
+
 #include <stdbool.h>
 
 void init_color_pairs();
