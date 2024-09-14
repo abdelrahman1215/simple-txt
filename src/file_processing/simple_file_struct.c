@@ -10,6 +10,7 @@ struct file_struct{
     bool changes_saved;
 
     dynamic_array *lines;
+    size_t line , column;
 
     linked_list *changes_stack;
     linked_list *undone_stack;
