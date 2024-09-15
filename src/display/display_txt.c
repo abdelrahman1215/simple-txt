@@ -83,6 +83,8 @@ void disp_file_name(text_display_info *info_ptr){
     {
         const char *tmp = (char *)simple_file_get_name(info_ptr -> file);
         if(tmp == NULL){
+            info_ptr -> txt_start_y = info_ptr -> disp_start_y;
+
             return;
         }
 
