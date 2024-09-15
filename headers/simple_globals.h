@@ -21,6 +21,20 @@
 #define SIDE_STRIP_HIGHLIGHT 5
 #define TITLE 6
 
+#ifndef CTRL
+#define CTRL(c) (((int)c) & 037)
+#endif
+
+#define CTRL_LEFT 443
+#define CTRL_RIGHT 444
+#define CTRL_UP 480
+#define CTRL_DOWN 481
+
+#define SHIFT_LEFT 391
+#define SHIFT_RIGHT 400
+#define SHIFT_UP 547
+#define SHIFT_DOWN 548
+
 SIMPLE_GLOBAL simple_file *Current_File;
 SIMPLE_GLOBAL unsigned int Txt_Disp_Start_X , Txt_Disp_Start_Y , Txt_Disp_End_X , Txt_Disp_End_Y;
 SIMPLE_GLOBAL unsigned int Least_H_Distance , Least_V_Distance;
