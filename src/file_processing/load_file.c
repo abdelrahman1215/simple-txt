@@ -28,18 +28,25 @@ simple_file *__allocate_simple_file__(const char *file_name){
         return NULL;
     }
 
-    size_t len = strnlen(file_name , 9223372036854775807);
-    ret -> file_name = calloc(len + 1 , sizeof(char));
-    if(ret -> file_name == NULL){
-        free(ret);
+    size_t len;
+    if(file_name != NULL){
+        len = strnlen(file_name , 9223372036854775807);
+        ret -> file_name = calloc(len + 1 , sizeof(char));
+        if(ret -> file_name == NULL){
+            free(ret);
 
-        return NULL;
+            return NULL;
+        }
+
+        strncpy(ret -> file_name , file_name , len);
+    }else{
+        ret -> file_name = NULL;
     }
 
-    strncpy(ret -> file_name , file_name , len);
 
     ret -> lines = new_dynamic_array(sizeof(simple_str *) , (free_func *)free_simple_str);
     if(ret -> lines == NULL){
+        if(file_name)
         free(ret -> file_name);
         free(ret);
 
@@ -160,6 +167,35 @@ void __load_from_str__(simple_file *file_ptr , char *src){
 
     line = new_simple_str(src + line_start);
     dynamic_array_add_element(file_ptr -> lines , &line);    
+}
+
+simple_file *load_from_str(const char *src , loading_err *get_err){
+    if(get_err == NULL) return NULL;
+
+    *get_err = OK;
+    simple_file *ret = __allocate_simple_file__(NULL);
+    if(ret == NULL){
+        *get_err = Alloc_Err;
+        return NULL;
+    }
+
+    size_t len = strlen(src);
+    char *copy = calloc(len + 1 , sizeof(char));
+    if(copy == NULL){
+        destroy_simple_file(ret);
+
+        *get_err = Alloc_Err;
+        return NULL;
+    }
+
+    strncpy(copy , src , len);
+    __load_from_str__(ret , copy);
+
+    ret -> changes_saved = true;
+    ret -> column = 0;
+    ret -> line = 0;
+
+    return ret;
 }
 
 simple_file *load_file(const char *file_name , loading_err *get_err){
