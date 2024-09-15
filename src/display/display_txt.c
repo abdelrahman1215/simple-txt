@@ -20,7 +20,7 @@ typedef struct text_display_info{
     unsigned int txt_start_x , txt_start_y;
     unsigned int indent;
 
-    bool display_line_no , display_file_name;
+    bool display_line_no , display_file_name , Scroll;
 }text_display_info;
 
 void update_values(text_display_info *info_ptr){
@@ -40,6 +40,15 @@ void update_values(text_display_info *info_ptr){
 
     unsigned int disp_width = info_ptr -> disp_end_x - info_ptr -> txt_start_x;
 
+    if(info_ptr -> Scroll == true){
+        info_ptr -> start_line = info_ptr -> line_pos;
+        info_ptr -> start_col = info_ptr -> col_pos;
+
+        info_ptr -> cursor_y = info_ptr -> txt_start_y;
+        info_ptr -> cursor_x = info_ptr -> txt_start_x;
+
+        return;
+    }
 
     if(info_ptr -> col_pos >= info_ptr -> start_col + disp_width - Least_H_Distance){
         if(info_ptr -> start_col + disp_width >= line_len){
@@ -120,7 +129,7 @@ void disp_file_name(text_display_info *info_ptr){
     free(file_path);
 }
 
-void update_text_display(simple_file *file_ptr , bool display_line_no , bool display_file_name  , bool hightlight_currrent_line , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y){
+void update_text_display(simple_file *file_ptr , bool display_line_no , bool display_file_name  , bool hightlight_currrent_line , bool Scroll , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y){
     if(stdscr == NULL) return ;
     if(file_ptr == NULL) return ;
     if(start_x >= end_x || start_y >= end_y || (start_y + 1 > end_y && display_file_name == true)) return ;
@@ -145,6 +154,8 @@ void update_text_display(simple_file *file_ptr , bool display_line_no , bool dis
 
     info.disp_start_y = start_y;
     info.disp_end_y = end_y;
+
+    info.Scroll = Scroll;
 
     size_t line_no = simple_file_get_line_no(file_ptr);
     int log_of_line_no = (int)log10(line_no);

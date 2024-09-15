@@ -13,7 +13,7 @@ void move_nlines_down(size_t lines);
 void move_nlines_up(size_t lines);
 void move_to_pos(size_t line_index , size_t col_index);
 
-void update_text_display(simple_file *file_ptr , bool display_line_no , bool display_file_name , bool hightlight_currrent_line , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y);
+void update_text_display(simple_file *file_ptr , bool display_line_no , bool display_file_name , bool hightlight_currrent_line  , bool scroll , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y);
 
 void render_background();
 
