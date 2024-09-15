@@ -6,7 +6,7 @@
 //tokens : 1
 void open_file(char *file_name){
     loading_err error;
-    simple_file *tmp = load_file(file_name , &error);
+    simple_file *tmp = load_file(file_name , true , &error);
 
     if(error == OK || error == File_Not_Found){
         save_file(Current_File);

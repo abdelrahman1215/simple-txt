@@ -76,10 +76,14 @@ simple_file *__allocate_simple_file__(const char *file_name){
     return ret;
 }
 
-char *__get_file_text__(const char *file_name , loading_err *get_err , simple_file *file_ptr){
+char *__get_file_text__(const char *file_name , bool create_if_not_found , loading_err *get_err , simple_file *file_ptr){
     FILE *target_file = fopen(file_name , "r");
     if(target_file == NULL){
         *get_err = File_Not_Found;
+        if(create_if_not_found == false){
+            return NULL;
+        }
+
         target_file = fopen(file_name , "w+");
 
         if(target_file == NULL){
@@ -198,7 +202,7 @@ simple_file *load_from_str(const char *src , loading_err *get_err){
     return ret;
 }
 
-simple_file *load_file(const char *file_name , loading_err *get_err){
+simple_file *load_file(const char *file_name , bool create_if_not_found , loading_err *get_err){
     if(get_err == NULL) return NULL;
 
     *get_err = OK;
@@ -227,7 +231,7 @@ simple_file *load_file(const char *file_name , loading_err *get_err){
     }
 
     loading_err err = OK;
-    char *file_text = __get_file_text__(file_name , &err , ret);
+    char *file_text = __get_file_text__(file_name , create_if_not_found , &err , ret);
     if(err != OK){
         *get_err = err;
         if(err == Alloc_Err) return NULL;

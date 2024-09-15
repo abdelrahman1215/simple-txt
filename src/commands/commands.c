@@ -35,7 +35,7 @@ void write_and_quit(char **args){
 //tokens_no : 1
 void edit_file(char **args){
     loading_err error;
-    simple_file *tmp = load_file(args[0] , &error);
+    simple_file *tmp = load_file(args[0] , true , &error);
 
     if(error == OK || error == File_Not_Found){
         save_file(Current_File);
