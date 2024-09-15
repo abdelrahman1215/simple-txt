@@ -22,6 +22,146 @@ void free_simple_str(simple_str **str_ptr_ptr){
     free(str_ptr_ptr);
 }
 
+simple_file *__allocate_simple_file__(const char *file_name){
+    simple_file *ret = malloc(sizeof(simple_file));
+    if(ret == NULL){
+        return NULL;
+    }
+
+    size_t len = strnlen(file_name , 9223372036854775807);
+    ret -> file_name = calloc(len + 1 , sizeof(char));
+    if(ret -> file_name == NULL){
+        free(ret);
+
+        return NULL;
+    }
+
+    strncpy(ret -> file_name , file_name , len);
+
+    ret -> lines = new_dynamic_array(sizeof(simple_str *) , (free_func *)free_simple_str);
+    if(ret -> lines == NULL){
+        free(ret -> file_name);
+        free(ret);
+
+        return NULL;
+    }
+    
+    ret -> changes_stack = new_linked_list();
+    if(ret -> changes_stack == NULL){
+        destroy_dynamic_array(ret -> lines);
+        free(ret -> file_name);
+        free(ret);
+
+        return NULL;
+    }
+
+    ret -> undone_stack = new_linked_list();
+    if(ret -> undone_stack == NULL){
+        destroy_dynamic_array(ret -> lines);
+        destroy_linked_list(ret -> changes_stack);
+
+        free(ret -> file_name);
+        free(ret);
+
+        return NULL;
+    }
+
+    return ret;
+}
+
+char *__get_file_text__(const char *file_name , loading_err *get_err , simple_file *file_ptr){
+    FILE *target_file = fopen(file_name , "r");
+    if(target_file == NULL){
+        *get_err = File_Not_Found;
+        target_file = fopen(file_name , "w+");
+
+        if(target_file == NULL){
+            *get_err = Invalid_File_Name;
+
+            return NULL;
+        }
+    }
+
+    char *buff = calloc(buff_size + 1 , sizeof(char));
+    if(buff == NULL){
+        destroy_dynamic_array(file_ptr -> lines);
+        free(file_ptr -> file_name);
+        free(file_ptr);
+
+        *get_err = Alloc_Err;
+        return NULL;
+    }
+
+    simple_str *file_buff = new_simple_str(NULL);
+    if(file_buff == NULL){
+        free(buff);
+
+        destroy_dynamic_array(file_ptr -> lines);
+        free(file_ptr -> file_name);
+        free(file_ptr);
+
+        *get_err = Alloc_Err;
+        return NULL;
+    }
+
+    size_t read_bytes = 0;
+    size_t total_read_bytes = 0;
+
+    do{
+        read_bytes = fread(buff , sizeof(char) , buff_size , target_file);
+        buff[read_bytes] = '\000';
+
+        simple_str_add(file_buff , buff , total_read_bytes);
+
+        total_read_bytes += read_bytes;
+    }while(read_bytes == buff_size);
+
+    free(buff);
+
+    char *ret = simple_str_get_string(file_buff);
+    if(ret == NULL){
+        free(file_buff);
+
+        destroy_dynamic_array(file_ptr -> lines);
+        free(file_ptr -> file_name);
+        free(file_ptr);
+
+        *get_err = Alloc_Err;
+        return NULL;
+    }
+
+    destroy_simple_str(file_buff);
+
+    if(total_read_bytes == 0){
+        return "";
+    }
+
+    fclose(target_file);
+
+    return ret;
+}
+
+void __load_from_str__(simple_file *file_ptr , char *src){
+    simple_str *line = NULL;
+
+    size_t line_start = 0;
+    for(size_t i = 0 ; src[i] != '\000' ; i++){
+        if(src[i] == '\n'){
+            src[i] = '\000';
+
+            line = new_simple_str(src + line_start);
+
+            dynamic_array_add_element(file_ptr -> lines , &line);
+
+            line_start = i + 1;
+        }
+    }
+
+
+    line = new_simple_str(src + line_start);
+    dynamic_array_add_element(file_ptr -> lines , &line);    
+}
+
 simple_file *load_file(const char *file_name , loading_err *get_err){
     *get_err = OK;
 
@@ -44,140 +184,20 @@ simple_file *load_file(const char *file_name , loading_err *get_err){
         return NULL;
     }
 
-    FILE *target_file = fopen(file_name , "r");
-    if(target_file == NULL){
-        *get_err = File_Not_Found;
-        target_file = fopen(file_name , "w+");
-
-        if(target_file == NULL){
-            *get_err = Invalid_File_Name;
-
-            return NULL;
-        }
-    }
-
-    simple_file *ret = malloc(sizeof(simple_file));
+    simple_file *ret = __allocate_simple_file__(file_name);
     if(ret == NULL){
         *get_err = Alloc_Err;
-
         return NULL;
     }
 
-    size_t len = strnlen(file_name , 9223372036854775807);
-    ret -> file_name = calloc(len + 1 , sizeof(char));
-    if(ret -> file_name == NULL){
-        free(ret);
-
-        *get_err = Alloc_Err;
-        return NULL;
-    }
-
-    strncpy(ret -> file_name , file_name , len);
-
-    ret -> lines = new_dynamic_array(sizeof(simple_str *) , (free_func *)free_simple_str);
-    if(ret -> lines == NULL){
-        free(ret -> file_name);
-        free(ret);
-
-        *get_err = Alloc_Err;
-        return NULL;
+    loading_err err = OK;
+    char *file_text = __get_file_text__(file_name , &err , ret);
+    if(err != OK){
+        *get_err = err;
+        if(err == Alloc_Err) return NULL;
     }
     
-    ret -> changes_stack = new_linked_list();
-    if(ret -> changes_stack == NULL){
-        destroy_dynamic_array(ret -> lines);
-        free(ret -> file_name);
-        free(ret);
-
-        *get_err = Alloc_Err;
-        return NULL;
-    }
-
-    ret -> undone_stack = new_linked_list();
-    if(ret -> undone_stack == NULL){
-        destroy_dynamic_array(ret -> lines);
-        destroy_linked_list(ret -> changes_stack);
-
-        free(ret -> file_name);
-        free(ret);
-
-        *get_err = Alloc_Err;
-        return NULL;
-    }
-
-    char *buff = calloc(buff_size + 1 , sizeof(char));
-    if(buff == NULL){
-        destroy_dynamic_array(ret -> lines);
-        free(ret -> file_name);
-        free(ret);
-
-        *get_err = Alloc_Err;
-        return NULL;
-    }
-
-    simple_str *file_buff = new_simple_str(NULL);
-    if(file_buff == NULL){
-        free(buff);
-
-        destroy_dynamic_array(ret -> lines);
-        free(ret -> file_name);
-        free(ret);
-
-        *get_err = Alloc_Err;
-        return NULL;
-    }
-
-    size_t read_bytes = 0;
-    size_t total_read_bytes = 0;
-
-    do{
-        read_bytes = fread(buff , sizeof(char) , buff_size , target_file);
-        buff[read_bytes] = '\000';
-
-        simple_str_add(file_buff , buff , total_read_bytes);
-
-        total_read_bytes += read_bytes;
-    }while(read_bytes == buff_size);
-
-    free(buff);
-
-    char *file_text = simple_str_get_string(file_buff);
-    if(file_text == NULL){
-        free(file_buff);
-
-        destroy_dynamic_array(ret -> lines);
-        free(ret -> file_name);
-        free(ret);
-
-        *get_err = Alloc_Err;
-        return NULL;
-    }
-
-    destroy_simple_str(file_buff);
-
-    simple_str *line = NULL;
-
-    size_t line_start = 0;
-    for(size_t i = 0 ; file_text[i] != '\000' ; i++){
-        if(file_text[i] == '\n'){
-            file_text[i] = '\000';
-
-            line = new_simple_str(file_text + line_start);
-
-            dynamic_array_add_element(ret -> lines , &line);
-
-            line_start = i + 1;
-        }
-    }
-
-
-    line = new_simple_str(file_text + line_start);
-    dynamic_array_add_element(ret -> lines , &line);    
-
-    if(total_read_bytes > 0){
-        free(file_text);
-    }
-    fclose(target_file);
+    __load_from_str__(ret , file_text);
 
 
     ret -> changes_saved = true;
