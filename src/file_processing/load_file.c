@@ -163,9 +163,9 @@ void __load_from_str__(simple_file *file_ptr , char *src){
 }
 
 simple_file *load_file(const char *file_name , loading_err *get_err){
-    *get_err = OK;
-
     if(get_err == NULL) return NULL;
+
+    *get_err = OK;
     if(file_name == NULL){
         *get_err = Invalid_Arg;
 
@@ -196,7 +196,7 @@ simple_file *load_file(const char *file_name , loading_err *get_err){
         *get_err = err;
         if(err == Alloc_Err) return NULL;
     }
-    
+
     __load_from_str__(ret , file_text);
 
 
