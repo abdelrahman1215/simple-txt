@@ -14,6 +14,12 @@
 #define DEFAULT_TEXT_COLOR COLOR_WHITE
 #define DEFAULT_LINE_HIGHLIGHT_COLOR 0xEB
 
+SIMPLE_GLOBAL unsigned short Text_Color;
+SIMPLE_GLOBAL unsigned short Title_Color;
+SIMPLE_GLOBAL unsigned short Outline_Color;
+SIMPLE_GLOBAL unsigned short Background_Color;
+SIMPLE_GLOBAL unsigned short Line_Highlight_Color;
+
 #define TEXT 1
 #define SIDE_STRIPS 2
 #define BACKGROUND 3

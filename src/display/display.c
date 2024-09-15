@@ -16,11 +16,10 @@ void render_background(){
 void init_color_pairs(){
     if(stdscr == NULL) return ;
 
-    init_pair(TEXT , DEFAULT_TEXT_COLOR , DEFAULT_BACKGROUND_COLOR);
-    init_pair(TITLE , DEFAULT_TITLE_COLOR , DEFAULT_BACKGROUND_COLOR);
-    init_pair(SIDE_STRIPS , DEFAULT_OUTLINE_COLOR , DEFAULT_BACKGROUND_COLOR);
-    init_pair(BACKGROUND , DEFAULT_BACKGROUND_COLOR , DEFAULT_BACKGROUND_COLOR);
-    init_pair(LINE_HIGHLIGHT , DEFAULT_TEXT_COLOR , DEFAULT_LINE_HIGHLIGHT_COLOR);
-    init_pair(SIDE_STRIP_HIGHLIGHT , DEFAULT_OUTLINE_COLOR , DEFAULT_LINE_HIGHLIGHT_COLOR);
-
+    init_pair(TEXT , Text_Color , Background_Color);
+    init_pair(TITLE , Title_Color , Background_Color);
+    init_pair(SIDE_STRIPS , Outline_Color , Background_Color);
+    init_pair(BACKGROUND , Background_Color , Background_Color);
+    init_pair(LINE_HIGHLIGHT , Text_Color , Line_Highlight_Color);
+    init_pair(SIDE_STRIP_HIGHLIGHT , Outline_Color , Line_Highlight_Color);
 }
