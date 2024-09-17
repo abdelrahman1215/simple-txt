@@ -138,7 +138,50 @@ void disp_file_name(text_display_info *info_ptr){
     free(file_path);
 }
 
-void update_text_display(simple_file *file_ptr , bool display_line_no , bool display_file_name  , bool hightlight_currrent_line , bool Scroll , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y){
+void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
+    unsigned int row_no = info_ptr -> disp_end_y - info_ptr -> txt_start_y;
+    size_t line_no = simple_file_get_line_no(info_ptr -> file);
+    int log_of_line_no = (int)log10(line_no);
+
+    attron(COLOR_PAIR(SIDE_STRIPS));
+
+    mvvline(info_ptr -> txt_start_y , info_ptr -> txt_start_x - 1 , 0 , Screen_Height - info_ptr -> txt_start_y);
+
+    size_t number_len = log_of_line_no + 1;
+    char empty_number[number_len + 1];
+    char number[number_len + 1];
+        
+    memset(empty_number , ' ' , number_len);
+    memset(number , ' ' , number_len);
+
+    empty_number[number_len] = '\000';
+    number[number_len] = '\000';
+
+
+    for(unsigned int i = 0 ; i < row_no ; i++){
+        if(info_ptr -> start_line + i == info_ptr -> line_pos && highlight_current_line){
+            attroff(COLOR_PAIR(SIDE_STRIPS));
+            attron(COLOR_PAIR(SIDE_STRIP_HIGHLIGHT));
+        }
+
+        if(info_ptr -> start_line + i >= line_no){
+            mvprintw(info_ptr -> txt_start_y + i , info_ptr -> disp_start_x , "%s" , empty_number);
+        }else{
+            itoa(info_ptr -> start_line + i + 1 , number + (log_of_line_no - (int)log10(info_ptr -> start_line + i + 1)) , 10);
+            mvprintw(info_ptr -> txt_start_y + i , info_ptr -> disp_start_x , "%s" , number);
+        }
+
+        if(info_ptr -> start_line + i == info_ptr -> line_pos && highlight_current_line){
+            attroff(COLOR_PAIR(SIDE_STRIP_HIGHLIGHT));
+            attron(COLOR_PAIR(SIDE_STRIPS));
+        }
+    }   
+
+
+    attroff(COLOR_PAIR(SIDE_STRIPS));
+}
+
+void update_text_display(simple_file *file_ptr , bool display_line_no , bool display_file_name  , bool highlight_current_line , bool Scroll , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y){
     if(stdscr == NULL) return ;
     if(file_ptr == NULL) return ;
     if(start_x >= end_x || start_y >= end_y || (start_y + 1 > end_y && display_file_name == true)) return ;
@@ -194,24 +237,18 @@ void update_text_display(simple_file *file_ptr , bool display_line_no , bool dis
         rows[i][0] = '~';
     }
 
-    attron(COLOR_PAIR(BACKGROUND));
-
-    for(unsigned int i = 0 ; i < (info.disp_end_y - info.disp_start_y) ; i++){
-        mvhline(info.disp_start_y + i , info.disp_start_x , 0 , info.disp_end_x - info.disp_start_x);
-    }
-
-    attroff(COLOR_PAIR(BACKGROUND));
+    render_background(info.disp_start_x , info.disp_start_y , info.disp_end_x , info.disp_end_y);
 
     attron(COLOR_PAIR(TEXT));
     for(unsigned int i = 0 ; i < row_no ; i++){
-        if(info.start_line + i == info.line_pos && hightlight_currrent_line){
+        if(info.start_line + i == info.line_pos && highlight_current_line){
             attroff(COLOR_PAIR(TEXT));
             attron(COLOR_PAIR(LINE_HIGHLIGHT));
         }
 
         mvprintw(info.txt_start_y + i , info.txt_start_x , "%s" , rows[i]);
 
-        if(info.start_line + i == info.line_pos && hightlight_currrent_line){
+        if(info.start_line + i == info.line_pos && highlight_current_line){
             attroff(COLOR_PAIR(LINE_HIGHLIGHT));
             attron(COLOR_PAIR(TEXT));
         }
@@ -220,42 +257,7 @@ void update_text_display(simple_file *file_ptr , bool display_line_no , bool dis
 
 
     if(info.display_line_no == true){
-        attron(COLOR_PAIR(SIDE_STRIPS));
-
-        mvvline(info.txt_start_y , info.txt_start_x - 1 , 0 , Screen_Height - info.txt_start_y);
-
-        size_t number_len = log_of_line_no + 2;
-        char empty_number[number_len];
-        char number[number_len];
-        
-        memset(empty_number , ' ' , number_len);
-        memset(number , ' ' , number_len);
-
-        empty_number[number_len - 1] = '\000';
-        number[number_len - 1] = '\000';
-
-        for(unsigned int i = 0 ; i < row_no ; i++){
-            if(info.start_line + i == info.line_pos && hightlight_currrent_line){
-                attroff(COLOR_PAIR(SIDE_STRIPS));
-                attron(COLOR_PAIR(SIDE_STRIP_HIGHLIGHT));
-                mvvline(info.txt_start_y + i , info.txt_start_x - 1 , 0 , 1);
-            }
-
-            if(info.start_line + i >= line_no){
-                mvprintw(info.txt_start_y + i , info.disp_start_x , "%s" , empty_number);
-            }else{
-                itoa(info.start_line + i + 1 , number + (log_of_line_no - (int)log10(info.start_line + i + 1)) , 10);
-                mvprintw(info.txt_start_y + i , info.disp_start_x , "%s" , number);
-            }
-
-            if(info.start_line + i == info.line_pos && hightlight_currrent_line){
-                attroff(COLOR_PAIR(SIDE_STRIP_HIGHLIGHT));
-                attron(COLOR_PAIR(SIDE_STRIPS));
-            }
-        }   
-
-
-        attroff(COLOR_PAIR(SIDE_STRIPS));
+        disp_line_no(&info , highlight_current_line);
     }
 
     if(display_file_name == true){
