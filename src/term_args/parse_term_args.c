@@ -6,7 +6,7 @@ void parse_term_args(int argc , char **argv){
     if(argc > 2) return ;
 
     if(argc == 1){
-        open_file("new_file");
+        open_file("Untitled");
     }else{
         unsigned char opened_files_no = 0;
 
@@ -59,7 +59,6 @@ void parse_term_args(int argc , char **argv){
             }
             open_file(argv[i]);
             opened_files_no ++;
-            return;
         }
     }
 }
