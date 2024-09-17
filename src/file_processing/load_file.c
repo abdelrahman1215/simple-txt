@@ -165,6 +165,8 @@ void __load_from_str__(simple_file *file_ptr , char *src){
             dynamic_array_add_element(file_ptr -> lines , &line);
 
             line_start = i + 1;
+        }else if(src[i] == '\t'){
+            src[i] = ' ';
         }
     }
 
