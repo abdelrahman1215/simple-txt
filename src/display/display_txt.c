@@ -24,6 +24,15 @@ typedef struct text_display_info{
 }text_display_info;
 
 void update_values(text_display_info *info_ptr){
+    static simple_file *last_displayed_file = NULL;
+
+    if(info_ptr -> file != last_displayed_file){
+        last_displayed_file = info_ptr -> file;
+
+        info_ptr -> start_col = simple_file_get_curr_column(info_ptr -> file);
+        info_ptr -> start_line = simple_file_get_curr_line(info_ptr -> file);
+    }
+
     info_ptr -> line_pos = simple_file_get_curr_line(info_ptr -> file) , info_ptr -> col_pos = simple_file_get_curr_column(info_ptr -> file);
     size_t line_len = simple_file_get_line_len(info_ptr -> file , info_ptr -> line_pos);
     size_t line_no = simple_file_get_line_no(info_ptr -> file);
@@ -135,17 +144,9 @@ void update_text_display(simple_file *file_ptr , bool display_line_no , bool dis
     if(start_x >= end_x || start_y >= end_y || (start_y + 1 > end_y && display_file_name == true)) return ;
     if(end_x > Screen_Width || end_y > Screen_Height) return ;
 
-    static simple_file *last_displayed_file = NULL;
-
     static text_display_info info;
-    if(file_ptr != last_displayed_file){
-        info.start_col = 0;
-        info.start_line = 0;
-        info.file = file_ptr;
 
-        last_displayed_file = file_ptr;
-    }
-
+    info.file = file_ptr;
     info.display_line_no = display_line_no;
     info.display_file_name = display_file_name;
 
@@ -267,6 +268,4 @@ void update_text_display(simple_file *file_ptr , bool display_line_no , bool dis
     }
 
     move(info.cursor_y , info.cursor_x);
-
-    last_displayed_file = file_ptr;
 }
