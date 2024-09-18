@@ -1,4 +1,6 @@
 make the loading function interpret the tabs as n spaces where n is the length of a tab(define this variable in simple_globals)
 improve message handling
+make a binding_map
+make a lower strip that shows the current line , column & mode
 
 #turns out the color pairs can be redefined
