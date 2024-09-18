@@ -202,7 +202,7 @@ void simple_file_delete(simple_file *file_ptr , size_t line_index , size_t start
 
 char *_delete_lines_(simple_file *file_ptr , size_t line_index , size_t line_count){
     if(file_ptr == NULL) return NULL;
-    if(line_index + line_count >= simple_file_get_line_no(file_ptr)) return NULL;
+    if(line_index + line_count > simple_file_get_line_no(file_ptr)) return NULL;
 
     dynamic_array *content = file_ptr ->lines;
 
@@ -210,6 +210,8 @@ char *_delete_lines_(simple_file *file_ptr , size_t line_index , size_t line_cou
     if(line_index > 0){
         simple_str_add(deleted_lines , "\n" , 0);
     }
+
+    size_t line_no = simple_file_get_line_no(file_ptr);
 
     simple_str **line = NULL;
     char *line_text = NULL;
@@ -236,10 +238,21 @@ char *_delete_lines_(simple_file *file_ptr , size_t line_index , size_t line_cou
     char *ret = simple_str_get_string(deleted_lines);
     destroy_simple_str(deleted_lines);
 
-    file_ptr -> line = line_index;
-    size_t next_line_len = simple_file_get_line_len(file_ptr , line_index + 1);
-    if(file_ptr -> column > next_line_len){
-        file_ptr -> column = next_line_len;
+    if(line_index == 0 && line_count == line_no){
+        simple_str *tmp = new_simple_str("");
+        dynamic_array_add_element(file_ptr -> lines , &tmp);
+    }
+
+    line_no = simple_file_get_line_no(file_ptr);
+    if(line_index + 1 > line_no){
+        file_ptr -> line = line_no - 1;
+    }else{
+        file_ptr -> line = line_index;
+    }
+
+    size_t line_len = simple_file_get_line_len(file_ptr , file_ptr -> line);
+    if(file_ptr -> column > line_len){
+        file_ptr -> column = line_len;
     }
 
     return ret;
@@ -277,14 +290,12 @@ char *_delete_from_to_(simple_file *file_ptr , size_t start_line , size_t start_
         simple_str_add(buff , tmp , simple_str_get_strlen(buff));
         free(tmp);
 
-        if(end_pos != last_line_len){
-            tmp = simple_file_get_line(file_ptr , start_line + 1);
-            _add_(file_ptr , start_line , simple_file_get_line_len(file_ptr , start_line) , tmp);
-            free(tmp);
-
-            tmp = _delete_lines_(file_ptr , start_line + 1 , 1);
-            free(tmp);
-        }
+        tmp = simple_file_get_line(file_ptr , start_line + 1);
+        _add_(file_ptr , start_line , simple_file_get_line_len(file_ptr , start_line) , tmp);
+        free(tmp);
+        
+        tmp = _delete_lines_(file_ptr , start_line + 1 , 1);
+        free(tmp);
 
         deleted_text = simple_str_get_string(buff);
         destroy_simple_str(buff);
