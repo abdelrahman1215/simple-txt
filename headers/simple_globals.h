@@ -8,6 +8,10 @@
 
 #define SIMPLE_GLOBAL __attribute__((__common__))
 
+typedef enum editor_mode {Normal_Mode = 1 , Insert_Mode = 2} editor_mode;
+
+SIMPLE_GLOBAL editor_mode Current_Mode;
+
 #define DEFAULT_TEXT_COLOR 0xFE
 #define DEFAULT_TITLE_COLOR 0x6F
 #define DEFAULT_OUTLINE_COLOR 0xED
