@@ -14,6 +14,7 @@
 #define DEFAULT_BACKGROUND_COLOR 0xEA
 #define DEFAULT_LINE_HIGHLIGHT_COLOR 0xEB
 #define DEFAULT_OUTLINE_HIGHLIGHT_COLOR 0xF5
+#define DEFAULT_OUTLINE_BACKGROUND_COLOR 0xEA
 
 SIMPLE_GLOBAL unsigned short Text_Color;
 SIMPLE_GLOBAL unsigned short Title_Color;
@@ -21,6 +22,7 @@ SIMPLE_GLOBAL unsigned short Outline_Color;
 SIMPLE_GLOBAL unsigned short Background_Color;
 SIMPLE_GLOBAL unsigned short Line_Highlight_Color;
 SIMPLE_GLOBAL unsigned short Outline_Highlight_Color;
+SIMPLE_GLOBAL unsigned short Outline_Background_Color;
 
 #define TEXT 1
 #define SIDE_STRIPS 2

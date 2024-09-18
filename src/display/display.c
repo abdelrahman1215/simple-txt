@@ -18,8 +18,8 @@ void init_color_pairs(){
 
     init_pair(TEXT , Text_Color , Background_Color);
     init_pair(TITLE , Title_Color , Background_Color);
-    init_pair(SIDE_STRIPS , Outline_Color , Background_Color);
+    init_pair(SIDE_STRIPS , Outline_Color , Outline_Background_Color);
     init_pair(BACKGROUND , Background_Color , Background_Color);
     init_pair(LINE_HIGHLIGHT , Text_Color , Line_Highlight_Color);
-    init_pair(SIDE_STRIP_HIGHLIGHT , Outline_Highlight_Color , Background_Color);
+    init_pair(SIDE_STRIP_HIGHLIGHT , Outline_Highlight_Color , Outline_Background_Color);
 }
