@@ -39,12 +39,12 @@ void update_values(text_display_info *info_ptr){
 
     if(info_ptr -> display_line_no){
         int log_of_line_no = (int)log10(line_no);
-        info_ptr -> indent = log_of_line_no + 1;
+        info_ptr -> indent = log_of_line_no + 2;
     }else{
         info_ptr -> indent = 0;
     }
 
-    info_ptr -> txt_start_x = info_ptr -> disp_start_x + info_ptr -> indent + (info_ptr -> display_line_no == true);
+    info_ptr -> txt_start_x = info_ptr -> disp_start_x + info_ptr -> indent;
     info_ptr -> txt_start_y = info_ptr -> disp_start_y + info_ptr -> display_file_name;
 
     unsigned int disp_width = info_ptr -> disp_end_x - info_ptr -> txt_start_x;
@@ -241,20 +241,11 @@ void update_text_display(simple_file *file_ptr , bool display_line_no , bool dis
 
     attron(COLOR_PAIR(TEXT));
     for(unsigned int i = 0 ; i < row_no ; i++){
-        if(info.start_line + i == info.line_pos && highlight_current_line){
-            attroff(COLOR_PAIR(TEXT));
-            attron(COLOR_PAIR(LINE_HIGHLIGHT));
-        }
-
         mvprintw(info.txt_start_y + i , info.txt_start_x , "%s" , rows[i]);
-
-        if(info.start_line + i == info.line_pos && highlight_current_line){
-            attroff(COLOR_PAIR(LINE_HIGHLIGHT));
-            attron(COLOR_PAIR(TEXT));
-        }
     }
     attroff(COLOR_PAIR(TEXT));
 
+    mvchgat(info.txt_start_y + (info.line_pos - info.start_line) , info.txt_start_x , (info.disp_end_x - info.txt_start_x) , COLOR_PAIR(LINE_HIGHLIGHT) , 0 , NULL);
 
     if(info.display_line_no == true){
         disp_line_no(&info , highlight_current_line);
