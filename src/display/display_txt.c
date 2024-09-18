@@ -145,7 +145,7 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
 
     attron(COLOR_PAIR(SIDE_STRIPS));
 
-    mvvline(info_ptr -> txt_start_y , info_ptr -> txt_start_x - 1 , 0 , Screen_Height - info_ptr -> txt_start_y);
+    mvvline(info_ptr -> txt_start_y , info_ptr -> txt_start_x - 1 , 0 , info_ptr -> disp_end_y - info_ptr -> txt_start_y);
 
     size_t number_len = log_of_line_no + 1;
     char empty_number[number_len + 1];
