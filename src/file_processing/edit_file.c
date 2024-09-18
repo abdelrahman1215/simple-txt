@@ -269,7 +269,6 @@ char *_delete_from_to_(simple_file *file_ptr , size_t start_line , size_t start_
         deleted_text = _delete_(file_ptr , start_line , start_pos , end_pos - start_pos);
     }else{
         simple_str *buff = new_simple_str(NULL);
-        size_t last_line_len = simple_file_get_line_len(file_ptr , end_line);
         char *tmp;
 
         tmp = _delete_(file_ptr , start_line , start_pos , simple_file_get_line_len(file_ptr , start_line) - start_pos);
