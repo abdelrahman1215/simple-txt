@@ -48,7 +48,12 @@ void update_lower_strip(){
             mvprintw(Screen_Height - 1 , 1 , "Normal mode");
             break;
     }
+    attroff(A_UNDERLINE);
+
+    size_t line_pos = simple_file_get_curr_line(Current_File) , col_pos = simple_file_get_curr_column(Current_File);
+    int log_of_line_pos = (int)log10(line_pos + 1) , log_of_col_pos = (int)log10(col_pos + 1);
+
+    mvprintw(Screen_Height - 1 , Screen_Width - (log_of_col_pos + log_of_line_pos + 12) , "Ln %i , Col %i" , line_pos + 1 , col_pos + 1);
 
     attroff(COLOR_PAIR(LOWER_STRIP_TEXT));
-    attroff(A_UNDERLINE);
 }
