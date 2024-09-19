@@ -237,7 +237,7 @@ void update_text_display(simple_file *file_ptr , bool display_line_no , bool dis
         rows[i][0] = '~';
     }
 
-    render_background(info.disp_start_x , info.disp_start_y , info.disp_end_x , info.disp_end_y);
+    render_background(info.disp_start_x , info.disp_start_y , info.disp_end_x , info.disp_end_y , BACKGROUND);
 
     attron(COLOR_PAIR(TEXT));
     for(unsigned int i = 0 ; i < row_no ; i++){
