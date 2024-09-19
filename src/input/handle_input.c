@@ -1,5 +1,6 @@
 #include "../../headers/simple_globals.h"
 #include "../../headers/simple_file.h"
+#include "../../headers/input.h"
 
 #include "normal_mode.c"
 #include "insert_mode.c"
