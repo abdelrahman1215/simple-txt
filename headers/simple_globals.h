@@ -13,20 +13,24 @@ typedef enum editor_mode {Normal_Mode = 1 , Insert_Mode = 2} editor_mode;
 SIMPLE_GLOBAL editor_mode Current_Mode;
 
 #define DEFAULT_TEXT_COLOR 0xFE
-#define DEFAULT_TITLE_COLOR 0x6F
+#define DEFAULT_TITLE_COLOR 0x1E
 #define DEFAULT_OUTLINE_COLOR 0xED
 #define DEFAULT_BACKGROUND_COLOR 0xEA
 #define DEFAULT_LINE_HIGHLIGHT_COLOR 0xEB
+#define DEFAULT_LOWER_STRIP_TEXT_COLOR 0x1D
 #define DEFAULT_OUTLINE_HIGHLIGHT_COLOR 0xF5
 #define DEFAULT_OUTLINE_BACKGROUND_COLOR 0xEA
+#define DEFAULT_LOWER_STRIP_BACKGROUND_COLOR 0xE9
 
 SIMPLE_GLOBAL unsigned short Text_Color;
 SIMPLE_GLOBAL unsigned short Title_Color;
 SIMPLE_GLOBAL unsigned short Outline_Color;
 SIMPLE_GLOBAL unsigned short Background_Color;
 SIMPLE_GLOBAL unsigned short Line_Highlight_Color;
+SIMPLE_GLOBAL unsigned short Lower_Strip_Text_Color;
 SIMPLE_GLOBAL unsigned short Outline_Highlight_Color;
 SIMPLE_GLOBAL unsigned short Outline_Background_Color;
+SIMPLE_GLOBAL unsigned short Lower_Strip_Background_Color;
 
 #define TEXT 1
 #define SIDE_STRIPS 2
@@ -34,6 +38,8 @@ SIMPLE_GLOBAL unsigned short Outline_Background_Color;
 #define LINE_HIGHLIGHT 4
 #define SIDE_STRIP_HIGHLIGHT 5
 #define TITLE 6
+#define LOWER_STRIP_BACKGROUND 7
+#define LOWER_STRIP_TEXT 8
 
 #ifndef CTRL
 #define CTRL(c) (((int)c) & 037)
