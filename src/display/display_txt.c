@@ -20,7 +20,7 @@ typedef struct text_display_info{
     unsigned int txt_start_x , txt_start_y;
     unsigned int indent;
 
-    bool display_line_no , display_file_name , Scroll;
+    bool display_line_no , display_file_name , highlight_current_line , Scroll;
 }text_display_info;
 
 void update_values(text_display_info *info_ptr){
@@ -39,7 +39,7 @@ void update_values(text_display_info *info_ptr){
 
     if(info_ptr -> display_line_no){
         int log_of_line_no = (int)log10(line_no);
-        info_ptr -> indent = log_of_line_no + 2;
+        info_ptr -> indent = log_of_line_no + 2 + info_ptr -> highlight_current_line;
     }else{
         info_ptr -> indent = 0;
     }
@@ -60,8 +60,10 @@ void update_values(text_display_info *info_ptr){
     }
 
     if(info_ptr -> col_pos >= info_ptr -> start_col + disp_width - Least_H_Distance){
-        if(info_ptr -> start_col + disp_width >= line_len){
+        if(info_ptr -> start_col + disp_width + 1 >= line_len && line_len >= disp_width){
             info_ptr -> start_col = line_len - disp_width;
+        }else if(line_len < disp_width){
+            info_ptr -> start_col = 0;
         }else{
             info_ptr -> start_col = info_ptr -> col_pos - (disp_width - Least_H_Distance);
         }
@@ -78,8 +80,10 @@ void update_values(text_display_info *info_ptr){
     unsigned int disp_height = info_ptr -> disp_end_y - info_ptr -> txt_start_y;
 
     if(info_ptr -> line_pos >= info_ptr -> start_line + disp_height - Least_V_Distance){
-        if(info_ptr -> start_line + disp_height >= line_no){
+        if(info_ptr -> start_line + disp_height + 1 >= line_no && line_no >= disp_height){
             info_ptr -> start_line = line_no - disp_height;
+        }else if(line_no < disp_height){
+            info_ptr -> start_line = 0;
         }else{
             info_ptr -> start_line = info_ptr -> line_pos - (disp_height - Least_V_Distance) + 1;
         }
@@ -145,8 +149,6 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
 
     attron(COLOR_PAIR(SIDE_STRIPS));
 
-    mvvline(info_ptr -> txt_start_y , info_ptr -> txt_start_x - 1 , 0 , info_ptr -> disp_end_y - info_ptr -> txt_start_y);
-
     size_t number_len = log_of_line_no + 1;
     char empty_number[number_len + 1];
     char number[number_len + 1];
@@ -158,20 +160,27 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
     number[number_len] = '\000';
 
 
+    unsigned int x = 0 , y = 0;
     for(unsigned int i = 0 ; i < row_no ; i++){
+        x = info_ptr -> disp_start_x + highlight_current_line;
+        y = info_ptr -> txt_start_y + i;
+
         if(info_ptr -> start_line + i == info_ptr -> line_pos && highlight_current_line){
             attroff(COLOR_PAIR(SIDE_STRIPS));
             attron(COLOR_PAIR(SIDE_STRIP_HIGHLIGHT));
+
+            x --;
         }
 
         if(info_ptr -> start_line + i >= line_no){
-            mvprintw(info_ptr -> txt_start_y + i , info_ptr -> disp_start_x , "%s" , empty_number);
+            mvprintw(y , x , "%s" , empty_number);
         }else{
             itoa(info_ptr -> start_line + i + 1 , number + (log_of_line_no - (int)log10(info_ptr -> start_line + i + 1)) , 10);
-            mvprintw(info_ptr -> txt_start_y + i , info_ptr -> disp_start_x , "%s" , number);
+            mvprintw(y , x , "%s" , number);
         }
 
         if(info_ptr -> start_line + i == info_ptr -> line_pos && highlight_current_line){
+            printw("  ");
             attroff(COLOR_PAIR(SIDE_STRIP_HIGHLIGHT));
             attron(COLOR_PAIR(SIDE_STRIPS));
         }
@@ -200,11 +209,12 @@ void update_text_display(simple_file *file_ptr , bool display_line_no , bool dis
     info.disp_end_y = end_y;
 
     info.Scroll = Scroll;
+    info.highlight_current_line = highlight_current_line;
 
     size_t line_no = simple_file_get_line_no(file_ptr);
     int log_of_line_no = (int)log10(line_no);
 
-    if(log_of_line_no + 2 >= end_x - start_x) info.display_line_no = false;
+    if(log_of_line_no + 2 + highlight_current_line >= end_x - start_x) info.display_line_no = false;
 
     update_values(&info);
 
