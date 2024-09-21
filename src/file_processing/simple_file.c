@@ -6,6 +6,11 @@ void simple_file_move_ncols_right(simple_file *file_ptr , size_t cols){
     if(file_ptr -> column + cols > simple_file_get_line_len(file_ptr , file_ptr -> line)){
         if(cols > 1){
             file_ptr -> column = simple_file_get_line_len(file_ptr , file_ptr -> line);
+        }else if(cols == 1 && file_ptr -> line < simple_file_get_line_no(file_ptr) - 1){
+            file_ptr -> line ++;
+            file_ptr -> column = 0;
+
+            return;
         }
 
         return;
@@ -19,6 +24,11 @@ void simple_file_move_ncols_left(simple_file *file_ptr , size_t cols){
     if(file_ptr -> column  < cols){
         if(cols > 1){
             file_ptr -> column = 0;
+        }else if(cols == 1 && file_ptr -> line > 0){
+            file_ptr -> line--;
+            file_ptr -> column = simple_file_get_line_len(file_ptr , file_ptr -> line);
+
+            return;
         }
 
         return;
