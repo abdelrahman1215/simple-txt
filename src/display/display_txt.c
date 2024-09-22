@@ -9,7 +9,7 @@
 #include <string.h>
 #include <math.h>
 
-typedef struct text_display_info{
+struct text_display_info{
     simple_file *file;
     size_t line_pos , col_pos;
     size_t start_line , start_col;
@@ -21,21 +21,14 @@ typedef struct text_display_info{
     unsigned int least_v_dist , least_h_dist;
     unsigned int indent;
 
-    unsigned int background_color;
-    bool display_line_no , display_file_name , highlight_current_line , Scroll;
+    unsigned int background_pair , text_pair , line_highlight_pair , side_strip_pair , side_strip_highlight_pair;
+    bool display_line_no , display_file_name , highligh_current_line , Scroll;
 
     WINDOW *window;
-}text_display_info;
+};
 
 void update_values(text_display_info *info_ptr){
     static simple_file *last_displayed_file = NULL;
-
-    if(info_ptr -> file != last_displayed_file){
-        last_displayed_file = info_ptr -> file;
-
-        info_ptr -> start_col = simple_file_get_curr_column(info_ptr -> file);
-        info_ptr -> start_line = simple_file_get_curr_line(info_ptr -> file);
-    }
 
     info_ptr -> line_pos = simple_file_get_curr_line(info_ptr -> file) , info_ptr -> col_pos = simple_file_get_curr_column(info_ptr -> file);
     //size_t line_len = simple_file_get_line_len(info_ptr -> file , info_ptr -> line_pos);
@@ -43,7 +36,7 @@ void update_values(text_display_info *info_ptr){
 
     if(info_ptr -> display_line_no){
         int log_of_line_no = (int)log10(line_no);
-        info_ptr -> indent = log_of_line_no + 2 + info_ptr -> highlight_current_line + 1;
+        info_ptr -> indent = log_of_line_no + 2 + info_ptr -> highligh_current_line + 1;
     }else{
         info_ptr -> indent = 0;
     }
@@ -141,7 +134,7 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
     size_t line_no = simple_file_get_line_no(info_ptr -> file);
     int log_of_line_no = (int)log10(line_no);
 
-    wattron(info_ptr -> window , COLOR_PAIR(SIDE_STRIPS));
+    wattron(info_ptr -> window , COLOR_PAIR(info_ptr -> side_strip_pair));
 
     size_t number_len = log_of_line_no + 1 + highlight_current_line;
     char empty_number[number_len + 1];
@@ -160,8 +153,8 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
         y = info_ptr -> txt_start_y + i;
 
         if(info_ptr -> start_line + i == info_ptr -> line_pos && highlight_current_line){
-            wattroff(info_ptr -> window , COLOR_PAIR(SIDE_STRIPS));
-            wattron(info_ptr -> window , COLOR_PAIR(SIDE_STRIP_HIGHLIGHT));
+            wattroff(info_ptr -> window , COLOR_PAIR(info_ptr -> side_strip_pair));
+            wattron(info_ptr -> window , COLOR_PAIR(info_ptr -> side_strip_highlight_pair));
 
             x --;
         }
@@ -175,18 +168,19 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
 
         if(info_ptr -> start_line + i == info_ptr -> line_pos && highlight_current_line){
             wprintw(info_ptr -> window , "  ");
-            wattroff(info_ptr -> window , COLOR_PAIR(SIDE_STRIP_HIGHLIGHT));
-            wattron(info_ptr -> window , COLOR_PAIR(SIDE_STRIPS));
+            wattroff(info_ptr -> window , COLOR_PAIR(info_ptr -> side_strip_highlight_pair));
+            wattron(info_ptr -> window , COLOR_PAIR(info_ptr -> side_strip_pair));
         }
     }   
 
 
-    wattroff(info_ptr -> window , COLOR_PAIR(SIDE_STRIPS));
+    wattroff(info_ptr -> window , COLOR_PAIR(info_ptr -> side_strip_pair));
 }
 
-void update_text_display(simple_file *file_ptr , WINDOW *disp_window , unsigned int background_color , unsigned int least_v_dist , unsigned int least_h_dist , bool display_line_no , bool display_file_name  , bool highlight_current_line , bool Scroll , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y){
+void update_text_display(simple_file *file_ptr , text_display_info *save_info , WINDOW *disp_window , unsigned int background_pair , unsigned int text_pair , unsigned int line_highlight_pair , unsigned int side_strip_pair , unsigned int side_strip_highlight_pair , unsigned int least_v_dist , unsigned int least_h_dist , bool display_line_no , bool display_file_name  , bool highlight_current_line , bool Scroll , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y){
     if(disp_window == NULL) return ;
     if(file_ptr == NULL) return ;
+    if(save_info == NULL) return ;
     
     if(start_x == 0 && end_x == 0){
         end_x = getmaxx(disp_window);
@@ -196,48 +190,56 @@ void update_text_display(simple_file *file_ptr , WINDOW *disp_window , unsigned 
         end_y = getmaxy(disp_window);
     }
 
-    if((start_x >= end_x && start_x == 0) || (start_y >= end_y && start_y == 0) || (start_y + 1 >= end_y && display_file_name == true)) return ;
+    if(side_strip_highlight_pair == 0) side_strip_highlight_pair = SIDE_STRIP_HIGHLIGHT;
+    if(line_highlight_pair == 0) line_highlight_pair = LINE_HIGHLIGHT;
+    if(side_strip_pair == 0) side_strip_pair = SIDE_STRIPS;
+    if(background_pair == 0) background_pair = BACKGROUND;
+    if(text_pair == 0) text_pair = TEXT;
 
-    init_pair(TEXT , Text_Color , background_color);
-    init_pair(TITLE , Title_Color , background_color);
-    init_pair(LINE_HIGHLIGHT , Text_Color , Line_Highlight_Color);
-    init_pair(SIDE_STRIPS , Outline_Color , background_color);
-    init_pair(SIDE_STRIP_HIGHLIGHT , Outline_Highlight_Color , Line_Highlight_Color);
+    if((start_x >= end_x && start_x == 0) || (start_y >= end_y && start_y == 0) || (start_y + 1 >= end_y && display_file_name == true)) return ;
 
     unsigned int win_width = getmaxx(disp_window) , win_height = getmaxy(disp_window);
     if(end_x > win_width || end_y > win_height) return ;
 
-    static text_display_info info;
+    if(save_info -> file == NULL){
+        save_info -> file = file_ptr;
+    }else if(save_info -> file != file_ptr) return;
 
-    info.file = file_ptr;
-    info.display_line_no = display_line_no;
-    info.display_file_name = display_file_name;
+    save_info -> file = file_ptr;
+    save_info -> display_line_no = display_line_no;
+    save_info -> display_file_name = display_file_name;
 
-    info.disp_start_x = start_x;
-    info.disp_end_x = end_x;
+    save_info -> disp_start_x = start_x;
+    save_info -> disp_end_x = end_x;
 
-    info.disp_start_y = start_y;
-    info.disp_end_y = end_y;
+    save_info -> disp_start_y = start_y;
+    save_info -> disp_end_y = end_y;
 
-    info.Scroll = Scroll;
-    info.highlight_current_line = highlight_current_line;
+    save_info -> Scroll = Scroll;
+    save_info -> highligh_current_line = highlight_current_line;
 
-    info.least_v_dist = least_v_dist;
-    info.least_h_dist = least_h_dist;
+    save_info -> least_v_dist = least_v_dist;
+    save_info -> least_h_dist = least_h_dist;
 
-    info.window = disp_window;
+    save_info -> window = disp_window;
+
+    save_info -> side_strip_highlight_pair = side_strip_highlight_pair; 
+    save_info -> line_highlight_pair = line_highlight_pair;
+    save_info -> side_strip_pair = side_strip_pair;
+    save_info -> background_pair = background_pair;
+    save_info -> text_pair = text_pair;
 
     size_t line_no = simple_file_get_line_no(file_ptr);
     int log_of_line_no = (int)log10(line_no);
 
-    if(log_of_line_no + 2 + highlight_current_line >= end_x - start_x) info.display_line_no = false;
+    if(log_of_line_no + 2 + highlight_current_line >= end_x - start_x) save_info -> display_line_no = false;
 
-    update_values(&info);
+    update_values(save_info);
 
-    if(info.txt_start_x >= end_x || info.txt_start_y >= end_y) return ;
+    if(save_info -> txt_start_x >= end_x || save_info -> txt_start_y >= end_y) return ;
 
-    unsigned int row_no = info.disp_end_y - info.txt_start_y;
-    size_t max_len = info.disp_end_x - info.txt_start_x;
+    unsigned int row_no = save_info -> disp_end_y - save_info -> txt_start_y;
+    size_t max_len = save_info -> disp_end_x - save_info -> txt_start_x;
     
     char rows[row_no][max_len + 1];
     for(unsigned int i = 0 ; i < row_no ; i++){
@@ -249,12 +251,12 @@ void update_text_display(simple_file *file_ptr , WINDOW *disp_window , unsigned 
     unsigned int used_rows = 0;
     size_t line_len;
     for(unsigned int i = 0 ; i < row_no ; i++ , used_rows++){
-        tmp = simple_file_get_line(file_ptr , i + info.start_line);
+        tmp = simple_file_get_line(file_ptr , i + save_info -> start_line);
         if(tmp == NULL) break;
-        line_len = simple_file_get_line_len(file_ptr , i + info.start_line);
-        if(info.start_col >= line_len) continue;
+        line_len = simple_file_get_line_len(file_ptr , i + save_info -> start_line);
+        if(save_info -> start_col >= line_len) continue;
 
-        strncpy(rows[i] , tmp + info.start_col , max_len > (line_len - info.start_col) ? (line_len - info.start_col) : max_len);
+        strncpy(rows[i] , tmp + save_info -> start_col , max_len > (line_len - save_info -> start_col) ? (line_len - save_info -> start_col) : max_len);
 
         free(tmp);
     }
@@ -263,30 +265,30 @@ void update_text_display(simple_file *file_ptr , WINDOW *disp_window , unsigned 
         rows[i][0] = '~';
     }
 
-    render_background(info.window , info.disp_start_x , info.disp_start_y , info.disp_end_x , info.disp_end_y , BACKGROUND);
+    render_background(save_info -> window , save_info -> disp_start_x , save_info -> disp_start_y , save_info -> disp_end_x , save_info -> disp_end_y , save_info -> background_pair);
 
-    if(info.display_line_no == true){
-        disp_line_no(&info , highlight_current_line);
+    if(save_info -> display_line_no == true){
+        disp_line_no(save_info , highlight_current_line);
     }
 
     if(display_file_name == true){
-        disp_file_name(&info);
+        disp_file_name(save_info);
     }
 
-    wattron(info.window , COLOR_PAIR(TEXT));
+    wattron(save_info -> window , COLOR_PAIR(save_info -> text_pair));
     for(unsigned int i = 0 ; i < row_no ; i++){
-        mvwprintw(info.window , info.txt_start_y + i , info.txt_start_x , "%s" , rows[i]);
+        mvwprintw(save_info -> window , save_info -> txt_start_y + i , save_info -> txt_start_x , "%s" , rows[i]);
     }
-    wattroff(info.window , COLOR_PAIR(TEXT));
+    wattroff(save_info -> window , COLOR_PAIR(save_info -> text_pair));
 
     if(highlight_current_line){
-        mvwchgat(info.window , info.cursor_y , info.txt_start_x , (info.disp_end_x - info.txt_start_x) , A_NORMAL , LINE_HIGHLIGHT , NULL);
+        mvwchgat(save_info -> window , save_info -> cursor_y , save_info -> txt_start_x , (save_info -> disp_end_x - save_info -> txt_start_x) , A_NORMAL , save_info -> line_highlight_pair , NULL);
     }
 
-    if(info.cursor_x == -1 && info.cursor_y == -1){
-        info.cursor_x = info.txt_start_x;
-        info.cursor_y = info.txt_start_y;
+    if(save_info -> cursor_x == -1 && save_info -> cursor_y == -1){
+        save_info -> cursor_x = save_info -> txt_start_x;
+        save_info -> cursor_y = save_info -> txt_start_y;
     }
 
-    wmove(info.window , info.cursor_y , info.cursor_x);
+    wmove(save_info -> window , save_info -> cursor_y , save_info -> cursor_x);
 }
