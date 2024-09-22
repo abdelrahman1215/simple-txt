@@ -8,7 +8,7 @@
 
 void init_color_pairs();
 
-void update_text_display(simple_file *file_ptr , WINDOW *disp_window , bool display_line_no , bool display_file_name , bool highlight_current_line  , bool scroll , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y);
+void update_text_display(simple_file *file_ptr , WINDOW *disp_window , unsigned int background_color , unsigned int least_v_dist , unsigned int least_h_dist , bool display_line_no , bool display_file_name , bool highlight_current_line  , bool scroll , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y);
 
 void render_background(WINDOW *disp_window , unsigned int start_x , unsigned int start_y , unsigned int end_x , unsigned int end_y , int color_pair);
 

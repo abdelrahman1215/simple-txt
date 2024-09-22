@@ -16,12 +16,8 @@ void render_background(WINDOW *disp_window , unsigned int start_x , unsigned int
 void init_color_pairs(){
     if(stdscr == NULL) return ;
 
-    init_pair(TEXT , Text_Color , Background_Color);
-    init_pair(TITLE , Title_Color , Background_Color);
+    init_pair(TEXT_BACKGROUND , Background_Color , Background_Color);
     init_pair(BACKGROUND , Background_Color , Background_Color);
-    init_pair(LINE_HIGHLIGHT , Text_Color , Line_Highlight_Color);
-    init_pair(SIDE_STRIPS , Outline_Color , Outline_Background_Color);
-    init_pair(SIDE_STRIP_HIGHLIGHT , Outline_Highlight_Color , Line_Highlight_Color);
     init_pair(LOWER_STRIP_TEXT , Lower_Strip_Text_Color , Lower_Strip_Background_Color);
     init_pair(LOWER_STRIP_BACKGROUND , Lower_Strip_Background_Color , Lower_Strip_Background_Color);
 }
