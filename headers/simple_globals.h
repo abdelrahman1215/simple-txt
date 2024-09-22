@@ -15,18 +15,24 @@ SIMPLE_GLOBAL editor_mode Current_Mode;
 #define DEFAULT_TEXT_COLOR 0xE6
 #define DEFAULT_TITLE_COLOR 0xCA
 #define DEFAULT_OUTLINE_COLOR 0xED
+#define DEFAULT_MODE_TEXT_COLOR 0xE9
 #define DEFAULT_BACKGROUND_COLOR 0xE9
+#define DEFAULT_COMMAND_TEXT_COLOR 0xD7
 #define DEFAULT_LINE_HIGHLIGHT_COLOR 0xEB
-#define DEFAULT_LOWER_STRIP_TEXT_COLOR 0xA6
+#define DEFAULT_MODE_BACKGROUND_COLOR 0xCA
+#define DEFAULT_LOWER_STRIP_TEXT_COLOR 0xD0
 #define DEFAULT_OUTLINE_HIGHLIGHT_COLOR 0xD7
 #define DEFAULT_OUTLINE_BACKGROUND_COLOR 0xE9
-#define DEFAULT_LOWER_STRIP_BACKGROUND_COLOR 0xE9
+#define DEFAULT_LOWER_STRIP_BACKGROUND_COLOR 0xEA
 
 SIMPLE_GLOBAL unsigned short Text_Color;
 SIMPLE_GLOBAL unsigned short Title_Color;
 SIMPLE_GLOBAL unsigned short Outline_Color;
+SIMPLE_GLOBAL unsigned short Mode_Text_Color;
 SIMPLE_GLOBAL unsigned short Background_Color;
+SIMPLE_GLOBAL unsigned short Command_Text_Color;
 SIMPLE_GLOBAL unsigned short Line_Highlight_Color;
+SIMPLE_GLOBAL unsigned short Mode_Background_Color;
 SIMPLE_GLOBAL unsigned short Lower_Strip_Text_Color;
 SIMPLE_GLOBAL unsigned short Outline_Highlight_Color;
 SIMPLE_GLOBAL unsigned short Lower_Strip_Background_Color;
@@ -40,6 +46,8 @@ SIMPLE_GLOBAL unsigned short Lower_Strip_Background_Color;
 #define TITLE 7
 #define LOWER_STRIP_BACKGROUND 8
 #define LOWER_STRIP_TEXT 9
+#define MODE 10
+#define COMMAND 11
 
 #ifndef CTRL
 #define CTRL(c) (((int)c) & 037)
