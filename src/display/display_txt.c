@@ -36,12 +36,12 @@ void update_values(text_display_info *info_ptr){
     }
 
     info_ptr -> line_pos = simple_file_get_curr_line(info_ptr -> file) , info_ptr -> col_pos = simple_file_get_curr_column(info_ptr -> file);
-    size_t line_len = simple_file_get_line_len(info_ptr -> file , info_ptr -> line_pos);
+    //size_t line_len = simple_file_get_line_len(info_ptr -> file , info_ptr -> line_pos);
     size_t line_no = simple_file_get_line_no(info_ptr -> file);
 
     if(info_ptr -> display_line_no){
         int log_of_line_no = (int)log10(line_no);
-        info_ptr -> indent = log_of_line_no + 2 + info_ptr -> highlight_current_line;
+        info_ptr -> indent = log_of_line_no + 2 + info_ptr -> highlight_current_line + 1;
     }else{
         info_ptr -> indent = 0;
     }
@@ -145,7 +145,7 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
 
     wattron(info_ptr -> window , COLOR_PAIR(SIDE_STRIPS));
 
-    size_t number_len = log_of_line_no + 1;
+    size_t number_len = log_of_line_no + 1 + highlight_current_line;
     char empty_number[number_len + 1];
     char number[number_len + 1];
         
@@ -171,7 +171,7 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
         if(info_ptr -> start_line + i >= line_no){
             mvwprintw(info_ptr -> window , y , x , "%s" , empty_number);
         }else{
-            itoa(info_ptr -> start_line + i + 1 , number + (log_of_line_no - (int)log10(info_ptr -> start_line + i + 1)) , 10);
+            itoa(info_ptr -> start_line + i + 1 , number + (log_of_line_no - (int)log10(info_ptr -> start_line + i + 1)) + 1 , 10);
             mvwprintw(info_ptr -> window , y , x , "%s" , number);
         }
 
