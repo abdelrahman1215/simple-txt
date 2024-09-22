@@ -34,7 +34,7 @@ void insert_mode(int input , WINDOW *inp_window){
             simple_file_move_nlines_up(Current_File , 1);
             break;
 
-        case 8://backspace
+        case '\b'://backspace
             if(col_pos > 0){
                 simple_file_delete(Current_File , line_pos , col_pos - 1 , 1);
             }else if(line_pos > 0){

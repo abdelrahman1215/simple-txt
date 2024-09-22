@@ -1,5 +1,6 @@
 #include "../../headers/simple_globals.h"
 #include "../../headers/simple_file.h"
+#include "command_mode.c"
 
 #include <pdcurses.h>
 #include <stdlib.h>
@@ -42,8 +43,9 @@ void normal_mode(int input , WINDOW *inp_window){
             simple_file_delete_lines(Current_File , simple_file_get_curr_line(Current_File) , 1);
             break;
 
-        case 'q':
-        case 'Q':
-            exit(0);
+        case ':':
+            command_mode();
+            break;
+
     }
 }
