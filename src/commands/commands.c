@@ -16,8 +16,7 @@ void write_to_current_file(char **args){
 //command : "q"
 //tokens_no : 0
 void quit(char **args){
-    destroy_simple_file(Current_File);
-    exit(0);
+    Quit = true;
 
     return ;
 }

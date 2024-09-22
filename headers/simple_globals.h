@@ -20,7 +20,7 @@ SIMPLE_GLOBAL editor_mode Current_Mode;
 #define DEFAULT_LOWER_STRIP_TEXT_COLOR 0xA6
 #define DEFAULT_OUTLINE_HIGHLIGHT_COLOR 0xD7
 #define DEFAULT_OUTLINE_BACKGROUND_COLOR 0xE9
-#define DEFAULT_LOWER_STRIP_BACKGROUND_COLOR 0xEA
+#define DEFAULT_LOWER_STRIP_BACKGROUND_COLOR 0xE9
 
 SIMPLE_GLOBAL unsigned short Text_Color;
 SIMPLE_GLOBAL unsigned short Title_Color;
@@ -29,17 +29,17 @@ SIMPLE_GLOBAL unsigned short Background_Color;
 SIMPLE_GLOBAL unsigned short Line_Highlight_Color;
 SIMPLE_GLOBAL unsigned short Lower_Strip_Text_Color;
 SIMPLE_GLOBAL unsigned short Outline_Highlight_Color;
-SIMPLE_GLOBAL unsigned short Outline_Background_Color;
 SIMPLE_GLOBAL unsigned short Lower_Strip_Background_Color;
 
 #define TEXT 1
 #define SIDE_STRIPS 2
 #define BACKGROUND 3
-#define LINE_HIGHLIGHT 4
-#define SIDE_STRIP_HIGHLIGHT 5
-#define TITLE 6
-#define LOWER_STRIP_BACKGROUND 7
-#define LOWER_STRIP_TEXT 8
+#define TEXT_BACKGROUND 4
+#define LINE_HIGHLIGHT 5
+#define SIDE_STRIP_HIGHLIGHT 6
+#define TITLE 7
+#define LOWER_STRIP_BACKGROUND 8
+#define LOWER_STRIP_TEXT 9
 
 #ifndef CTRL
 #define CTRL(c) (((int)c) & 037)
@@ -55,6 +55,7 @@ SIMPLE_GLOBAL unsigned short Lower_Strip_Background_Color;
 #define SHIFT_UP 547
 #define SHIFT_DOWN 548
 
+SIMPLE_GLOBAL bool Quit;
 SIMPLE_GLOBAL simple_file *Current_File;
 SIMPLE_GLOBAL unsigned int Txt_Disp_Start_X , Txt_Disp_Start_Y , Txt_Disp_End_X , Txt_Disp_End_Y;
 SIMPLE_GLOBAL unsigned int Least_H_Distance , Least_V_Distance;
