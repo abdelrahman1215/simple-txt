@@ -21,6 +21,8 @@ typedef struct text_display_info{
     unsigned int indent;
 
     bool display_line_no , display_file_name , highlight_current_line , Scroll;
+
+    WINDOW *window;
 }text_display_info;
 
 void update_values(text_display_info *info_ptr){
@@ -60,13 +62,7 @@ void update_values(text_display_info *info_ptr){
     }
 
     if(info_ptr -> col_pos >= info_ptr -> start_col + disp_width - Least_H_Distance){
-        if(info_ptr -> start_col + disp_width + 1 >= line_len && line_len >= disp_width){
-            info_ptr -> start_col = line_len - disp_width;
-        }else if(line_len < disp_width){
-            info_ptr -> start_col = 0;
-        }else{
-            info_ptr -> start_col = info_ptr -> col_pos - (disp_width - Least_H_Distance);
-        }
+        info_ptr -> start_col = info_ptr -> col_pos - (disp_width - Least_H_Distance);
     }else if(info_ptr -> col_pos <= info_ptr -> start_col + Least_H_Distance && info_ptr -> start_col > 0){
         if(info_ptr -> col_pos < Least_H_Distance){
             info_ptr -> start_col = 0;
@@ -129,15 +125,15 @@ void disp_file_name(text_display_info *info_ptr){
         file_name[(info_ptr -> disp_end_x - info_ptr -> disp_start_x) - 6] = '\000';
     }
 
-    attron(COLOR_PAIR(TITLE));
+    wattron(info_ptr -> window , COLOR_PAIR(TITLE));
 
     curs_set(0);
 
-    mvprintw(info_ptr -> disp_start_y , info_ptr -> disp_start_x + ((info_ptr -> disp_end_x - info_ptr -> disp_start_x)/2) - (strlen(file_name)/2) , "%s" , file_name);
+    mvwprintw(info_ptr -> window , info_ptr -> disp_start_y , info_ptr -> disp_start_x + ((info_ptr -> disp_end_x - info_ptr -> disp_start_x)/2) - (strlen(file_name)/2) , "%s" , file_name);
     
     curs_set(1);
 
-    attroff(COLOR_PAIR(TITLE));
+    wattroff(info_ptr -> window , COLOR_PAIR(TITLE));
 
     free(file_path);
 }
@@ -147,7 +143,7 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
     size_t line_no = simple_file_get_line_no(info_ptr -> file);
     int log_of_line_no = (int)log10(line_no);
 
-    attron(COLOR_PAIR(SIDE_STRIPS));
+    wattron(info_ptr -> window , COLOR_PAIR(SIDE_STRIPS));
 
     size_t number_len = log_of_line_no + 1;
     char empty_number[number_len + 1];
@@ -166,35 +162,46 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
         y = info_ptr -> txt_start_y + i;
 
         if(info_ptr -> start_line + i == info_ptr -> line_pos && highlight_current_line){
-            attroff(COLOR_PAIR(SIDE_STRIPS));
-            attron(COLOR_PAIR(SIDE_STRIP_HIGHLIGHT));
+            wattroff(info_ptr -> window , COLOR_PAIR(SIDE_STRIPS));
+            wattron(info_ptr -> window , COLOR_PAIR(SIDE_STRIP_HIGHLIGHT));
 
             x --;
         }
 
         if(info_ptr -> start_line + i >= line_no){
-            mvprintw(y , x , "%s" , empty_number);
+            mvwprintw(info_ptr -> window , y , x , "%s" , empty_number);
         }else{
             itoa(info_ptr -> start_line + i + 1 , number + (log_of_line_no - (int)log10(info_ptr -> start_line + i + 1)) , 10);
-            mvprintw(y , x , "%s" , number);
+            mvwprintw(info_ptr -> window , y , x , "%s" , number);
         }
 
         if(info_ptr -> start_line + i == info_ptr -> line_pos && highlight_current_line){
-            printw("  ");
-            attroff(COLOR_PAIR(SIDE_STRIP_HIGHLIGHT));
-            attron(COLOR_PAIR(SIDE_STRIPS));
+            wprintw(info_ptr -> window , "  ");
+            wattroff(info_ptr -> window , COLOR_PAIR(SIDE_STRIP_HIGHLIGHT));
+            wattron(info_ptr -> window , COLOR_PAIR(SIDE_STRIPS));
         }
     }   
 
 
-    attroff(COLOR_PAIR(SIDE_STRIPS));
+    wattroff(info_ptr -> window , COLOR_PAIR(SIDE_STRIPS));
 }
 
-void update_text_display(simple_file *file_ptr , bool display_line_no , bool display_file_name  , bool highlight_current_line , bool Scroll , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y){
-    if(stdscr == NULL) return ;
+void update_text_display(simple_file *file_ptr , WINDOW *disp_window , bool display_line_no , bool display_file_name  , bool highlight_current_line , bool Scroll , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y){
+    if(disp_window == NULL) return ;
     if(file_ptr == NULL) return ;
-    if(start_x >= end_x || start_y >= end_y || (start_y + 1 > end_y && display_file_name == true)) return ;
-    if(end_x > Screen_Width || end_y > Screen_Height) return ;
+    
+    if(start_x == 0 && end_x == 0){
+        end_x = getmaxx(disp_window);
+    }
+
+    if(start_y == 0 && end_y == 0){
+        end_y = getmaxy(disp_window);
+    }
+
+    if((start_x >= end_x && start_x == 0) || (start_y >= end_y && start_y == 0) || (start_y + 1 >= end_y && display_file_name == true)) return ;
+
+    unsigned int win_width = getmaxx(disp_window) , win_height = getmaxy(disp_window);
+    if(end_x > win_width || end_y > win_height) return ;
 
     static text_display_info info;
 
@@ -210,6 +217,8 @@ void update_text_display(simple_file *file_ptr , bool display_line_no , bool dis
 
     info.Scroll = Scroll;
     info.highlight_current_line = highlight_current_line;
+
+    info.window = disp_window;
 
     size_t line_no = simple_file_get_line_no(file_ptr);
     int log_of_line_no = (int)log10(line_no);
@@ -247,15 +256,7 @@ void update_text_display(simple_file *file_ptr , bool display_line_no , bool dis
         rows[i][0] = '~';
     }
 
-    render_background(info.disp_start_x , info.disp_start_y , info.disp_end_x , info.disp_end_y , BACKGROUND);
-
-    attron(COLOR_PAIR(TEXT));
-    for(unsigned int i = 0 ; i < row_no ; i++){
-        mvprintw(info.txt_start_y + i , info.txt_start_x , "%s" , rows[i]);
-    }
-    attroff(COLOR_PAIR(TEXT));
-
-    mvchgat(info.txt_start_y + (info.line_pos - info.start_line) , info.txt_start_x , (info.disp_end_x - info.txt_start_x) , COLOR_PAIR(LINE_HIGHLIGHT) , 0 , NULL);
+    render_background(info.window , info.disp_start_x , info.disp_start_y , info.disp_end_x , info.disp_end_y , BACKGROUND);
 
     if(info.display_line_no == true){
         disp_line_no(&info , highlight_current_line);
@@ -265,10 +266,18 @@ void update_text_display(simple_file *file_ptr , bool display_line_no , bool dis
         disp_file_name(&info);
     }
 
+    wattron(info.window , COLOR_PAIR(TEXT));
+    for(unsigned int i = 0 ; i < row_no ; i++){
+        mvwprintw(info.window , info.txt_start_y + i , info.txt_start_x , "%s" , rows[i]);
+    }
+    wattroff(info.window , COLOR_PAIR(TEXT));
+
+    mvwchgat(info.window , info.txt_start_y + (info.line_pos - info.start_line) , info.txt_start_x , (info.disp_end_x - info.txt_start_x) , COLOR_PAIR(LINE_HIGHLIGHT) , 0 , NULL);
+
     if(info.cursor_x == -1 && info.cursor_y == -1){
         info.cursor_x = info.txt_start_x;
         info.cursor_y = info.txt_start_y;
     }
 
-    move(info.cursor_y , info.cursor_x);
+    wmove(info.window , info.cursor_y , info.cursor_x);
 }

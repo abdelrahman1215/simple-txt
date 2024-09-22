@@ -7,21 +7,21 @@
 
 #include <pdcurses.h>
 
-void handle_input(){
+void handle_input(WINDOW *inp_window){
     flushinp();
     int ch;
 
     do{
-        ch = getch();
+        ch = wgetch(inp_window);
     }while(ch == ERR);
 
     switch(Current_Mode){
         case Normal_Mode:
-            normal_mode(ch);
+            normal_mode(ch , inp_window);
             break;
 
         case Insert_Mode:
-            insert_mode(ch);
+            insert_mode(ch , inp_window);
             break;
     }
 }

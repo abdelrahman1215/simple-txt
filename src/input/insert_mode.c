@@ -4,7 +4,7 @@
 #include <pdcurses.h>
 #include <ctype.h>
 
-void insert_mode(int input){
+void insert_mode(int input , WINDOW *inp_window){
     if(input == ERR) return ;
 
     size_t line_pos = simple_file_get_curr_line(Current_File);
@@ -54,7 +54,7 @@ void insert_mode(int input){
             break;
         
         default:
-            for(int ch = input ; ch != ERR && (isprint(ch) || ch == '\n' || ch == '\t') ; ch = getch()){
+            for(int ch = input ; ch != ERR && (isprint(ch) || ch == '\n' || ch == '\t') ; ch = wgetch(inp_window)){
                 line_pos = simple_file_get_curr_line(Current_File);
                 col_pos = simple_file_get_curr_column(Current_File);
 

@@ -4,7 +4,7 @@
 #include <pdcurses.h>
 #include <stdlib.h>
 
-void normal_mode(int input){
+void normal_mode(int input , WINDOW *inp_window){
     if(input == ERR) return ; 
 
     switch(input){
