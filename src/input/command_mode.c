@@ -10,8 +10,19 @@ void command_mode(){
     unsigned int win_width = getmaxx(Lower_Strip_Window);
     //unsigned int win_height = getmaxy(Lower_Strip_Window);
 
+    wattron(Lower_Strip_Window , COLOR_PAIR(LOWER_STRIP_BACKGROUND));
+
+    mvwhline(Lower_Strip_Window , 0 , 0 , 0 , Screen_Width);
+
+    wattroff(Lower_Strip_Window , COLOR_PAIR(LOWER_STRIP_BACKGROUND));
+
+    wattron(Lower_Strip_Window , COLOR_PAIR(LOWER_STRIP_TEXT));
+
     mvwprintw(Lower_Strip_Window , 0 , 0 , ":");
-    char *command = get_str(Lower_Strip_Window , Lower_Strip_Background_Color , false , 1 , win_width - 1 , 0 , 1);
+    
+    wattroff(Lower_Strip_Window , COLOR_PAIR(LOWER_STRIP_TEXT));
+
+    char *command = get_str(Lower_Strip_Window , LOWER_STRIP_BACKGROUND , COMMAND , false , 1 , win_width - 1 , 0 , 1);
     if(command == NULL) return ;
 
     parse_command(command);

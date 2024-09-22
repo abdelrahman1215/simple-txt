@@ -1,3 +1,4 @@
+#include "../headers/simple_globals.h"
 #include "../headers/simple_file.h"
 #include "../headers/simple_str.h"
 #include "../headers/display.h"
@@ -9,7 +10,7 @@
 #include <ctype.h>
 
 
-char *get_str(WINDOW *inp_window , unsigned int background_color , bool warp_text , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned int end_y){
+char *get_str(WINDOW *inp_window , unsigned int background_pair , unsigned int text_pair , bool warp_text , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned int end_y){
     if(inp_window == NULL) return NULL;
 
     if(start_x == 0 && end_x == 0){
@@ -36,15 +37,17 @@ char *get_str(WINDOW *inp_window , unsigned int background_color , bool warp_tex
     size_t line_pos = 0; 
     size_t col_pos = 0;
 
+    text_display_info *save_info = new_text_disp_info();
+    if(save_info == NULL) return NULL;
+
     for(int ch = wgetch(inp_window) ; ch != '\n' ; ch = wgetch(inp_window)){
         line_pos = simple_file_get_curr_line(buffer);
         col_pos = simple_file_get_curr_column(buffer);
 
         switch(ch){
             case '\e':
-                ungetch('\n');
-
-                break;
+                free(save_info);
+                return NULL;
 
             case KEY_LEFT:
                 simple_file_move_ncols_left(buffer , 1);
@@ -82,9 +85,11 @@ char *get_str(WINDOW *inp_window , unsigned int background_color , bool warp_tex
                 }
         }
 
-        update_text_display(buffer , inp_window , background_color , 0 , 0 , false , false , false , false , start_x , end_x , start_y , end_y);
+        update_text_display(buffer , save_info , inp_window , background_pair , text_pair , 0 , 0 , 0 , 0 , 0 , false , false , false , false , start_x , end_x , start_y , end_y);
         wrefresh(inp_window);
     }
+
+    free(save_info);
 
     simple_str *ret_buff = new_simple_str("");
     if(ret_buff == NULL){
