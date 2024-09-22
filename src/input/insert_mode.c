@@ -34,6 +34,14 @@ void insert_mode(int input , WINDOW *inp_window){
             simple_file_move_nlines_up(Current_File , 1);
             break;
 
+        case CTRL('z'):
+            simple_file_undo(Current_File);
+            break;
+
+        case CTRL('y'):
+            simple_file_redo(Current_File);
+            break;
+
         case '\b'://backspace
             if(col_pos > 0){
                 simple_file_delete(Current_File , line_pos , col_pos - 1 , 1);
