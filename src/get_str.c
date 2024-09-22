@@ -41,6 +41,11 @@ char *get_str(WINDOW *inp_window , unsigned int background_color , bool warp_tex
         col_pos = simple_file_get_curr_column(buffer);
 
         switch(ch){
+            case '\e':
+                ungetch('\n');
+
+                break;
+
             case KEY_LEFT:
                 simple_file_move_ncols_left(buffer , 1);
 

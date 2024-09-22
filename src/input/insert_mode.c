@@ -14,7 +14,7 @@ void insert_mode(int input , WINDOW *inp_window){
     size_t line_len = simple_file_get_line_len(Current_File , line_pos);
 
     switch(input){
-        case 27://escape
+        case '\e'://escape
             Current_Mode = Normal_Mode;
             return;
 
