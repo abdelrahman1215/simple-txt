@@ -1,7 +1,7 @@
-#include "headers/parse_term_args.h"
-#include "headers/simple_globals.h"
-#include "headers/display.h"
-#include "headers/input.h"
+#include "../headers/parse_term_args.h"
+#include "../headers/simple_globals.h"
+#include "../headers/display.h"
+#include "../headers/input.h"
 
 #include <pdcurses.h>
 #include <stdlib.h>
