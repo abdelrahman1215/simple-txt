@@ -150,7 +150,7 @@ void command_tree_add_node(command_tree *tree_ptr , const char *command , unsign
 command_node **_command_tree_find_node_ptr_(command_tree *tree_ptr , const char *command){
     if(tree_ptr == NULL || command == NULL) return NULL;
     for(size_t i = 0 ; command[i] ; i++){
-        if(isalpha(command[i] == 0)) return NULL;
+        if(isalpha(command[i]) == 0) return NULL;
     }
 
     command_node **ret;
