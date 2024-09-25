@@ -77,10 +77,7 @@ int main(int argc , char **argv){
         handle_input(Text_Window);
 
         update_lower_strip(Lower_Strip_Window);
-        wnoutrefresh(Lower_Strip_Window);
-
         update_text_display(Current_File , save_text_info , Text_Window , BACKGROUND , TEXT , LINE_HIGHLIGHT , SIDE_STRIPS , SIDE_STRIP_HIGHLIGHT , Least_V_Distance , Least_H_Distance , true , true , true , false , 0 , 0 , 0 , 0);
-        wnoutrefresh(Text_Window);
 
         doupdate();
     }

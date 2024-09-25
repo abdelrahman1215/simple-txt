@@ -291,4 +291,5 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
     }
 
     wmove(save_info -> window , save_info -> cursor_y , save_info -> cursor_x);
+    wnoutrefresh(disp_window);
 }
