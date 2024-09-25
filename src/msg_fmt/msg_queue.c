@@ -38,10 +38,18 @@ char *dequeue_msg(msg_type *get_type){
 
     struct msg *target = linked_list_get_obj(target_node);
     
-    linked_list_delete_node(0 , msg_queue);
-
-    char *ret = target -> msg;
     *get_type = target -> type;
+
+    size_t len = strlen(target -> msg);
+    char *ret = calloc(len + 1 , sizeof(char));
+
+    if(ret == NULL) return NULL;
+    
+    memcpy(ret , target -> msg , len);
+
+
+
+    linked_list_delete_node(0 , msg_queue);
 
     return ret;
 }
