@@ -22,7 +22,7 @@ void run_commands(char **tokens , unsigned short token_no){
         }
 
         if(info.token_no > 0){
-            if(token_no - i < info.token_no){
+            if(token_no - (i + 1) < info.token_no){
                 parsing_error(tokens[i] , Not_Enough_Args);
                 
                 return ;
@@ -64,6 +64,7 @@ void parse_command(char *input){
 
         return;
     }
+    
     char *token = strtok(copy , delimeters);
     unsigned short tokens_no = 0;
     for(char **tmp ; token != NULL ; token = strtok(NULL , delimeters) , tokens_no++){
