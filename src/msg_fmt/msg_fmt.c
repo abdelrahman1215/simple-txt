@@ -1,38 +1,15 @@
 #include "../../c_datastructures/headers/linked_list.h"
 #include "../../headers/msg_fmt.h"
+#include"msg_queue.c"
 
 #include <string.h>
 #include <stdio.h>
 
-linked_list *msg_queue = NULL;
-
-void init_msg_queue(){
-    if(msg_queue != NULL) return ;
-
-    msg_queue = new_linked_list();
-}
-
-void enqueue_msg(char *msg){
+void custom_msg(msg_type type , char *msg){
     if(msg == NULL) return ;
-    if(msg[0] == '\000') return ;
+    if(*msg == '\000') return ;
 
-    if(msg_queue == NULL) init_msg_queue();
-
-    size_t len = strlen(msg);
-    linked_list_add_node(msg , len + 1 , NULL , msg_queue);
-}
-
-char *dequeue_msg(){
-    if(msg_queue == NULL) return NULL;
-
-    node *target_node = linked_list_get_first_node(msg_queue);
-    if(target_node == NULL) return NULL;
-
-    char *ret = linked_list_get_obj(target_node);
-    
-    linked_list_delete_node(0 , msg_queue);
-
-    return ret;
+    enqueue_msg(type , msg);
 }
 
 void loading_msg(const char *file_name , loading_err error){
@@ -50,7 +27,7 @@ void loading_msg(const char *file_name , loading_err error){
         default : return ;
     }
 
-    enqueue_msg(msg);
+    enqueue_msg(Message , msg);
 }
 
 void wrote_into_file_msg(const char *file_name){
@@ -61,37 +38,6 @@ void wrote_into_file_msg(const char *file_name){
     memset(msg , 0 , 1024);
 
     sprintf(msg , "wrote the changes into \"%s\"" , file_name);
-}
-
-linked_list *error_queue = NULL;
-
-void init_error_queue(){
-    if(error_queue != NULL) return ;
-
-    error_queue = new_linked_list();
-}
-
-void enqueue_error(char *error_msg){
-    if(error_msg == NULL) return ;
-    if(error_msg[0] == '\000') return ;
-
-    if(error_queue == NULL) init_error_queue();
-
-    size_t len = strlen(error_msg);
-    linked_list_add_node(error_msg , len + 1 , NULL , error_queue);
-}
-
-char *dequeue_error(){
-    if(error_queue == NULL) return NULL;
-
-    node *target_node = linked_list_get_first_node(error_queue);
-    if(target_node == NULL) return NULL;
-
-    char *ret = linked_list_get_obj(target_node);
-    
-    linked_list_delete_node(0 , error_queue);
-
-    return ret;
 }
 
 void loading_error(const char *file_name ,  loading_err error_type){
@@ -111,7 +57,7 @@ void loading_error(const char *file_name ,  loading_err error_type){
         default : return ;
     }
 
-    enqueue_error(error);
+    enqueue_msg(Error , error);
 }
 
 void parsing_error(const char *command ,  parsing_errors error_type){
@@ -139,7 +85,7 @@ void parsing_error(const char *command ,  parsing_errors error_type){
         default : return ;
     }
 
-    enqueue_error(error);
+    enqueue_msg(Error , error);
 }
 
 void term_arg_error(const char *arg ,  parsing_term_errors error_type){
@@ -163,5 +109,5 @@ void term_arg_error(const char *arg ,  parsing_term_errors error_type){
         default : return ;
     }
 
-    enqueue_error(error);
+    enqueue_msg(Error , error);
 }

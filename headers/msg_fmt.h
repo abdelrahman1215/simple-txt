@@ -5,12 +5,13 @@
 #include "parse_commands.h"
 #include "simple_file.h"
 
-char *dequeue_msg();
+typedef enum msg_type {Error = 1 , Warning = 2 , Message = 3} msg_type;
 
+char *dequeue_msg(msg_type *get_type);
+
+void custom_msg(msg_type type , char *msg);
 void loading_msg(const char *file_name , loading_err error);
 void wrote_into_file_msg(const char *file_name);
-
-char *dequeue_error();
 
 void loading_error(const char *file_name ,  loading_err error_type);
 void parsing_error(const char *command ,  parsing_errors error_type);
