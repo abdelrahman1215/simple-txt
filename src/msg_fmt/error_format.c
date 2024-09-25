@@ -1,5 +1,5 @@
-#include "../c_datastructures/headers/linked_list.h"
-#include "../headers/error_format.h"
+#include "../../c_datastructures/headers/linked_list.h"
+#include "../../headers/error_format.h"
 
 #include <string.h>
 #include <stdio.h>
