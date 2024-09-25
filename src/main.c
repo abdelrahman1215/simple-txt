@@ -56,11 +56,12 @@ int main(int argc , char **argv){
     notimeout(Text_Window , true);
     nodelay(Text_Window , true);
     keypad(Text_Window , true);
-    wrefresh(Text_Window);
+    wnoutrefresh(Text_Window);
 
     Lower_Strip_Window = newwin(1 , Screen_Width , Screen_Height - 1 , 0);
     nodelay(Lower_Strip_Window , true);
-    wrefresh(Lower_Strip_Window);
+    keypad(Lower_Strip_Window , true);
+    wnoutrefresh(Lower_Strip_Window);
     refresh();
 
 

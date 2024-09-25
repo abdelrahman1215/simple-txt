@@ -41,6 +41,8 @@ char *get_str(WINDOW *inp_window , unsigned int background_pair , unsigned int t
     if(save_info == NULL) return NULL;
 
     for(int ch = wgetch(inp_window) ; ch != '\n' ; ch = wgetch(inp_window)){
+        if(ch == ERR) continue;
+
         line_pos = simple_file_get_curr_line(buffer);
         col_pos = simple_file_get_curr_column(buffer);
 
