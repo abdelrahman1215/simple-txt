@@ -2,7 +2,7 @@ CC = gcc
 C_Flags = -g3
 Data_Structures_Path = c_datastructures/bin/
 
-main : simple_file.o error_format.o msg_format.o parse_commands.o parse_term_args.o display.o input.o get_str.o datastructs
+main : simple_file.o msg_fmt.o parse_commands.o parse_term_args.o display.o input.o get_str.o datastructs
 	$(CC) $(C_Flags) -o simple-txt src/main.c bin/*.o -lpdcurses -L$(Data_Structures_Path) -ldynamic_array -llinked_list -lhashmap
 
 simple_str.o : src/simple_str.c bin/
@@ -11,11 +11,8 @@ simple_str.o : src/simple_str.c bin/
 simple_file.o : src/file_processing/load_file.c src/file_processing/edit_file.c bin/ simple_str.o div_str.o
 	$(CC) $(C_Flags) -c src/file_processing/simple_file.c -o bin/simple_file.o
 
-error_format.o : src/msg_fmt/error_format.c bin/
-	$(CC) $(C_Flags) -c src/msg_fmt/error_format.c -o bin/error_format.o
-
-msg_format.o : src/msg_fmt/msg_format.c bin/ 
-	$(CC) $(C_Flags) -c src/msg_fmt/msg_format.c -o bin/msg_format.o
+msg_fmt.o : src/msg_fmt/msg_fmt.c bin/ 
+	$(CC) $(C_Flags) -c src/msg_fmt/msg_fmt.c -o bin/msg_fmt.o
 
 parse_commands.o : src/commands/parse_commands.c bin/
 	$(CC) $(C_Flags) -c src/commands/parse_commands.c -o bin/parse_commands.o

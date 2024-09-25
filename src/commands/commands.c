@@ -1,7 +1,6 @@
 #include "../../headers/simple_globals.h"
-#include "../../headers/error_format.h"
 #include "../../headers/simple_file.h"
-#include "../../headers/msg_format.h"
+#include "../../headers/msg_fmt.h"
 
 #include <stdlib.h>
 

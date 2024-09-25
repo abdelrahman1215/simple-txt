@@ -1,9 +1,14 @@
-#ifndef ERRORS_H
-#define ERRORS_H
+#ifndef MSG_FMT
+#define MSG_FMT
 
 #include "parse_term_args.h"
 #include "parse_commands.h"
 #include "simple_file.h"
+
+char *dequeue_msg();
+
+void loading_msg(const char *file_name , loading_err error);
+void wrote_into_file_msg(const char *file_name);
 
 char *dequeue_error();
 
