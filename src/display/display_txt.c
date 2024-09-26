@@ -204,7 +204,15 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
 
     if(save_info -> file == NULL){
         save_info -> file = file_ptr;
-    }else if(save_info -> file != file_ptr) return;
+    }else if(save_info -> file != file_ptr){
+        save_info -> file = file_ptr;
+        save_info -> col_pos = save_info -> line_pos = 0;
+        save_info -> start_line = save_info -> start_col = 0;
+        save_info -> cursor_x = save_info -> cursor_y = 0;
+        save_info -> disp_start_x = save_info -> disp_end_x = save_info -> disp_start_y = save_info -> disp_end_y = save_info -> txt_start_x = save_info -> txt_start_y = save_info -> indent = 0;
+        save_info -> background_pair = save_info -> text_pair = save_info -> line_highlight_pair = save_info -> side_strip_highlight_pair = save_info -> side_strip_pair = 0;
+        save_info -> display_line_no = save_info -> display_file_name = save_info -> highligh_current_line = save_info -> Scroll = false;
+    }
 
     save_info -> file = file_ptr;
     save_info -> display_line_no = display_line_no;
