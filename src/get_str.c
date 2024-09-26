@@ -34,17 +34,66 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
 
     char tmp[2] = " ";
 
-    size_t line_pos = 0; 
     size_t col_pos = 0;
 
     text_display_info *save_info = new_text_disp_info();
     if(save_info == NULL) return NULL;
 
+    bool cycle_thru_opts = false;
+    size_t opt_index = 0;
+    autocomp_info info = {.rep_options = NULL};
+
     for(int ch = wgetch(inp_window) ; ch != '\n' ; ch = wgetch(inp_window)){
         if(ch == ERR) continue;
 
-        line_pos = simple_file_get_curr_line(buffer);
         col_pos = simple_file_get_curr_column(buffer);
+        
+        if(ch == '\t'){
+            if(autocomplete == NULL) continue;;
+
+            char *input = simple_file_get_line(buffer , 0);
+            if(input == NULL) return NULL;
+
+            autocomp_info tmp_info = autocomplete(input , col_pos , !cycle_thru_opts);
+            info.replace_start = tmp_info.replace_start;
+            info.replace_end = tmp_info.replace_end;
+            if(!cycle_thru_opts){
+                if(info.rep_options != NULL){
+                    for(size_t i = 0 ; i < info.opt_no ; i++){
+                        free(info.rep_options[i]);
+                    }
+
+                    free(info.rep_options);
+                }
+
+                info.opt_no = tmp_info.opt_no;
+                info.rep_options = tmp_info.rep_options;
+            }
+
+            free(input);
+            if(info.rep_options == NULL) continue;
+
+            size_t del_count = info.replace_end - info.replace_start;
+
+            simple_file_delete(buffer , 0 , info.replace_start , del_count);
+            simple_file_add(buffer , 0 , info.replace_start , info.rep_options[opt_index]);
+
+            if(info.opt_no > 1){
+                cycle_thru_opts = true;
+                opt_index ++;
+            }
+
+            if(opt_index >= info.opt_no){
+                opt_index = 0;
+            }
+
+            update_text_display(buffer , save_info , inp_window , background_pair , text_pair , 0 , 0 , 0 , 0 , 0 , false , false , false , false , start_x , end_x , start_y , end_y);
+            wrefresh(inp_window);
+            continue;
+        }
+
+        cycle_thru_opts = false;
+        opt_index = 0;
 
         switch(ch){
             case '\e':
@@ -63,42 +112,22 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
 
             case '\b':
                 if(col_pos > 0){
-                    simple_file_delete(buffer , line_pos , col_pos - 1 , 1);
+                    simple_file_delete(buffer , 0 , col_pos - 1 , 1);
                 }
 
                 break;
 
             case KEY_DC:
-                simple_file_delete(buffer , line_pos , col_pos , 1);
+                simple_file_delete(buffer , 0 , col_pos , 1);
 
                 break;
             
-            case '\t':
-                if(autocomplete == NULL) break;
-                char *input = simple_file_get_line(buffer , 0);
-                if(input == NULL) return NULL;
-
-                autocomp_info info = autocomplete(input , col_pos);
-                free(input);
-
-                if(info.replacement == NULL) break;
-
-                if(info.replace_start >= info.replace_end) return NULL;
-
-                size_t del_len = info.replace_end - info.replace_start;
-                simple_file_delete(buffer , 0 , info.replace_start , del_len);
-                simple_file_add(buffer , 0 , info.replace_start , info.replacement);
-
-                free(info.replacement);
-
-                break;
-
             default :
                 for(int tmp = ch ; tmp != ERR ; tmp = wgetch(inp_window)){
                     if(!isprint(tmp)) continue ;
 
                     char tmp_buff[2] = {(char)tmp , '\000'};
-                    simple_file_add(buffer , line_pos , col_pos , tmp_buff);
+                    simple_file_add(buffer , 0 , col_pos , tmp_buff);
                 }
 
                 break;
@@ -108,6 +137,13 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
         wrefresh(inp_window);
     }
 
+    if(info.rep_options != NULL){
+        for(size_t i = 0 ; i < info.opt_no ; i++){
+            free(info.rep_options[i]);
+        }
+
+        free(info.rep_options);
+    }
     free(save_info);
 
     simple_str *ret_buff = new_simple_str("");

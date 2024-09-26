@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-autocomp_info autocomplete(char *input , size_t pos){
-    autocomp_info ret;
+autocomp_info autocomplete(char *input , size_t pos , bool get_replacement){
+    autocomp_info ret = {.opt_no = 0 , .rep_options = NULL};
 
     for(ret.replace_end = pos ; input[ret.replace_end + 1] != '\000' ; ret.replace_end ++){
         if(input[ret.replace_end + 1] == ' ') break;
@@ -17,17 +17,49 @@ autocomp_info autocomplete(char *input , size_t pos){
         if(input[ret.replace_start - 1] == ' ') break;
     }
 
-    if(ret.replace_start == ret.replace_end) return (autocomp_info){.replace_start = 0 , .replace_end = 0 , .replacement = 0};
+    if(ret.replace_start == ret.replace_end) return (autocomp_info){.replace_start = 0 , .replace_end = 0 , .rep_options = NULL , .opt_no = 0};
 
-    {
+    if(get_replacement){
         size_t tok_len = ret.replace_end - ret.replace_start;
-        char tmp[tok_len + 1];
-        memset(tmp , 0 , tok_len + 1);
-        strncpy(tmp , input + ret.replace_start , tok_len);
+        char tok[tok_len + 1];
+        memset(tok , 0 , tok_len + 1);
+        strncpy(tok , input + ret.replace_start , tok_len);
 
-        ret.replacement = get_nearest_command(tmp);
-        if(ret.replacement == NULL) return (autocomp_info){.replace_start = 0 , .replace_end = 0 , .replacement = NULL};
-        if(strlen(ret.replacement) == tok_len) return (autocomp_info){.replace_start = 0 , .replace_end = 0 , .replacement = NULL};
+        linked_list *list = get_nearest_command_list(tok);
+        if(list == NULL) return (autocomp_info){.replace_start = 0 , .replace_end = 0 , .rep_options = NULL , .rep_options = NULL};
+
+        ret.opt_no = linked_list_get_node_no(list);
+        if(ret.opt_no == 0){
+            destroy_linked_list(list);
+
+            return (autocomp_info){.replace_start = 0 , .replace_end = 0 , .rep_options = NULL , .rep_options = NULL};
+        }
+
+        ret.rep_options = calloc(ret.opt_no , sizeof(char *));
+        if(ret.rep_options ==NULL){
+            destroy_linked_list(list);
+
+            return (autocomp_info){.replace_start = 0 , .replace_end = 0 , .rep_options = NULL , .rep_options = NULL};
+        }
+
+        command_info *target_info;
+        size_t command_len;
+        size_t i = 0;
+        for(node *target_node = linked_list_get_first_node(list) ; target_node != NULL ; target_node = linked_list_get_next_node(target_node)){
+            target_info = linked_list_get_obj(target_node);
+
+            command_len = strlen(target_info -> command);
+            if(command_len == tok_len && i == 0){
+                ret.rep_options[ret.opt_no - 1] = calloc(command_len + 1 , sizeof(char));
+                strncpy(ret.rep_options[ret.opt_no - 1] , target_info -> command , command_len);   
+            }else{
+                ret.rep_options[i] = calloc(command_len + 1 , sizeof(char));
+                strncpy(ret.rep_options[i] , target_info -> command , command_len);
+                i++;
+            }
+
+            free(target_info);
+        }
     }
 
     return ret;

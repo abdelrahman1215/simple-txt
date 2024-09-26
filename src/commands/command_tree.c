@@ -7,17 +7,6 @@
 
 typedef struct command_node command_node;
 
-typedef void (command_func) (char **tokens);
-
-typedef struct command_info{
-    char *command;
-    size_t command_len;
-    //specifies the number of tokens that should follow a command and be given to it
-    unsigned short token_no;
-
-    command_func *command_exec;
-}command_info;
-
 typedef struct command_tree command_tree;
 
 typedef struct command_node{
