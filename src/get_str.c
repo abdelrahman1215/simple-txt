@@ -81,6 +81,8 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
                 autocomp_info info = autocomplete(input , col_pos);
                 free(input);
 
+                if(info.replacement == NULL) break;
+
                 if(info.replace_start >= info.replace_end) return NULL;
 
                 size_t del_len = info.replace_end - info.replace_start;
@@ -91,7 +93,6 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
 
                 break;
 
-
             default :
                 for(int tmp = ch ; tmp != ERR ; tmp = wgetch(inp_window)){
                     if(!isprint(tmp)) continue ;
@@ -99,6 +100,8 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
                     char tmp_buff[2] = {(char)tmp , '\000'};
                     simple_file_add(buffer , line_pos , col_pos , tmp_buff);
                 }
+
+                break;
         }
 
         update_text_display(buffer , save_info , inp_window , background_pair , text_pair , 0 , 0 , 0 , 0 , 0 , false , false , false , false , start_x , end_x , start_y , end_y);

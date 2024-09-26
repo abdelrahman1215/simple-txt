@@ -6,5 +6,6 @@
 typedef enum parsing_errors {Command_Not_Found = 1 , Not_Enough_Args = 2} parsing_errors;
 
 void parse_command(char *input);
+char *get_nearest_command(char *tok);
 
 #endif

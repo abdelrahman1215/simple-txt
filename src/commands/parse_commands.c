@@ -85,3 +85,27 @@ void parse_command(char *input){
     free(tokens);
     free(copy);
 }
+
+char *get_nearest_command(char *tok){
+    if(tok == NULL) return NULL;
+    if(tok[0] == '\000') return NULL;
+    if(Command_Tree == NULL) init_command_tree();
+
+    linked_list *list = command_tree_nearest_commands_list(Command_Tree , tok);
+    if(list == NULL) return NULL;
+
+    node *target_node = linked_list_get_first_node(list);
+    command_info *target = (command_info *)linked_list_get_obj(target_node);
+    char *tmp = target -> command;
+    size_t command_len = strlen(tmp);
+
+    char *ret = calloc(command_len + 1 , sizeof(char));
+    if(ret != NULL){
+        strncpy(ret , tmp , command_len);
+    }
+
+    free(target);
+    destroy_linked_list(list);
+
+    return ret;
+}
