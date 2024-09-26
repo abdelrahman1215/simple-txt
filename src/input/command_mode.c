@@ -22,7 +22,7 @@ void command_mode(){
     
     wattroff(Lower_Strip_Window , COLOR_PAIR(LOWER_STRIP_TEXT));
 
-    char *command = get_str(Lower_Strip_Window , LOWER_STRIP_BACKGROUND , COMMAND , false , 1 , win_width - 1 , 0 , 1);
+    char *command = get_str(Lower_Strip_Window , NULL , LOWER_STRIP_BACKGROUND , COMMAND , 1 , win_width - 1 , 0 , 1);
     if(command == NULL) return ;
 
     parse_command(command);

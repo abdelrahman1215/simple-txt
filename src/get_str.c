@@ -10,7 +10,7 @@
 #include <ctype.h>
 
 
-char *get_str(WINDOW *inp_window , unsigned int background_pair , unsigned int text_pair , bool warp_text , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned int end_y){
+char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int background_pair , unsigned int text_pair , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned int end_y){
     if(inp_window == NULL) return NULL;
 
     if(start_x == 0 && end_x == 0){
@@ -72,15 +72,29 @@ char *get_str(WINDOW *inp_window , unsigned int background_pair , unsigned int t
                 simple_file_delete(buffer , line_pos , col_pos , 1);
 
                 break;
+            
+            case '\t':
+                if(autocomplete == NULL) break;
+                char *input = simple_file_get_line(buffer , 0);
+                if(input == NULL) return NULL;
+
+                autocomp_info info = autocomplete(input , col_pos);
+                free(input);
+
+                if(info.replace_start >= info.replace_end) return NULL;
+
+                size_t del_len = info.replace_end - info.replace_start;
+                simple_file_delete(buffer , 0 , info.replace_start , del_len);
+                simple_file_add(buffer , 0 , info.replace_start , info.replacement);
+
+                free(info.replacement);
+
+                break;
 
 
             default :
                 for(int tmp = ch ; tmp != ERR ; tmp = wgetch(inp_window)){
                     if(!isprint(tmp)) continue ;
-
-                    if(col_pos == win_width || warp_text){
-                        simple_file_add(buffer , line_pos , col_pos , "\n");
-                    }
 
                     char tmp_buff[2] = {(char)tmp , '\000'};
                     simple_file_add(buffer , line_pos , col_pos , tmp_buff);
