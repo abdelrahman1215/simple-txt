@@ -190,13 +190,14 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
         end_y = getmaxy(disp_window);
     }
 
+    if((start_x >= end_x && start_x == 0) || (start_y >= end_y && start_y == 0) || (start_y + 1 >= end_y && display_file_name == true)) return ;
+    
     if(side_strip_highlight_pair == 0) side_strip_highlight_pair = SIDE_STRIP_HIGHLIGHT;
     if(line_highlight_pair == 0) line_highlight_pair = LINE_HIGHLIGHT;
     if(side_strip_pair == 0) side_strip_pair = SIDE_STRIPS;
     if(background_pair == 0) background_pair = BACKGROUND;
     if(text_pair == 0) text_pair = TEXT;
 
-    if((start_x >= end_x && start_x == 0) || (start_y >= end_y && start_y == 0) || (start_y + 1 >= end_y && display_file_name == true)) return ;
 
     unsigned int win_width = getmaxx(disp_window) , win_height = getmaxy(disp_window);
     if(end_x > win_width || end_y > win_height) return ;
