@@ -45,7 +45,8 @@ int main(int argc , char **argv){
     Txt_Disp_Start_Y = 0;
     Txt_Disp_End_X = Screen_Width - 1;
     Txt_Disp_End_Y = Screen_Height - 1;
-    Least_H_Distance = Least_V_Distance = 2;
+    Least_H_Distance = 5;
+    Least_V_Distance = 3;
 
 
     init_color_pairs();
@@ -66,12 +67,16 @@ int main(int argc , char **argv){
 
 
     update_lower_strip(Lower_Strip_Window);
-    wrefresh(Lower_Strip_Window);
 
     text_display_info *save_text_info = new_text_disp_info();
-    render_background(Text_Window , 0 , 0 , getmaxx(Text_Window) , Screen_Height - 1 , BACKGROUND);
     update_text_display(Current_File , save_text_info , Text_Window , BACKGROUND , TEXT , LINE_HIGHLIGHT , SIDE_STRIPS , SIDE_STRIP_HIGHLIGHT, Least_V_Distance , Least_H_Distance , true , true , true , false , 0 , 0 , 0 , 0);
-    wrefresh(Text_Window);
+
+    PANEL *Std_Panel = new_panel(stdscr);
+    PANEL *Text_Panel = new_panel(Text_Window);
+    PANEL *Lower_Strip_Panel = new_panel(Lower_Strip_Window);
+
+    update_panels();
+    doupdate();
 
 
     while(!Quit){
@@ -80,10 +85,16 @@ int main(int argc , char **argv){
         update_lower_strip(Lower_Strip_Window);
         update_text_display(Current_File , save_text_info , Text_Window , BACKGROUND , TEXT , LINE_HIGHLIGHT , SIDE_STRIPS , SIDE_STRIP_HIGHLIGHT , Least_V_Distance , Least_H_Distance , true , true , true , false , 0 , 0 , 0 , 0);
 
+        update_panels();
         doupdate();
     }
 
     free(save_text_info);
+
+    del_panel(Std_Panel);
+    del_panel(Text_Panel);
+    del_panel(Lower_Strip_Panel);
+
     delwin(Lower_Strip_Window);
     delwin(Text_Window);
     endwin();

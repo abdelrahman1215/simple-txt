@@ -82,5 +82,4 @@ void update_lower_strip(WINDOW *disp_window){
     }
 
     wattroff(disp_window , COLOR_PAIR(LOWER_STRIP_TEXT));
-    wnoutrefresh(disp_window);
 }
