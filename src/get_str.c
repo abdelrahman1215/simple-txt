@@ -43,6 +43,10 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
     size_t opt_index = 0;
     autocomp_info info = {.rep_options = NULL};
 
+    wmove(inp_window , start_y , start_x);
+    wrefresh(inp_window);
+    curs_set(1);
+
     for(int ch = wgetch(inp_window) ; ch != '\n' ; ch = wgetch(inp_window)){
         if(ch == ERR) continue;
 
@@ -144,6 +148,9 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
 
         free(info.rep_options);
     }
+
+    curs_set(0);
+
     free(save_info);
 
     simple_str *ret_buff = new_simple_str("");

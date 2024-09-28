@@ -4,6 +4,7 @@
 #include "../headers/input.h"
 
 #include <pdcurses.h>
+#include <pdcurses/panel.h>
 #include <stdlib.h>
 
 //reminder : when using ctrl - v results may vary , in windows terminal
@@ -21,6 +22,7 @@ int main(int argc , char **argv){
     notimeout(stdscr , true);
     start_color();
     noecho();
+    curs_set(0);
     refresh();
 
 
@@ -54,7 +56,6 @@ int main(int argc , char **argv){
     refresh();
 
     Text_Window = newwin(Screen_Height - 1 , Screen_Width - 2 , 0 , 1);
-    notimeout(Text_Window , true);
     nodelay(Text_Window , true);
     keypad(Text_Window , true);
     wnoutrefresh(Text_Window);
@@ -77,7 +78,6 @@ int main(int argc , char **argv){
 
     update_panels();
     doupdate();
-
 
     while(!Quit){
         handle_input(Text_Window);
