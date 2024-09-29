@@ -7,7 +7,10 @@
 //command : "w"
 //tokens_no : 0
 void write_to_current_file(char **args){
+    if(simple_file_changes_saved(Current_File)) return ;
+
     save_file(Current_File);
+    wrote_into_file_msg(simple_file_get_name(Current_File));
 
     return ;
 }

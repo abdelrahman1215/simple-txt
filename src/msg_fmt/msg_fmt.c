@@ -38,6 +38,7 @@ void wrote_into_file_msg(const char *file_name){
     memset(msg , 0 , 1024);
 
     sprintf(msg , "wrote the changes into \"%s\"" , file_name);
+    enqueue_msg(Message , msg);
 }
 
 void loading_error(const char *file_name ,  loading_err error_type){
