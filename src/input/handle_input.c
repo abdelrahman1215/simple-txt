@@ -10,7 +10,7 @@
 void handle_input(WINDOW *inp_window){
     flushinp();
     int ch;
-
+    
     do{
         ch = wgetch(inp_window);
     }while(ch == ERR);

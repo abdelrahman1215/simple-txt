@@ -76,13 +76,13 @@ int main(int argc , char **argv){
     wattrset(Msg_Window , COLOR_PAIR(LOWER_STRIP_BACKGROUND));
     nodelay(Msg_Window , true);
     keypad(Msg_Window , true);
-    wnoutrefresh(Msg_Window);
 
     Std_Panel = new_panel(stdscr);
     Msg_Panel = new_panel(Msg_Window);
     Lower_Strip_Panel = new_panel(Lower_Strip_Window);
     Text_Panel = new_panel(Text_Window);
 
+    hide_panel(Msg_Panel);
     text_display_info *save_text_info = new_text_disp_info();
 
     PANEL *top_panel;

@@ -1,6 +1,7 @@
 #include "../../headers/simple_globals.h"
 #include "../../headers/simple_file.h"
 #include "command_mode.c"
+#include "binding_map.c"
 
 #include <pdcurses.h>
 #include <stdlib.h>
@@ -47,5 +48,8 @@ void normal_mode(int input , WINDOW *inp_window){
             command_mode();
             break;
 
+        default :
+            exec_binding(input);
+            break;
     }
 }
