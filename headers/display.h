@@ -8,6 +8,8 @@
 
 typedef struct text_display_info text_display_info;
 
+void display_messages();
+
 void init_color_pairs();
 
 text_display_info *new_text_disp_info();
