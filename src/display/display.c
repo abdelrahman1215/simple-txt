@@ -1,4 +1,5 @@
 #include "display_txt.c"
+#include "display_msg.c"
 
 #include <string.h>
 
@@ -35,15 +36,25 @@ void init_color_pairs(){
 
     init_pair(TEXT , Text_Color , Background_Color);
     init_pair(TITLE , Title_Color , Background_Color);
-    init_pair(MODE, Mode_Text_Color, Mode_Background_Color);
     init_pair(SIDE_STRIPS , Outline_Color , Background_Color);
     init_pair(BACKGROUND , Background_Color , Background_Color);
-    init_pair(LINE_HIGHLIGHT , Text_Color , Line_Highlight_Color);
     init_pair(TEXT_BACKGROUND , Background_Color , Background_Color);
-    init_pair(COMMAND , Command_Text_Color , Lower_Strip_Background_Color);
     init_pair(SIDE_STRIP_HIGHLIGHT , Outline_Highlight_Color , Line_Highlight_Color);
+
+    init_pair(MODE, Mode_Text_Color, Mode_Background_Color);
+    init_pair(LINE_HIGHLIGHT , Text_Color , Line_Highlight_Color);
+    init_pair(COMMAND , Command_Text_Color , Lower_Strip_Background_Color);
     init_pair(LOWER_STRIP_TEXT , Lower_Strip_Text_Color , Lower_Strip_Background_Color);
     init_pair(LOWER_STRIP_BACKGROUND , Lower_Strip_Background_Color , Lower_Strip_Background_Color);
+
+    init_pair(MESSAGE_E , DEFAULT_E_COLOR , DEFAULT_MESSAGE_BACKGROUND_COLOR);
+    init_pair(MESSAGE_W , DEFAULT_W_COLOR , DEFAULT_MESSAGE_BACKGROUND_COLOR);
+    init_pair(MESSAGE_M , DEFAULT_M_COLOR , DEFAULT_MESSAGE_BACKGROUND_COLOR);
+    init_pair(ERROR_COLOR , DEFAULT_ERROR_COLOR , DEFAULT_MESSAGE_BACKGROUND_COLOR);
+    init_pair(WARNING_COLOR , DEFAULT_WARNING_COLOR , DEFAULT_MESSAGE_BACKGROUND_COLOR);
+    init_pair(MESSAGE_COLOR , DEFAULT_MESSAGE_COLOR , DEFAULT_MESSAGE_BACKGROUND_COLOR);
+    init_pair(MESSAGE_TEXT , Message_Text_Color , Message_Background_Color);
+    init_pair(MESSAGE_BACKGROUND , Message_Background_Color , Message_Background_Color);
 }
 
 void update_lower_strip(WINDOW *disp_window){
