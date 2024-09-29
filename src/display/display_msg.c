@@ -106,9 +106,9 @@ void display_messages(){
                 break;
 
             case Message :
-                wattron(Msg_Window , COLOR_PAIR(WARNING_COLOR));
+                wattron(Msg_Window , COLOR_PAIR(MESSAGE_COLOR));
                 mvwprintw(Msg_Window , i + 1 , 1 , lines[i + start_line]);
-                wattroff(Msg_Window , COLOR_PAIR(WARNING_COLOR));
+                wattroff(Msg_Window , COLOR_PAIR(MESSAGE_COLOR));
 
                 break;
         }
@@ -192,9 +192,9 @@ void display_messages(){
                     break;
 
                 case Message :
-                    wattron(Msg_Window , COLOR_PAIR(WARNING_COLOR));
+                    wattron(Msg_Window , COLOR_PAIR(MESSAGE_COLOR));
                     mvwprintw(Msg_Window , i + 1 , 1 , lines[i + start_line]);
-                    wattroff(Msg_Window , COLOR_PAIR(WARNING_COLOR));
+                    wattroff(Msg_Window , COLOR_PAIR(MESSAGE_COLOR));
 
                     break;
 
