@@ -292,7 +292,7 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
 
     if(highlight_current_line) mvwchgat(save_info -> window , save_info -> cursor_y , save_info -> txt_start_x , (save_info -> disp_end_x - save_info -> txt_start_x) , A_NORMAL , save_info -> line_highlight_pair , NULL);
 
-    if(!Scroll) mvwchgat(save_info -> window , save_info -> cursor_y , save_info -> cursor_x , 1 , A_REVERSE , save_info -> text_pair , NULL);
+    if(!Scroll && highlight_current_line) mvwchgat(save_info -> window , save_info -> cursor_y , save_info -> cursor_x , 1 , A_REVERSE , save_info -> text_pair , NULL);
 
     if(save_info -> cursor_x == -1 && save_info -> cursor_y == -1){
         save_info -> cursor_x = save_info -> txt_start_x;
