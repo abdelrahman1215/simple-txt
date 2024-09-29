@@ -40,16 +40,15 @@ char *dequeue_msg(msg_type *get_type){
     
     *get_type = target -> type;
 
-    size_t len = strlen(target -> msg);
-    char *ret = calloc(len + 1 , sizeof(char));
-
-    if(ret == NULL) return NULL;
-    
-    memcpy(ret , target -> msg , len);
-
-
+    char *ret = target -> msg;
 
     linked_list_delete_node(0 , msg_queue);
 
     return ret;
+}
+
+size_t get_msg_no(){
+    if(msg_queue == NULL) return 0;
+
+    return linked_list_get_node_no(msg_queue);
 }

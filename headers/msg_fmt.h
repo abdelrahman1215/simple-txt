@@ -8,6 +8,7 @@
 typedef enum msg_type {Error = 1 , Warning = 2 , Message = 3} msg_type;
 
 char *dequeue_msg(msg_type *get_type);
+size_t get_msg_no();
 
 void custom_msg(msg_type type , char *msg);
 void loading_msg(const char *file_name , loading_err error);
