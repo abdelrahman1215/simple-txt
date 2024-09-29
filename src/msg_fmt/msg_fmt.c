@@ -37,7 +37,7 @@ void wrote_into_file_msg(const char *file_name){
     char msg[1024];
     memset(msg , 0 , 1024);
 
-    sprintf(msg , "wrote the changes into \"%s\"" , file_name);
+    sprintf(msg , "wrote changes into \"%s\"." , file_name);
     enqueue_msg(Message , msg);
 }
 
