@@ -43,8 +43,9 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
     size_t opt_index = 0;
     autocomp_info info = {.rep_options = NULL};
 
-    wmove(inp_window , start_y , start_x);
+    update_text_display(buffer , save_info , inp_window , background_pair , text_pair , 0 , 0 , 0 , 0 , 0 , false , false , false , false , start_x , end_x , start_y , end_y);
     wrefresh(inp_window);
+
     curs_set(1);
 
     for(int ch = wgetch(inp_window) ; ch != '\n' ; ch = wgetch(inp_window)){
@@ -53,7 +54,7 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
         col_pos = simple_file_get_curr_column(buffer);
         
         if(ch == '\t'){
-            if(autocomplete == NULL) continue;;
+            if(autocomplete == NULL) continue;
 
             char *input = simple_file_get_line(buffer , 0);
             if(input == NULL) return NULL;
