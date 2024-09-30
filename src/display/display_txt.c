@@ -177,7 +177,7 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
     wattroff(info_ptr -> window , COLOR_PAIR(info_ptr -> side_strip_pair));
 }
 
-void update_text_display(simple_file *file_ptr , text_display_info *save_info , WINDOW *disp_window , unsigned int background_pair , unsigned int text_pair , unsigned int line_highlight_pair , unsigned int side_strip_pair , unsigned int side_strip_highlight_pair , unsigned int least_v_dist , unsigned int least_h_dist , bool display_line_no , bool display_file_name  , bool highlight_current_line , bool Scroll , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y){
+void update_text_display(simple_file *file_ptr , text_display_info *save_info , WINDOW *disp_window , unsigned int background_pair , unsigned int text_pair , unsigned int line_highlight_pair , unsigned int side_strip_pair , unsigned int side_strip_highlight_pair , unsigned int least_v_dist , unsigned int least_h_dist , bool display_line_no , bool display_file_name  , bool highlight_current_line , bool Scroll , bool disp_cursor , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y){
     if(disp_window == NULL) return ;
     if(file_ptr == NULL) return ;
     if(save_info == NULL) return ;
@@ -292,7 +292,7 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
 
     if(highlight_current_line) mvwchgat(save_info -> window , save_info -> cursor_y , save_info -> txt_start_x , (save_info -> disp_end_x - save_info -> txt_start_x) , A_NORMAL , save_info -> line_highlight_pair , NULL);
 
-    if(!Scroll && highlight_current_line) mvwchgat(save_info -> window , save_info -> cursor_y , save_info -> cursor_x , 1 , A_REVERSE , save_info -> text_pair , NULL);
+    if(!Scroll && disp_cursor) mvwchgat(save_info -> window , save_info -> cursor_y , save_info -> cursor_x , 1 , A_REVERSE , save_info -> text_pair , NULL);
 
     if(save_info -> cursor_x == -1 && save_info -> cursor_y == -1){
         save_info -> cursor_x = save_info -> txt_start_x;

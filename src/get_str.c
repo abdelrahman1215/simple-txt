@@ -43,7 +43,7 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
     size_t opt_index = 0;
     autocomp_info info = {.rep_options = NULL};
 
-    update_text_display(buffer , save_info , inp_window , background_pair , text_pair , 0 , 0 , 0 , 0 , 0 , false , false , false , false , start_x , end_x , start_y , end_y);
+    update_text_display(buffer , save_info , inp_window , background_pair , text_pair , 0 , 0 , 0 , 0 , 0 , false , false , false , false , true , start_x , end_x , start_y , end_y);
     wrefresh(inp_window);
 
     curs_set(1);
@@ -92,7 +92,7 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
                 opt_index = 0;
             }
 
-            update_text_display(buffer , save_info , inp_window , background_pair , text_pair , 0 , 0 , 0 , 0 , 0 , false , false , false , false , start_x , end_x , start_y , end_y);
+            update_text_display(buffer , save_info , inp_window , background_pair , text_pair , 0 , 0 , 0 , 0 , 0 , false , false , false , false , true , start_x , end_x , start_y , end_y);
             wrefresh(inp_window);
             continue;
         }
@@ -138,7 +138,7 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
                 break;
         }
 
-        update_text_display(buffer , save_info , inp_window , background_pair , text_pair , 0 , 0 , 0 , 0 , 0 , false , false , false , false , start_x , end_x , start_y , end_y);
+        update_text_display(buffer , save_info , inp_window , background_pair , text_pair , 0 , 0 , 0 , 0 , 0 , false , false , false , false , true , start_x , end_x , start_y , end_y);
         wrefresh(inp_window);
     }
 
