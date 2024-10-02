@@ -31,6 +31,8 @@ void display_messages(){
         if(Exit){
             exit(1);
         }
+
+        return ;
     }
 
     size_t line_no = 0;
