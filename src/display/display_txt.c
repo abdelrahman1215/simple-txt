@@ -22,7 +22,7 @@ struct text_display_info{
     unsigned int indent;
 
     unsigned int background_pair , text_pair , line_highlight_pair , side_strip_pair , side_strip_highlight_pair;
-    bool display_line_no , display_file_name , highligh_current_line , Scroll;
+    bool display_line_no , display_file_name , highligh_current_line;
 
     WINDOW *window;
 };
@@ -44,17 +44,8 @@ void update_values(text_display_info *info_ptr){
     info_ptr -> txt_start_x = info_ptr -> disp_start_x + info_ptr -> indent;
     info_ptr -> txt_start_y = info_ptr -> disp_start_y + info_ptr -> display_file_name;
 
+    unsigned int disp_height = info_ptr -> disp_end_y - info_ptr -> txt_start_y;
     unsigned int disp_width = info_ptr -> disp_end_x - info_ptr -> txt_start_x;
-
-    if(info_ptr -> Scroll == true){
-        info_ptr -> start_line = info_ptr -> line_pos;
-        info_ptr -> start_col = info_ptr -> col_pos;
-
-        info_ptr -> cursor_y = info_ptr -> txt_start_y;
-        info_ptr -> cursor_x = info_ptr -> txt_start_x;
-
-        return;
-    }
 
     if(info_ptr -> col_pos >= info_ptr -> start_col + disp_width - info_ptr -> least_h_dist){
         info_ptr -> start_col = info_ptr -> col_pos - (disp_width - info_ptr -> least_h_dist);
@@ -68,7 +59,6 @@ void update_values(text_display_info *info_ptr){
 
     info_ptr -> cursor_x = (info_ptr -> col_pos - info_ptr -> start_col) + info_ptr -> txt_start_x;
 
-    unsigned int disp_height = info_ptr -> disp_end_y - info_ptr -> txt_start_y;
 
     if(info_ptr -> line_pos >= info_ptr -> start_line + disp_height - info_ptr -> least_v_dist){
         if(info_ptr -> start_line + disp_height + 1 >= line_no && line_no >= disp_height){
@@ -177,7 +167,7 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
     wattroff(info_ptr -> window , COLOR_PAIR(info_ptr -> side_strip_pair));
 }
 
-void update_text_display(simple_file *file_ptr , text_display_info *save_info , WINDOW *disp_window , unsigned int background_pair , unsigned int text_pair , unsigned int line_highlight_pair , unsigned int side_strip_pair , unsigned int side_strip_highlight_pair , unsigned int least_v_dist , unsigned int least_h_dist , bool display_line_no , bool display_file_name  , bool highlight_current_line , bool Scroll , bool disp_cursor , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y){
+void update_text_display(simple_file *file_ptr , text_display_info *save_info , WINDOW *disp_window , unsigned int background_pair , unsigned int text_pair , unsigned int line_highlight_pair , unsigned int side_strip_pair , unsigned int side_strip_highlight_pair , unsigned int least_v_dist , unsigned int least_h_dist , bool display_line_no , bool display_file_name  , bool highlight_current_line , bool disp_cursor , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y){
     if(disp_window == NULL) return ;
     if(file_ptr == NULL) return ;
     if(save_info == NULL) return ;
@@ -211,7 +201,7 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
         save_info -> cursor_x = save_info -> cursor_y = 0;
         save_info -> disp_start_x = save_info -> disp_end_x = save_info -> disp_start_y = save_info -> disp_end_y = save_info -> txt_start_x = save_info -> txt_start_y = save_info -> indent = 0;
         save_info -> background_pair = save_info -> text_pair = save_info -> line_highlight_pair = save_info -> side_strip_highlight_pair = save_info -> side_strip_pair = 0;
-        save_info -> display_line_no = save_info -> display_file_name = save_info -> highligh_current_line = save_info -> Scroll = false;
+        save_info -> display_line_no = save_info -> display_file_name = save_info -> highligh_current_line = false;
     }
 
     save_info -> file = file_ptr;
@@ -224,7 +214,6 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
     save_info -> disp_start_y = start_y;
     save_info -> disp_end_y = end_y;
 
-    save_info -> Scroll = Scroll;
     save_info -> highligh_current_line = highlight_current_line;
 
     save_info -> least_v_dist = least_v_dist;
@@ -292,7 +281,7 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
 
     if(highlight_current_line) mvwchgat(save_info -> window , save_info -> cursor_y , save_info -> txt_start_x , (save_info -> disp_end_x - save_info -> txt_start_x) , A_NORMAL , save_info -> line_highlight_pair , NULL);
 
-    if(!Scroll && disp_cursor) mvwchgat(save_info -> window , save_info -> cursor_y , save_info -> cursor_x , 1 , A_REVERSE , save_info -> text_pair , NULL);
+    if(disp_cursor) mvwchgat(save_info -> window , save_info -> cursor_y , save_info -> cursor_x , 1 , A_REVERSE , save_info -> text_pair , NULL);
 
     if(save_info -> cursor_x == -1 && save_info -> cursor_y == -1){
         save_info -> cursor_x = save_info -> txt_start_x;
