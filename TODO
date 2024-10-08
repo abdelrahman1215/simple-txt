@@ -1,4 +1,5 @@
 make the loading function interpret the tabs as n spaces where n is the length of a tab(define this variable in simple_globals)
 add the an error_code member to the message data_structure
+add a warp_text option to update_text_display
 
 #turns out the color pairs can be redefined
