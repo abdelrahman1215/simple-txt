@@ -1,4 +1,5 @@
-#include "open_file.c"
+#include "../../headers/open_files.h"
+#include "../../headers/msg_fmt.h"
 #include "init_maps.c"
 
 void parse_term_args(int argc , char **argv){
