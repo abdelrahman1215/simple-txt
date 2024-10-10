@@ -4,7 +4,6 @@
 
 #include <unistd.h>
 
-//tokens : 1
 void open_file(char *file_name){
     if(file_name[0] == '\000') return ;
 
