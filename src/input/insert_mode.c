@@ -43,6 +43,10 @@ void insert_mode(int input , WINDOW *inp_window){
             simple_file_redo(Current_File);
             break;
 
+        case CTRL('d'):
+            simple_file_delete_lines(Current_File , line_pos , 1);
+            break;
+
         case '\b'://backspace
             if(col_pos > 0){
                 simple_file_delete(Current_File , line_pos , col_pos - 1 , 1);
