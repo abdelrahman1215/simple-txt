@@ -13,16 +13,6 @@ void open_file(char *file_name){
     if(error == OK || error == File_Not_Found){
         if(error == File_Not_Found){
             loading_msg(file_name , error);
-        }else{
-            for(size_t i = strlen(file_name) ; i > 0 ; i--){
-                if(file_name[i - 1] == '/' || file_name[i - 1] == '\\'){
-                    file_name[i - 1] = '\000';
-
-                    break;
-                }
-            }
-
-            if(file_name[0] != '\000') chdir(file_name);
         }
     }else{
         loading_error(file_name , error);
