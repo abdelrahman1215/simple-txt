@@ -2,6 +2,7 @@
 #include "../../headers/simple_file.h"
 
 #include <pdcurses.h>
+#include <string.h>
 #include <ctype.h>
 
 void insert_mode(int input , WINDOW *inp_window){
@@ -63,12 +64,21 @@ void insert_mode(int input , WINDOW *inp_window){
         
         default:
             char tmp[2] = {'\000' , '\000'};
+
+            char tab[Tab_Size + 1];
+            memset(tab , ' ' , Tab_Size);
+            tab[Tab_Size] = '\000';
+            
             for(int ch = input ; ch != ERR && (isprint(ch) || ch == '\n' || ch == '\t') ; ch = wgetch(inp_window)){
                 line_pos = simple_file_get_curr_line(Current_File);
                 col_pos = simple_file_get_curr_column(Current_File);
 
-                tmp[0] = ch;
-                simple_file_add(Current_File , line_pos , col_pos , tmp);
+                if(ch == '\t'){
+                    simple_file_add(Current_File , line_pos , col_pos , tab);
+                }else{
+                    tmp[0] = ch;
+                    simple_file_add(Current_File , line_pos , col_pos , tmp);
+                }
             }
 
             break;

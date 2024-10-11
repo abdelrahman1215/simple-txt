@@ -28,9 +28,10 @@ int main(int argc , char **argv){
     curs_set(0);
     refresh();
 
+    Tab_Size = DEFAULT_TAB_SIZE;
+
     Screen_Width = getmaxx(stdscr);
     Screen_Height = getmaxy(stdscr);
-
 
     Text_Color = DEFAULT_TEXT_COLOR;
     Title_Color = DEFAULT_TITLE_COLOR;
