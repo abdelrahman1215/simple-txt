@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-
 char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int background_pair , unsigned int text_pair , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned int end_y){
     if(inp_window == NULL) return NULL;
 
@@ -45,8 +44,6 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
 
     update_text_display(buffer , save_info , inp_window , background_pair , text_pair , 0 , 0 , 0 , 0 , 0 , false , false , false , true , start_x , end_x , start_y , end_y);
     wrefresh(inp_window);
-
-    curs_set(1);
 
     for(int ch = wgetch(inp_window) ; ch != '\n' ; ch = wgetch(inp_window)){
         if(ch == ERR) continue;
@@ -118,6 +115,11 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
             case '\b':
                 if(col_pos > 0){
                     simple_file_delete(buffer , 0 , col_pos - 1 , 1);
+                }else{
+                    destroy_simple_file(buffer);
+                    free(save_info);
+
+                    return NULL;
                 }
 
                 break;
@@ -149,8 +151,6 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
 
         free(info.rep_options);
     }
-
-    curs_set(0);
 
     free(save_info);
 
