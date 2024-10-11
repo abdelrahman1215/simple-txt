@@ -97,6 +97,7 @@ SIMPLE_GLOBAL simple_file *Current_File;
 SIMPLE_GLOBAL unsigned int Txt_Disp_Start_X , Txt_Disp_Start_Y , Txt_Disp_End_X , Txt_Disp_End_Y;
 SIMPLE_GLOBAL unsigned int Least_H_Distance , Least_V_Distance;
 SIMPLE_GLOBAL unsigned int Screen_Width , Screen_Height;
+SIMPLE_GLOBAL unsigned char Tab_Size;
 
 SIMPLE_GLOBAL WINDOW *Text_Window , *Lower_Strip_Window , *Msg_Window;
 SIMPLE_GLOBAL PANEL *Std_Panel , *Text_Panel , *Lower_Strip_Panel , *Msg_Panel;
