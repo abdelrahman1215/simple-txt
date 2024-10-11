@@ -62,16 +62,13 @@ void insert_mode(int input , WINDOW *inp_window){
             break;
         
         default:
+            char tmp[2] = {'\000' , '\000'};
             for(int ch = input ; ch != ERR && (isprint(ch) || ch == '\n' || ch == '\t') ; ch = wgetch(inp_window)){
                 line_pos = simple_file_get_curr_line(Current_File);
                 col_pos = simple_file_get_curr_column(Current_File);
 
-                if(input == '\t'){
-                    simple_file_add(Current_File , line_pos , col_pos , "   ");
-                }else{
-                    char tmp[2] = {(char)ch , '\000'};
-                    simple_file_add(Current_File , line_pos , col_pos , tmp);
-                }
+                tmp[0] = ch;
+                simple_file_add(Current_File , line_pos , col_pos , tmp);
             }
 
             break;
