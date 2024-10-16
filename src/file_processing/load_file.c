@@ -147,9 +147,7 @@ char *__get_file_text__(const char *file_name , bool create_if_not_found , loadi
     destroy_simple_str(file_buff);
 
     fclose(target_file);
-    if(created_new_file == true){
-        int check = remove(file_name);
-    }
+    if(created_new_file == true) remove(file_name);
 
     return ret;
 }
@@ -199,7 +197,7 @@ simple_file *load_from_str(const char *src , loading_err *get_err){
     strncpy(copy , src , len);
     __load_from_str__(ret , copy);
 
-    ret -> changes_saved = true;
+    ret -> changes_saved = false;
     ret -> column = 0;
     ret -> line = 0;
 
@@ -244,7 +242,7 @@ simple_file *load_file(const char *file_name , bool create_if_not_found , loadin
     __load_from_str__(ret , file_text);
 
 
-    ret -> changes_saved = true;
+    ret -> changes_saved = false;
     ret -> column = 0;
     ret -> line = 0;
 
