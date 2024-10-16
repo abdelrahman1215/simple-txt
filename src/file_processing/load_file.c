@@ -78,6 +78,7 @@ simple_file *__allocate_simple_file__(const char *file_name){
 
 char *__get_file_text__(const char *file_name , bool create_if_not_found , loading_err *get_err , simple_file *file_ptr){
     FILE *target_file = fopen(file_name , "r");
+    bool created_new_file = false;
     if(target_file == NULL){
         *get_err = File_Not_Found;
         if(create_if_not_found == false){
@@ -91,6 +92,8 @@ char *__get_file_text__(const char *file_name , bool create_if_not_found , loadi
 
             return NULL;
         }
+
+        created_new_file = true;
     }
 
     char *buff = calloc(buff_size + 1 , sizeof(char));
@@ -143,11 +146,10 @@ char *__get_file_text__(const char *file_name , bool create_if_not_found , loadi
 
     destroy_simple_str(file_buff);
 
-    if(total_read_bytes == 0){
-        return "";
-    }
-
     fclose(target_file);
+    if(created_new_file == true){
+        int check = remove(file_name);
+    }
 
     return ret;
 }
