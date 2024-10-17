@@ -130,12 +130,24 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
                 break;
             
             default :
-                for(int tmp = ch ; tmp != ERR ; tmp = wgetch(inp_window)){
-                    if(!isprint(tmp)) continue ;
+                simple_str *buffer_str = new_simple_str("");
+                char tmp_buff[2] = {'\000' , '\000'};
 
-                    char tmp_buff[2] = {(char)tmp , '\000'};
-                    simple_file_add(buffer , 0 , col_pos , tmp_buff);
+                for(int tmp = ch ; tmp != ERR ; tmp = wgetch(inp_window)){
+                    if(!isprint(tmp) && tmp != '\t') break ;
+
+                    tmp_buff[0] = tmp;
+                    if(tmp == '\t'){
+                        tmp_buff[0] = ' ';
+                    }
+
+                    simple_str_add(buffer_str , tmp_buff , simple_str_get_strlen(buffer_str));
                 }
+
+                char buff_text[simple_str_get_strlen(buffer_str) + 1];
+                simple_str_copy_str(buffer_str , buff_text , simple_str_get_strlen(buffer_str) + 1);
+
+                simple_file_add(buffer , 0 , col_pos , buff_text);
 
                 break;
         }

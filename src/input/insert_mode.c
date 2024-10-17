@@ -1,6 +1,7 @@
 #include "../../headers/simple_globals.h"
 #include "../../headers/curses_header.h"
 #include "../../headers/simple_file.h"
+#include "../../headers/simple_str.h"
 
 #include <string.h>
 #include <ctype.h>
@@ -72,18 +73,24 @@ void insert_mode(int input , WINDOW *inp_window){
             char tab[Tab_Size + 1];
             memset(tab , ' ' , Tab_Size);
             tab[Tab_Size] = '\000';
+
+            simple_str *buffer = new_simple_str("");
             
             for(int ch = input ; ch != ERR && (isprint(ch) || ch == '\n' || ch == '\t') ; ch = wgetch(inp_window)){
-                line_pos = simple_file_get_curr_line(Current_File);
-                col_pos = simple_file_get_curr_column(Current_File);
-
                 if(ch == '\t'){
-                    simple_file_add(Current_File , line_pos , col_pos , tab);
+                    simple_str_add(buffer , tab , simple_str_get_strlen(buffer));
                 }else{
                     tmp[0] = ch;
-                    simple_file_add(Current_File , line_pos , col_pos , tmp);
+                    simple_str_add(buffer , tmp , simple_str_get_strlen(buffer));
                 }
             }
+
+            size_t buff_len = simple_str_get_strlen(buffer);
+            char buff_text[buff_len + 1];
+            simple_str_copy_str(buffer , buff_text , buff_len + 1);
+
+            simple_file_add(Current_File , line_pos , col_pos , buff_text);
+            destroy_simple_str(buffer);
 
             break;
     } 
