@@ -91,6 +91,11 @@ char *__get_file_text__(const char *file_name , bool create_if_not_found , loadi
             *get_err = Invalid_File_Name;
 
             return NULL;
+        }else{
+            fclose(target_file);
+            remove(file_name);
+
+            return "";
         }
 
         created_new_file = true;
@@ -147,7 +152,12 @@ char *__get_file_text__(const char *file_name , bool create_if_not_found , loadi
     destroy_simple_str(file_buff);
 
     fclose(target_file);
-    if(created_new_file == true) remove(file_name);
+
+    if(ret[0] == '\000'){
+        free(ret);
+
+        return "";
+    }
 
     return ret;
 }
@@ -240,6 +250,7 @@ simple_file *load_file(const char *file_name , bool create_if_not_found , loadin
     }
 
     __load_from_str__(ret , file_text);
+    if(file_text[0] != '\000') free(file_text);
 
 
     ret -> changes_saved = false;
