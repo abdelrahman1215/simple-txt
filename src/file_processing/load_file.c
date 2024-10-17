@@ -189,7 +189,7 @@ void __load_from_str__(simple_file *file_ptr , char *src){
 simple_file *load_from_str(const char *src , loading_err *get_err){
     if(get_err == NULL) return NULL;
 
-    *get_err = OK;
+    *get_err = Ok;
     simple_file *ret = __allocate_simple_file__(NULL);
     if(ret == NULL){
         *get_err = Alloc_Err;
@@ -218,7 +218,7 @@ simple_file *load_from_str(const char *src , loading_err *get_err){
 simple_file *load_file(const char *file_name , bool create_if_not_found , loading_err *get_err){
     if(get_err == NULL) return NULL;
 
-    *get_err = OK;
+    *get_err = Ok;
     if(file_name == NULL){
         *get_err = Invalid_Arg;
 
@@ -243,9 +243,9 @@ simple_file *load_file(const char *file_name , bool create_if_not_found , loadin
         return NULL;
     }
 
-    loading_err err = OK;
+    loading_err err = Ok;
     char *file_text = __get_file_text__(file_name , create_if_not_found , &err , ret);
-    if(err != OK){
+    if(err != Ok){
         *get_err = err;
         if(err == Alloc_Err) return NULL;
     }
