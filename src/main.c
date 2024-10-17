@@ -1,10 +1,10 @@
 #include "../headers/parse_term_args.h"
 #include "../headers/simple_globals.h"
+#include "../headers/curses_header.h"
 #include "../headers/msg_fmt.h"
 #include "../headers/display.h"
 #include "../headers/input.h"
 
-#include <pdcurses.h>
 #include <stdlib.h>
 
 //reminder : when using ctrl - v results may vary , in windows terminal

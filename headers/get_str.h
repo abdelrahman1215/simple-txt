@@ -1,7 +1,7 @@
 #ifndef GET_STR_H
 #define GET_STR_H
 
-#include <pdcurses.h>
+#include "curses_header.h"
 
 typedef struct autocomp_info {
     size_t replace_start , replace_end;

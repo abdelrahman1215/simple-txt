@@ -1,11 +1,11 @@
 #include "../../headers/simple_globals.h"
+#include "../../headers/curses_header.h"
 #include "../../headers/simple_file.h"
 #include "../../headers/input.h"
 
 #include "normal_mode.c"
 #include "insert_mode.c"
 
-#include <pdcurses.h>
 
 void handle_input(WINDOW *inp_window){
     flushinp();

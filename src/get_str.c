@@ -1,10 +1,10 @@
 #include "../headers/simple_globals.h"
+#include "../headers/curses_header.h"
 #include "../headers/simple_file.h"
 #include "../headers/simple_str.h"
 #include "../headers/display.h"
 #include "../headers/get_str.h"
 
-#include <pdcurses.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <ctype.h>

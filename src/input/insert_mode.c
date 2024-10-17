@@ -1,7 +1,7 @@
 #include "../../headers/simple_globals.h"
+#include "../../headers/curses_header.h"
 #include "../../headers/simple_file.h"
 
-#include <pdcurses.h>
 #include <string.h>
 #include <ctype.h>
 

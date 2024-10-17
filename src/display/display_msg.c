@@ -1,8 +1,8 @@
 #include "../../headers/simple_globals.h"
+#include "../../headers/curses_header.h"
 #include "../../headers/display.h"
 #include "../../headers/msg_fmt.h"
 
-#include <pdcurses.h>
 #include <stdlib.h>
 
 void display_messages(){

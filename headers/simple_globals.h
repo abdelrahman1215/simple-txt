@@ -1,10 +1,10 @@
 #ifndef SIMPLE_GLOBALS
 #define SIMPLE_GLOBALS
 
+#include "curses_header.h"
 #include "simple_file.h"
 
 #include <stddef.h>
-#include <pdcurses.h>
 
 #define SIMPLE_GLOBAL __attribute__((__common__))
 

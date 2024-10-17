@@ -1,8 +1,8 @@
 #include "../../headers/parse_commands.h"
 #include "../../headers/simple_globals.h"
+#include "../../headers/curses_header.h"
 #include "../../headers/get_str.h"
 
-#include <pdcurses.h>
 #include <stdlib.h>
 #include <string.h>
 

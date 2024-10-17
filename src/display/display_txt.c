@@ -1,8 +1,8 @@
 #include "../../headers/simple_globals.h"
+#include "../../headers/curses_header.h"
 #include "../../headers/simple_file.h"
 #include "../../headers/display.h"
 
-#include <pdcurses.h>
 #include <stdbool.h>
 #include <unistd.h>
 #include <stdlib.h>

@@ -1,9 +1,9 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include "curses_header.h"
 #include "simple_file.h"
 
-#include <pdcurses.h>
 #include <stdbool.h>
 
 typedef struct text_display_info text_display_info;
