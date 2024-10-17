@@ -112,3 +112,16 @@ char *simple_str_get_string(simple_str *str_ptr){
 
     return strncpy(dest , str_ptr -> str , str_ptr -> strlen);
 }
+
+void simple_str_copy_str(simple_str *src , char *dest , size_t dest_size){
+    if(src == NULL || dest == NULL || dest_size == 0) return ;
+
+    memset(dest , 0 , dest_size);
+
+    size_t src_len = src -> strlen;
+    size_t copy_len = dest_size - 1;
+    
+    if(copy_len > src_len) copy_len = src_len;
+
+    strncpy(dest , src -> str , copy_len);
+}
