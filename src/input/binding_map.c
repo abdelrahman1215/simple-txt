@@ -42,7 +42,7 @@ void init_binding_map(){
     }
 }
 
-void exec_binding(int input){
+int exec_binding(int input){
     if(binding_map == NULL) init_binding_map();
 
     binding_key key = {.integer = input};
@@ -53,11 +53,13 @@ void exec_binding(int input){
     key.str[4] = '\000';
 
     entry *target_entry = hashmap_lookup_entry(key.str , binding_map);
-    if(target_entry == NULL) return ;
+    if(target_entry == NULL) return 1;
 
     binding *target = hashmap_get_obj(target_entry);
 
     target -> exec();
 
     free(target);
+
+    return 0;
 }
