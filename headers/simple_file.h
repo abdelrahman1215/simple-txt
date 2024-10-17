@@ -18,6 +18,7 @@ void destroy_simple_file(simple_file *file_ptr);
 const char *simple_file_get_name(simple_file *file_ptr);
 size_t simple_file_get_line_no(simple_file *file_ptr);
 char *simple_file_get_line(simple_file *file_ptr , size_t index);
+void simple_file_copy_line(simple_file *file_ptr , size_t index , char *dest , size_t dest_size);
 size_t simple_file_get_line_len(simple_file *file_ptr , size_t index);
 bool simple_file_changes_saved(simple_file *file_ptr);
 

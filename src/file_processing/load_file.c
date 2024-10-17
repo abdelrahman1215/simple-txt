@@ -347,6 +347,16 @@ char *simple_file_get_line(simple_file *file_ptr , size_t index){
     return ret;
 }
 
+void simple_file_copy_line(simple_file *file_ptr , size_t index , char *dest , size_t dest_size){
+    if(file_ptr == NULL || dest == NULL || dest_size == 0) return ;
+    if(index >= simple_file_get_line_no(file_ptr)) return ;
+
+    simple_str **str = (simple_str **)dynamic_array_get_element(file_ptr -> lines , index);
+    simple_str_copy_str(*str , dest , dest_size);
+
+    free(str);
+}
+
 size_t simple_file_get_line_len(simple_file *file_ptr , size_t index){
     if(file_ptr == NULL) return 0;
     if(index >= simple_file_get_line_no(file_ptr)) return 0;
