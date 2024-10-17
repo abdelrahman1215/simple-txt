@@ -1,5 +1,4 @@
 add a warp_text option to update_text_display
 add a relative_line_no option to update_text_display
-add simple_str_copy_text and simple_file_copy_line functions
 
 #turns out the color pairs can be redefined
