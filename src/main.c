@@ -86,7 +86,7 @@ int main(int argc , char **argv){
     hide_panel(Msg_Panel);
     text_display_info *save_text_info = new_text_disp_info();
 
-    PANEL *top_panel;
+    PANEL *Top_Panel;
     WINDOW *Current_Win;
     while(!Quit){
         display_messages();
@@ -98,8 +98,8 @@ int main(int argc , char **argv){
         update_panels();
         doupdate();
 
-        top_panel = panel_below(NULL);
-        Current_Win = panel_window(top_panel);
+        Top_Panel = panel_below(NULL);
+        Current_Win = panel_window(Top_Panel);
         handle_input(Current_Win);
     }
 
