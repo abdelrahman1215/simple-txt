@@ -1,4 +1,5 @@
 #include "../../c_datastructures/headers/linked_list.h"
+#include "../../headers/parse_commands.h"
 
 #include <stddef.h>
 #include <stdlib.h>
