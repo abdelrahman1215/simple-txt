@@ -1,3 +1,4 @@
+#include "../../headers/simple_globals.h"
 #include "../../headers/simple_file.h"
 #include "../../headers/simple_str.h"
 #include "simple_file_struct.c"
@@ -163,25 +164,25 @@ char *__get_file_text__(const char *file_name , bool create_if_not_found , loadi
 }
 
 void __load_from_str__(simple_file *file_ptr , char *src){
-    simple_str *line = NULL;
+    simple_str *line = new_simple_str("");
+    char tab[Tab_Size + 1];
+    memset(tab , ' ' , Tab_Size);
+    tab[Tab_Size] = '\000';
 
-    size_t line_start = 0;
+    char add[2] = {'\000' , '\000'};
+
     for(size_t i = 0 ; src[i] != '\000' ; i++){
         if(src[i] == '\n'){
-            src[i] = '\000';
-
-            line = new_simple_str(src + line_start);
-
             dynamic_array_add_element(file_ptr -> lines , &line);
-
-            line_start = i + 1;
+            line = new_simple_str("");
         }else if(src[i] == '\t'){
-            src[i] = ' ';
+            simple_str_add(line , tab , simple_str_get_strlen(line));
+        }else{
+            add[0] = src[i];
+            simple_str_add(line , add , simple_str_get_strlen(line));
         }
     }
 
-
-    line = new_simple_str(src + line_start);
     dynamic_array_add_element(file_ptr -> lines , &line);    
 }
 
@@ -252,8 +253,21 @@ simple_file *load_file(const char *file_name , bool create_if_not_found , loadin
     __load_from_str__(ret , file_text);
     if(file_text[0] != '\000') free(file_text);
 
+    /*the save function exits if all changes were saved
+    but in the case the file doesn't exist (and is a valid path)
+    we don't want it to exit because then the file won't be created by the editor
+    so we set changes saved to false so that save function would try to write into that path
+    thus creating that file*/
 
-    ret -> changes_saved = false;
+    FILE *check = fopen(file_name , "r");
+    if(check == NULL){
+        ret -> changes_saved = false;
+    }else{
+        ret -> changes_saved = true;
+        fclose(check);
+    }
+    
+
     ret -> column = 0;
     ret -> line = 0;
 
