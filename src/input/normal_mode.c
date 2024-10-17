@@ -39,11 +39,6 @@ void normal_mode(int input , WINDOW *inp_window){
             Current_Mode = Insert_Mode;
             break;
 
-        case 'd':
-        case 'D':
-            simple_file_delete_lines(Current_File , simple_file_get_curr_line(Current_File) , 1);
-            break;
-
         case ':':
             command_mode();
             break;
