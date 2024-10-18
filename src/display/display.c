@@ -63,7 +63,7 @@ void update_lower_strip(WINDOW *disp_window){
 
     wattron(disp_window , COLOR_PAIR(LOWER_STRIP_BACKGROUND));
 
-    mvwhline(disp_window , 0 , 0 , 0 , Screen_Width);
+    mvwhline(disp_window , 0 , 0 , ' ' , Screen_Width);
 
     wattroff(disp_window , COLOR_PAIR(LOWER_STRIP_BACKGROUND));
 
