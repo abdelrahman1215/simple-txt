@@ -87,7 +87,7 @@ void insert_mode(int input , WINDOW *inp_window){
 
             size_t buff_len = simple_str_get_strlen(buffer);
             char buff_text[buff_len + 1];
-            simple_str_copy_str(buffer , buff_text , buff_len + 1);
+            simple_str_copy_str(buffer , 0 , buff_text , buff_len + 1);
 
             simple_file_add(Current_File , line_pos , col_pos , buff_text);
             destroy_simple_str(buffer);
