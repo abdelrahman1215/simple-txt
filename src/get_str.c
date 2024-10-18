@@ -6,6 +6,7 @@
 #include "../headers/get_str.h"
 
 #include <stdbool.h>
+#include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 
@@ -144,7 +145,10 @@ char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int bac
                     simple_str_add(buffer_str , tmp_buff , simple_str_get_strlen(buffer_str));
                 }
 
-                char buff_text[simple_str_get_strlen(buffer_str) + 1];
+                size_t buff_len = simple_str_get_strlen(buffer_str);
+                char buff_text[buff_len + 1];
+                memset(buff_text , 0 , buff_len + 1);
+
                 simple_str_copy_str(buffer_str , 0 , buff_text , simple_str_get_strlen(buffer_str) + 1);
 
                 simple_file_add(buffer , 0 , col_pos , buff_text);
