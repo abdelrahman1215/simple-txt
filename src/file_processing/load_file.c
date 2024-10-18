@@ -347,12 +347,12 @@ char *simple_file_get_line(simple_file *file_ptr , size_t index){
     return ret;
 }
 
-void simple_file_copy_line(simple_file *file_ptr , size_t index , char *dest , size_t dest_size){
+void simple_file_copy_line(simple_file *file_ptr , size_t index , size_t start_pos , char *dest , size_t dest_size){
     if(file_ptr == NULL || dest == NULL || dest_size == 0) return ;
     if(index >= simple_file_get_line_no(file_ptr)) return ;
 
     simple_str **str = (simple_str **)dynamic_array_get_element(file_ptr -> lines , index);
-    simple_str_copy_str(*str , dest , dest_size);
+    simple_str_copy_str(*str , start_pos , dest , dest_size);
 
     free(str);
 }

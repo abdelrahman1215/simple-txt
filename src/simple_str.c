@@ -113,13 +113,15 @@ char *simple_str_get_string(simple_str *str_ptr){
     return strncpy(dest , str_ptr -> str , str_ptr -> strlen);
 }
 
-void simple_str_copy_str(simple_str *src , char *dest , size_t dest_size){
+void simple_str_copy_str(simple_str *src , size_t copy_start , char *dest , size_t dest_size){
     if(src == NULL || dest == NULL || dest_size == 0) return ;
 
     size_t src_len = src -> strlen;
+    if(copy_start >= src -> strlen) return ;
+
     size_t copy_len = dest_size - 1;
     
-    if(copy_len > src_len) copy_len = src_len;
+    if(copy_len + copy_start > src_len) copy_len = src_len - copy_start;
 
-    strncpy(dest , src -> str , copy_len);
+    strncpy(dest , src -> str + copy_start , copy_len);
 }
