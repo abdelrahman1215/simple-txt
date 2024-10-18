@@ -245,18 +245,13 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
         rows[i][max_len] = '\000';
     }
 
-    char *tmp = NULL;
     unsigned int used_rows = 0;
     size_t line_len;
     for(unsigned int i = 0 ; i < row_no ; i++ , used_rows++){
-        tmp = simple_file_get_line(file_ptr , i + save_info -> start_line);
-        if(tmp == NULL) break;
         line_len = simple_file_get_line_len(file_ptr , i + save_info -> start_line);
         if(save_info -> start_col >= line_len) continue;
 
-        strncpy(rows[i] , tmp + save_info -> start_col , max_len > (line_len - save_info -> start_col) ? (line_len - save_info -> start_col) : max_len);
-
-        free(tmp);
+        simple_file_copy_line(file_ptr , i + save_info -> start_line , save_info -> start_col , rows[i] , max_len + 1);
     }
 
     for(unsigned int i = used_rows ; i < row_no ; i++){
