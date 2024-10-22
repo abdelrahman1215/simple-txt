@@ -247,7 +247,7 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
 
     unsigned int used_rows = 0;
     size_t line_len;
-    for(unsigned int i = 0 ; i < row_no ; i++ , used_rows++){
+    for(unsigned int i = 0 ; i < row_no && i + save_info -> start_line < line_no ; i++ , used_rows++){
         line_len = simple_file_get_line_len(file_ptr , i + save_info -> start_line);
         if(save_info -> start_col >= line_len) continue;
 
