@@ -170,7 +170,12 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
 void update_text_display(simple_file *file_ptr , text_display_info *save_info , WINDOW *disp_window , unsigned int background_pair , unsigned int text_pair , unsigned int line_highlight_pair , unsigned int side_strip_pair , unsigned int side_strip_highlight_pair , unsigned int least_v_dist , unsigned int least_h_dist , bool display_line_no , bool display_file_name  , bool highlight_current_line , bool disp_cursor , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y){
     if(disp_window == NULL) return ;
     if(file_ptr == NULL) return ;
-    if(save_info == NULL) return ;
+
+    bool created_tmp_save_info = false;
+    if(save_info == NULL){
+        created_tmp_save_info = true;
+        save_info = new_text_disp_info();
+    }
     
     if(start_x == 0 && end_x == 0){
         end_x = getmaxx(disp_window);
@@ -180,7 +185,11 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
         end_y = getmaxy(disp_window);
     }
 
-    if((start_x >= end_x && start_x == 0) || (start_y >= end_y && start_y == 0) || (start_y + 1 >= end_y && display_file_name == true)) return ;
+    if((start_x >= end_x && start_x == 0) || (start_y >= end_y && start_y == 0) || (start_y + 1 >= end_y && display_file_name == true)){
+        if(created_tmp_save_info) free(save_info);
+        
+        return ;
+    }
     
     if(side_strip_highlight_pair == 0) side_strip_highlight_pair = SIDE_STRIP_HIGHLIGHT;
     if(line_highlight_pair == 0) line_highlight_pair = LINE_HIGHLIGHT;
@@ -190,7 +199,11 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
 
 
     unsigned int win_width = getmaxx(disp_window) , win_height = getmaxy(disp_window);
-    if(end_x > win_width || end_y > win_height) return ;
+    if(end_x > win_width || end_y > win_height){
+        if(created_tmp_save_info) free(save_info);
+
+        return ;
+    }
 
     if(save_info -> file == NULL){
         save_info -> file = file_ptr;
@@ -235,7 +248,11 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
 
     update_values(save_info);
 
-    if(save_info -> txt_start_x >= end_x || save_info -> txt_start_y >= end_y) return ;
+    if(save_info -> txt_start_x >= end_x || save_info -> txt_start_y >= end_y){
+        if(created_tmp_save_info) free(save_info);
+
+        return ;
+    }
 
     unsigned int row_no = save_info -> disp_end_y - save_info -> txt_start_y;
     size_t max_len = save_info -> disp_end_x - save_info -> txt_start_x;
@@ -285,4 +302,6 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
     }
 
     wmove(save_info -> window , save_info -> cursor_y , save_info -> cursor_x);
+
+    if(created_tmp_save_info) free(save_info);
 }
