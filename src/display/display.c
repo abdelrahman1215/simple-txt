@@ -59,11 +59,11 @@ void init_color_pairs(){
 
 void update_lower_strip(WINDOW *disp_window){
     if(stdscr == NULL) return ;
-    unsigned int win_width = getmaxx(disp_window) ; //win_height = getmaxy(disp_window);
+    unsigned int win_width = getmaxx(disp_window) , win_height = getmaxy(disp_window);
 
     wattron(disp_window , COLOR_PAIR(LOWER_STRIP_BACKGROUND));
 
-    mvwhline(disp_window , 0 , 0 , ' ' , Screen_Width);
+    mvwhline(disp_window , win_height - 1 , 0 , ' ' , Screen_Width);
 
     wattroff(disp_window , COLOR_PAIR(LOWER_STRIP_BACKGROUND));
 
@@ -73,11 +73,11 @@ void update_lower_strip(WINDOW *disp_window){
 
     switch(Current_Mode){
         case Insert_Mode :
-            mvwprintw(disp_window , 0 , 0 , " Insert ");
+            mvwprintw(disp_window , win_height - 1 , 0 , " Insert ");
             break;
 
         case Normal_Mode :
-            mvwprintw(disp_window , 0 , 0 , " Normal ");
+            mvwprintw(disp_window , win_height - 1 , 0 , " Normal ");
             break;
     }
     
@@ -89,7 +89,7 @@ void update_lower_strip(WINDOW *disp_window){
     int log_of_line_pos = (int)log10(line_pos + 1) , log_of_col_pos = (int)log10(col_pos + 1);
 
     if(log_of_col_pos + log_of_line_pos + 19/*the extra 8 are for the mode*/ < win_width){
-        mvwprintw(disp_window , 0 , win_width - (log_of_col_pos + log_of_line_pos + 11) , "Ln %i,Col %i" , line_pos + 1 , col_pos + 1);
+        mvwprintw(disp_window , win_height - 1 , win_width - (log_of_col_pos + log_of_line_pos + 11) , "Ln %i,Col %i" , line_pos + 1 , col_pos + 1);
     }
 
     wattroff(disp_window , COLOR_PAIR(LOWER_STRIP_TEXT));
