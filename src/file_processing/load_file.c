@@ -172,14 +172,23 @@ void __load_from_str__(simple_file *file_ptr , char *src){
     char add[2] = {'\000' , '\000'};
 
     for(size_t i = 0 ; src[i] != '\000' ; i++){
-        if(src[i] == '\n'){
-            dynamic_array_add_element(file_ptr -> lines , &line);
-            line = new_simple_str("");
-        }else if(src[i] == '\t'){
-            simple_str_add(line , tab , simple_str_get_strlen(line));
-        }else{
-            add[0] = src[i];
-            simple_str_add(line , add , simple_str_get_strlen(line));
+        switch(src[i]){
+            case '\n': 
+                dynamic_array_add_element(file_ptr -> lines , &line);
+                line = new_simple_str("");
+
+                break;
+
+            case '\t':
+                simple_str_add(line , tab , simple_str_get_strlen(line));
+
+                break;
+
+            default :
+                add[0] = src[i];
+                simple_str_add(line , add , simple_str_get_strlen(line));
+
+                break;
         }
     }
 
