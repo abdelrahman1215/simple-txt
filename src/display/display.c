@@ -57,6 +57,34 @@ void init_color_pairs(){
     init_pair(MESSAGE_BACKGROUND , Message_Background_Color , Message_Background_Color);
 }
 
+#define MODE_MAX_LEN 11
+
+void disp_recorded_binding(WINDOW *disp_window , char *recorded_binding){
+    if(stdscr == NULL || recorded_binding == NULL) return ;
+    if(recorded_binding[0] == '\000') return ;
+    unsigned int win_width = getmaxx(disp_window) , win_height = getmaxy(disp_window);
+
+    wattron(disp_window , COLOR_PAIR(LOWER_STRIP_BACKGROUND));
+
+    mvwhline(disp_window , win_height - 1 , 0 , ' ' , Screen_Width);
+
+    wattroff(disp_window , COLOR_PAIR(LOWER_STRIP_BACKGROUND));
+
+
+
+    wattron(disp_window , COLOR_PAIR(MODE));
+
+    mvwprintw(disp_window , win_height - 1 , 0 , " Recording ");
+
+    wattroff(disp_window , COLOR_PAIR(MODE));
+
+    loading_err get_err;
+    simple_file *binding = load_from_str(recorded_binding , &get_err);
+    if(get_err != OK) return ;
+
+    update_text_display(binding , NULL , disp_window , LOWER_STRIP_BACKGROUND , LOWER_STRIP_TEXT , 0 , 0 , 0 , 0 , 0 , false , false , false , false , 12 , win_width , 0 , 0);
+}
+
 void update_lower_strip(WINDOW *disp_window){
     if(stdscr == NULL) return ;
     unsigned int win_width = getmaxx(disp_window) , win_height = getmaxy(disp_window);
@@ -83,12 +111,14 @@ void update_lower_strip(WINDOW *disp_window){
     
     wattroff(disp_window , COLOR_PAIR(MODE));
 
+
+
     wattron(disp_window , COLOR_PAIR(LOWER_STRIP_TEXT));
 
     size_t line_pos = simple_file_get_curr_line(Current_File) , col_pos = simple_file_get_curr_column(Current_File);
     int log_of_line_pos = (int)log10(line_pos + 1) , log_of_col_pos = (int)log10(col_pos + 1);
 
-    if(log_of_col_pos + log_of_line_pos + 19/*the extra 8 are for the mode*/ < win_width){
+    if(log_of_col_pos + log_of_line_pos + 11/*for the written text*/ + MODE_MAX_LEN < win_width){
         mvwprintw(disp_window , win_height - 1 , win_width - (log_of_col_pos + log_of_line_pos + 11) , "Ln %i,Col %i" , line_pos + 1 , col_pos + 1);
     }
 
