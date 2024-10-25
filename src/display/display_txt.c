@@ -231,7 +231,7 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
 
     save_info -> least_v_dist = least_v_dist;
     save_info -> least_h_dist = least_h_dist;
-    if(save_info -> least_h_dist == 0) save_info -> least_h_dist = 1;//for this to work the least_h_dist has to be at least 1
+    if(save_info -> least_h_dist == 0 || disp_cursor) save_info -> least_h_dist = 1;//for this to work the least_h_dist has to be at least 1
 
     save_info -> window = disp_window;
 
