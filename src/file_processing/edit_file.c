@@ -155,7 +155,7 @@ void simple_file_add(simple_file *file_ptr , size_t line_index , size_t pos_inde
 
 char *_delete_(simple_file *file_ptr , size_t line_index , size_t start_pos , size_t count){
     if(file_ptr == NULL) return NULL;
-    if(line_index >= simple_file_get_line_no(file_ptr) || count == 0) return NULL;
+    if(line_index > simple_file_get_line_no(file_ptr) || count == 0) return NULL;
     if(start_pos + count > simple_file_get_line_len(file_ptr , line_index)) return NULL;
 
     dynamic_array *content = file_ptr -> lines;
@@ -279,13 +279,14 @@ char *_delete_from_to_(simple_file *file_ptr , size_t start_line , size_t start_
         if(end_line - start_line > 1){
             tmp = _delete_lines_(file_ptr , start_line + 1 , end_line - start_line - 1);
             simple_str_add(buff , tmp , simple_str_get_strlen(buff));
+            simple_str_add(buff , "\n" , simple_str_get_strlen(buff));
             free(tmp);
         }else{
             simple_str_add(buff , "\n" , simple_str_get_strlen(buff));
         }
 
         //if a logical error happens in the future add + 1 after end_pos
-        tmp = _delete_(file_ptr , end_line , 0 , end_pos );
+        tmp = _delete_(file_ptr , start_line + 1 , 0 , end_pos );
         simple_str_add(buff , tmp , simple_str_get_strlen(buff));
         free(tmp);
 
