@@ -59,7 +59,7 @@ void init_color_pairs(){
 
 #define MODE_MAX_LEN 11
 
-void disp_recorded_binding(WINDOW *disp_window , char *recorded_binding){
+void display_recorded_binding(WINDOW *disp_window , char *recorded_binding){
     if(stdscr == NULL || recorded_binding == NULL) return ;
     if(recorded_binding[0] == '\000') return ;
     unsigned int win_width = getmaxx(disp_window) , win_height = getmaxy(disp_window);

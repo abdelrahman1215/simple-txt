@@ -18,7 +18,7 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
 
 void render_background(WINDOW *disp_window , unsigned int start_x , unsigned int start_y , unsigned int end_x , unsigned int end_y , int color_pair);
 
-void disp_recorded_binding(WINDOW *disp_window , char *recorded_binding);
+void display_recorded_binding(WINDOW *disp_window , char *recorded_binding);
 
 void update_lower_strip(WINDOW *disp_window);
 
