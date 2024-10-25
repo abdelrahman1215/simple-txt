@@ -31,7 +31,7 @@ void update_values(text_display_info *info_ptr){
     static simple_file *last_displayed_file = NULL;
 
     info_ptr -> line_pos = simple_file_get_curr_line(info_ptr -> file) , info_ptr -> col_pos = simple_file_get_curr_column(info_ptr -> file);
-    size_t line_len = simple_file_get_line_len(info_ptr -> file , info_ptr -> line_pos);
+    //size_t line_len = simple_file_get_line_len(info_ptr -> file , info_ptr -> line_pos);
     size_t line_no = simple_file_get_line_no(info_ptr -> file);
 
     if(info_ptr -> display_line_no){
