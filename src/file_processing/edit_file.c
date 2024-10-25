@@ -227,7 +227,7 @@ char *_delete_lines_(simple_file *file_ptr , size_t line_index , size_t line_cou
         }
 
         simple_str_add(deleted_lines , line_text , simple_str_get_strlen(deleted_lines));
-        simple_str_add(deleted_lines , "\n" , simple_str_get_strlen(deleted_lines));
+        if(i + 1 < line_count) simple_str_add(deleted_lines , "\n" , simple_str_get_strlen(deleted_lines));
 
         free(line_text);
         free(line);
