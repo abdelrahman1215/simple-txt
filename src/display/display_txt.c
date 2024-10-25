@@ -272,9 +272,6 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
         simple_file_copy_line(file_ptr , i + save_info -> start_line , save_info -> start_col , rows[i] , max_len + 1);
     }
 
-    for(unsigned int i = used_rows ; i < row_no ; i++){
-        rows[i][0] = '~';
-    }
 
     render_background(save_info -> window , save_info -> disp_start_x , save_info -> disp_start_y , save_info -> disp_end_x , save_info -> disp_end_y , save_info -> background_pair);
 
@@ -287,10 +284,16 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
     }
 
     wattron(save_info -> window , COLOR_PAIR(save_info -> text_pair));
-    for(unsigned int i = 0 ; i < row_no ; i++){
+    for(unsigned int i = 0 ; i < used_rows ; i++){
         mvwprintw(save_info -> window , save_info -> txt_start_y + i , save_info -> txt_start_x , "%s" , rows[i]);
     }
     wattroff(save_info -> window , COLOR_PAIR(save_info -> text_pair));
+
+    wattron(save_info -> window , COLOR_PAIR(save_info -> side_strip_pair));
+    if(used_rows < row_no){
+        mvwhline(save_info -> window , save_info -> txt_start_y + used_rows , save_info -> txt_start_x + 1 , 0 , save_info -> disp_end_x - save_info -> txt_start_x - 2);
+    }
+    wattroff(save_info -> window , COLOR_PAIR(save_info -> side_strip_pair));
 
     if(highlight_current_line) mvwchgat(save_info -> window , save_info -> cursor_y , save_info -> txt_start_x , (save_info -> disp_end_x - save_info -> txt_start_x) , A_NORMAL , save_info -> line_highlight_pair , NULL);
 
