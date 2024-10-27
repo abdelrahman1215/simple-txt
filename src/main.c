@@ -12,11 +12,10 @@
 //while in other terminals you will get a ^V
 
 int main(int argc , char **argv){
-    parse_term_args(argc , argv);
-    display_messages();
     
     Current_Mode = Normal_Mode;
     Quit = false;
+    Display_Started = false;
 
     initscr();
     keypad(stdscr , true);
@@ -58,6 +57,10 @@ int main(int argc , char **argv){
     Least_V_Distance = 3;
 
     init_color_pairs();
+    parse_term_args(argc , argv);
+    display_messages();
+
+    Display_Started = true;
     render_background(stdscr , 0 , 0 , Screen_Width , Screen_Height , BACKGROUND);
     refresh();
 
