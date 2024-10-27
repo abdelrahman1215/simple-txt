@@ -13,13 +13,16 @@ void open_file(char *file_name){
 
     if(tmp != NULL){
         if(Current_File != NULL){
-            save_file(Current_File);
-            destroy_simple_file(Current_File);
+            if(simple_file_changes_saved(Current_File)){
+                destroy_simple_file(Current_File);
+            }else{
+                custom_msg(Error , "save the current file first");
+            }
         }
 
         Current_File = tmp;
     }
 
     if(error == Is_Dir) open_dir(file_name);
-    else loading_error(file_name , error);
+    loading_error(file_name , error);
 }
