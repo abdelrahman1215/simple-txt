@@ -107,8 +107,6 @@ simple_file *make_disp_file(dir_entry *entries , size_t entry_no){
     loading_err error;
     simple_file *ret = load_from_str("" , &error);
     if(ret == NULL){
-        free(entries);
-
         return NULL;
     }
 
@@ -141,6 +139,8 @@ void open_dir(char *dir_name){
 
     simple_file *disp_file = make_disp_file(entries , entry_no);
     if(disp_file == NULL){
+        free(entries);
+
         return ;
     }
 
@@ -174,6 +174,14 @@ void open_dir(char *dir_name){
 
                 break;
 
+            case '\e':
+                destroy_simple_file(disp_file);
+                destroy_simple_str(file_path);
+                free(entries);
+                free(info);
+
+                return ;
+
             case '\n':
             case '\r':
                 size_t line = simple_file_get_curr_line(disp_file);
@@ -196,6 +204,13 @@ void open_dir(char *dir_name){
 
                     destroy_simple_file(disp_file);
                     disp_file = make_disp_file(entries , entry_no);
+                    if(disp_file == NULL){
+                        destroy_simple_str(file_path);
+                        free(entries);
+                        free(info);
+
+                        return ;
+                    }
 
                     break;
                 }
