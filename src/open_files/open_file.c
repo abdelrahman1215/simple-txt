@@ -11,13 +11,16 @@ void open_file(char *file_name){
     loading_err error;
     simple_file *tmp = load_file(file_name , true , &error);
 
+    if(Current_File != NULL){
+        if(!simple_file_changes_saved(Current_File)){
+            custom_msg(Error , "save the current file first");
+            return ;
+        }
+    }
+
     if(tmp != NULL){
         if(Current_File != NULL){
-            if(simple_file_changes_saved(Current_File)){
-                destroy_simple_file(Current_File);
-            }else{
-                custom_msg(Error , "save the current file first");
-            }
+            destroy_simple_file(Current_File);
         }
 
         Current_File = tmp;
