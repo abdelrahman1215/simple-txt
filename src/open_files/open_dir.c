@@ -1,5 +1,9 @@
+#include "../../headers/simple_globals.h"
 #include "../../headers/curses_header.h"
 #include "../../headers/simple_file.h"
+#include "../../headers/simple_str.h"
+#include "../../headers/open_files.h"
+#include "../../headers/display.h"
 
 #include <sys/stat.h>
 #include <stdbool.h>
@@ -99,6 +103,34 @@ dir_entry *get_entries(const char *dir_name , size_t *get_entry_no){
     return ret;
 }
 
+simple_file *make_disp_file(dir_entry *entries , size_t entry_no){
+    loading_err error;
+    simple_file *ret = load_from_str("" , &error);
+    if(ret == NULL){
+        free(entries);
+
+        return NULL;
+    }
+
+    size_t line = 0 , col = 0;
+    for(size_t i = 1/*skip the ./ folder*/ ; i < entry_no ; i++){
+        line = simple_file_get_curr_line(ret);
+        col = simple_file_get_curr_column(ret);
+        simple_file_add(ret , line , col , entries[i].entry_name);
+
+        col = simple_file_get_curr_column(ret);
+        if(entries[i].is_dir){
+            simple_file_add(ret , line , col , "/");
+            col++;
+        }
+        
+        if(i + 1 < entry_no) simple_file_add(ret , line , col , "\n");
+    }
+    
+    simple_file_move_to_xy(ret , 0 , 0);
+    return ret;
+}
+
 void open_dir(char *dir_name){
     if(dir_name == NULL) return ;
     if(dir_name[0] == '\000') return ;
@@ -107,5 +139,79 @@ void open_dir(char *dir_name){
     dir_entry *entries = get_entries(dir_name , &entry_no);
     if(entries == NULL) return ;
 
+    simple_file *disp_file = make_disp_file(entries , entry_no);
+    if(disp_file == NULL){
+        return ;
+    }
+
+    text_display_info *info = new_text_disp_info();
+    if(info == NULL){
+        destroy_simple_file(disp_file);
+        free(entries);
+
+        return ;
+    }
+
+    render_background(stdscr , 0 , 0 , Screen_Width , Screen_Height , BACKGROUND);
+
+    bool Break = false;
+    simple_str *file_path = new_simple_str(dir_name);
+    if(dir_name[strlen(dir_name) - 1] != '/' && dir_name[strlen(dir_name) - 1] != '\\'){
+        simple_str_add(file_path , "/" , simple_str_get_strlen(file_path));
+    }
+
+    for(int ch = getch() ; !Break ; ch = getch()){
+        update_text_display(disp_file , info , stdscr , BACKGROUND , TEXT , LINE_HIGHLIGHT , SIDE_STRIPS , SIDE_STRIP_HIGHLIGHT , 3 , 0 , false , false , true , false , 1 , Screen_Width - 1 , 0 , 0);
+
+        switch(ch){
+            case KEY_UP:
+                simple_file_move_nlines_up(disp_file , 1);
+
+                break;
+
+            case KEY_DOWN:
+                simple_file_move_nlines_down(disp_file , 1);
+
+                break;
+
+            case '\n':
+            case '\r':
+                size_t line = simple_file_get_curr_line(disp_file);
+                dir_entry target = entries[line + 1/*because the ../ folder was skipped*/];
+                simple_str_add(file_path , target.entry_name , simple_str_get_strlen(file_path));
+
+                if(target.is_dir){
+                    simple_str_add(file_path , "/" , simple_str_get_strlen(file_path));
+                    char *tmp = simple_str_get_string(file_path);
+                    
+                    free(entries);
+                    entries = get_entries(tmp, &entry_no);
+                    if(entries == NULL){
+                        destroy_simple_file(disp_file);
+                        destroy_simple_str(file_path);
+                        free(info);
+
+                        return ;
+                    }
+
+                    destroy_simple_file(disp_file);
+                    disp_file = make_disp_file(entries , entry_no);
+
+                    break;
+                }
+
+                char *tmp_path = simple_str_get_string(file_path);
+                open_file(tmp_path);
+                Break = true;
+
+                free(tmp_path);
+
+                break;
+        }
+    }
+
+    destroy_simple_file(disp_file);
+    destroy_simple_str(file_path);
     free(entries);
+    free(info);
 }
