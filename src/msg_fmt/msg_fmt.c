@@ -51,9 +51,6 @@ void loading_error(const char *file_name ,  loading_err error_type){
     strncat(error , file_name , strlen(file_name));
 
     switch(error_type){
-        case Is_Dir :
-            strncat(error , " is a directory. " , strlen(" is a directory."));
-            break;
 
         default : return ;
     }
