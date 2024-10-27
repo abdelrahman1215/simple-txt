@@ -1,6 +1,7 @@
 #include "../../headers/simple_globals.h"
 #include "../../headers/simple_file.h"
 #include "../../headers/msg_fmt.h"
+#include "open_dir.c"
 
 #include <unistd.h>
 
