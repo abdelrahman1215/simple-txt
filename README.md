@@ -1,10 +1,12 @@
 # simple-txt
 a vim inspired text editor written from scratch in c using pdcurses
 
-ps: for now it only works on windows
+note: for now it only works on windows
 
 # screenshots / screen records
 ![img](https://github.com/abdelrahman1215/simple-txt/blob/main/demos/Screenshot%20(7).png)
+
+note: the actual cursor is hidden , this cursor is displayed by the program
 
 # controls
 ## navigation
