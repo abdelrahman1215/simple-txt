@@ -8,7 +8,10 @@ a vim inspired text editor written from scratch in c using pdcurses
 
 >note: the actual cursor is hidden , this cursor is displayed by the program
 
-![screenrecord1](demos/screen%20record.mp4)
+<video width="320" height="240" controls>
+  <source src="demos/screen record.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 # controls
 ## navigation
