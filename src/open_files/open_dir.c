@@ -107,10 +107,5 @@ void open_dir(char *dir_name){
     dir_entry *entries = get_entries(dir_name , &entry_no);
     if(entries == NULL) return ;
 
-    dir_entry check[entry_no];
-    for(size_t i = 0 ; i < entry_no ; i++){
-        check[i] = entries[i];
-    }
-
     free(entries);
 }

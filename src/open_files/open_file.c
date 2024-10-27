@@ -20,5 +20,6 @@ void open_file(char *file_name){
         Current_File = tmp;
     }
 
-    loading_error(file_name , error);
+    if(error == Is_Dir) open_dir(file_name);
+    /*else*//*commented till the open_dir function is finished*/ loading_error(file_name , error);
 }
