@@ -14,3 +14,9 @@ vim like navigation controls (still working on moving multiple lines or columns)
 # editing
 * ctrl z / ctrl y -> undo redo
 * ctrl d -> delete a whole line
+
+# commands
+* edit -> open files or directories
+* w -> save changes
+* q -> quit
+* wq -> save & quit
