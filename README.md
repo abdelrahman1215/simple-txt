@@ -4,11 +4,11 @@ a vim inspired text editor written from scratch in c using pdcurses
 >note: for now it only works on windows
 
 # screenshots / screen records
-[screenshot1](https://github.com/abdelrahman1215/simple-txt/blob/main/demos/Screenshot%20(7).png)
+![screenshot1](https://github.com/abdelrahman1215/simple-txt/blob/main/demos/Screenshot%20(7).png)
 
 >note: the actual cursor is hidden , this cursor is displayed by the program
 
-[screenrecord1](https://github.com/abdelrahman1215/simple-txt/blob/main/demos/screen%20record.mp4)
+![screenrecord1](demos/screen%20record.mp4)
 
 # controls
 ## navigation
