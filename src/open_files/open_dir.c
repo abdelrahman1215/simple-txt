@@ -13,6 +13,7 @@ typedef struct dir_entry{
 
 dir_entry *get_entries(const char *dir_name , size_t *get_entry_no){
     if(get_entry_no == NULL) return NULL;
+    *get_entry_no = 0;
 
     DIR *directory = opendir(dir_name);
     if(directory == NULL) return NULL;
@@ -44,7 +45,7 @@ dir_entry *get_entries(const char *dir_name , size_t *get_entry_no){
 
     strncpy(path , dir_name , path_len);
     if(add_slash){
-        path[dir_name_len - 1] = '/';
+        path[dir_name_len] = '/';
     }
 
     size_t add_start = strlen(path);
@@ -65,6 +66,16 @@ dir_entry *get_entries(const char *dir_name , size_t *get_entry_no){
         entries[i].is_dir = is_dir(path);
     }
 
+    for(size_t i = 0 ; i < entry_no - 1 ; i++){
+        for(size_t i = 0 ; i < entry_no - 1 ; i++){
+            if(entries[i].is_dir == false && entries[i + 1].is_dir){
+                dir_entry tmp = entries[i];
+                entries[i] = entries[i + 1];
+                entries[i + 1] = tmp;
+            }
+        }
+    }
+
     free(path);
     closedir(directory);
 
@@ -77,6 +88,7 @@ void open_dir(char *dir_name){
 
     size_t entry_no;
     dir_entry *entries = get_entries(dir_name , &entry_no);
+    if(entry_no == 0) return ;
 
     free(entries);
 }
