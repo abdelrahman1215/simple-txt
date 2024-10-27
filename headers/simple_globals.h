@@ -93,6 +93,7 @@ SIMPLE_GLOBAL unsigned short Message_Background_Color;
 #define SHIFT_DOWN 548
 
 SIMPLE_GLOBAL bool Quit;
+SIMPLE_GLOBAL bool Display_Started;
 SIMPLE_GLOBAL simple_file *Current_File;
 SIMPLE_GLOBAL unsigned int Txt_Disp_Start_X , Txt_Disp_Start_Y , Txt_Disp_End_X , Txt_Disp_End_Y;
 SIMPLE_GLOBAL unsigned int Least_H_Distance , Least_V_Distance;
