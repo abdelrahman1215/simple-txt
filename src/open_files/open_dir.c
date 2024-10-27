@@ -66,20 +66,37 @@ dir_entry *get_entries(const char *dir_name , size_t *get_entry_no){
         entries[i].is_dir = is_dir(path);
     }
 
-    for(size_t i = 0 ; i < entry_no - 1 ; i++){
-        for(size_t i = 0 ; i < entry_no - 1 ; i++){
-            if(entries[i].is_dir == false && entries[i + 1].is_dir){
-                dir_entry tmp = entries[i];
-                entries[i] = entries[i + 1];
-                entries[i + 1] = tmp;
-            }
+    size_t index = 0;
+    dir_entry *ret = calloc(entry_no , sizeof(dir_entry));
+    if(ret == NULL){
+        closedir(directory);
+        free(entries);
+        free(path);
+
+        return NULL;
+    }
+
+    for(size_t i = 0 ; i < entry_no ; i++){
+        if(entries[i].is_dir){
+            ret[index] = entries[i];
+            index++;
         }
     }
 
-    free(path);
-    closedir(directory);
+    for(size_t i = 0 ; i < entry_no ; i++){
+        if(!(entries[i].is_dir)){
+            ret[index] = entries[i];
+            index++;
+        }
+    }
 
-    return entries;
+    //the two for loops above sort the entries by adding directory entries first then adding file entries
+
+    closedir(directory);
+    free(entries);
+    free(path);
+
+    return ret;
 }
 
 void open_dir(char *dir_name){
@@ -88,7 +105,12 @@ void open_dir(char *dir_name){
 
     size_t entry_no;
     dir_entry *entries = get_entries(dir_name , &entry_no);
-    if(entry_no == 0) return ;
+    if(entries == NULL) return ;
+
+    dir_entry check[entry_no];
+    for(size_t i = 0 ; i < entry_no ; i++){
+        check[i] = entries[i];
+    }
 
     free(entries);
 }
