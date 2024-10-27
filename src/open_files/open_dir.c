@@ -160,8 +160,14 @@ void open_dir(char *dir_name){
         simple_str_add(file_path , "/" , simple_str_get_strlen(file_path));
     }
 
+    attron(COLOR_PAIR(SIDE_STRIPS));
+
+    mvprintw(0 , 1 , "press escape to exit");    
+
+    attroff(COLOR_PAIR(SIDE_STRIPS));
+
     for(int ch = getch() ; !Break ; ch = getch()){
-        update_text_display(disp_file , info , stdscr , BACKGROUND , TEXT , LINE_HIGHLIGHT , SIDE_STRIPS , SIDE_STRIP_HIGHLIGHT , 3 , 0 , false , false , true , false , 1 , Screen_Width - 1 , 0 , 0);
+        update_text_display(disp_file , info , stdscr , BACKGROUND , TEXT , LINE_HIGHLIGHT , SIDE_STRIPS , SIDE_STRIP_HIGHLIGHT , 3 , 0 , false , false , true , false , 1 , Screen_Width - 1 , 1 , Screen_Height);
 
         switch(ch){
             case KEY_UP:
