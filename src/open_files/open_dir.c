@@ -180,6 +180,8 @@ void open_dir(char *dir_name){
                 free(entries);
                 free(info);
 
+                if(Current_File == NULL) Quit = true;
+                
                 return ;
 
             case '\n':
