@@ -164,7 +164,15 @@ char *__get_file_text__(const char *file_name , bool create_if_not_found , loadi
 }
 
 void __load_from_str__(simple_file *file_ptr , char *src){
+    if(file_ptr == NULL) return ;
+
     simple_str *line = new_simple_str("");
+    if(src == NULL){
+        dynamic_array_add_element(file_ptr -> lines , &line);
+
+        return ;
+    }
+
     char tab[Tab_Size + 1];
     memset(tab , ' ' , Tab_Size);
     tab[Tab_Size] = '\000';
@@ -260,7 +268,7 @@ simple_file *load_file(const char *file_name , bool create_if_not_found , loadin
     }
 
     __load_from_str__(ret , file_text);
-    if(file_text[0] != '\000') free(file_text);
+    if(file_text != NULL) if(file_text[0] != '\000') free(file_text);
 
     /*the save function exits if all changes were saved
     but in the case the file doesn't exist (and is a valid path)
