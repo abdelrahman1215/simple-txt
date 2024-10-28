@@ -5,6 +5,10 @@
 void parse_term_args(int argc , char **argv){
     //remove this if statement if flags or options are made in the future
     if(argc > 2) return ;
+    if(flags_map == NULL){
+        init_flag_map();
+        init_option_map();
+    }
 
     if(argc == 1){
         open_file("Untitled");

@@ -1,5 +1,8 @@
 #include "../../c_datastructures/headers/hashmap.h"
-#include "stddef.h"
+#include "options.c"
+#include "flags.c"
+
+#include <stddef.h>
 
 hashmap *flags_map = NULL , *options_map = NULL;
 
@@ -19,8 +22,14 @@ typedef struct flag_info{
 char *option_names[] = {};
 option_info options[] = {};
 
-char *flag_names[] = {};
-flag_info flags[] = {};
+char *flag_names[] = {
+    "-v",
+    "--version"
+};
+flag_info flags[] = {
+    {.flag_exec = version},
+    {.flag_exec = version}
+};
 
 void init_flag_map(){
     if(flags_map != NULL) return ;
