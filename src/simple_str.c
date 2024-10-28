@@ -125,3 +125,9 @@ void simple_str_copy_str(simple_str *src , size_t copy_start , char *dest , size
 
     strncpy(dest , src -> str + copy_start , copy_len);
 }
+
+char simple_str_get_char(simple_str *str_ptr , size_t index){
+    if(index >= str_ptr -> strlen) return '\000';
+
+    return str_ptr -> str[index];
+}
