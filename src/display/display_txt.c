@@ -22,7 +22,7 @@ struct text_display_info{
     unsigned int indent;
 
     unsigned int background_pair , text_pair , line_highlight_pair , side_strip_pair , side_strip_highlight_pair;
-    bool display_line_no , display_file_name , highligh_current_line;
+    bool display_line_no , display_file_name , highlight_current_line , display_cursor;
 
     WINDOW *window;
 };
@@ -31,12 +31,12 @@ void update_values(text_display_info *info_ptr){
     static simple_file *last_displayed_file = NULL;
 
     info_ptr -> line_pos = simple_file_get_curr_line(info_ptr -> file) , info_ptr -> col_pos = simple_file_get_curr_column(info_ptr -> file);
-    //size_t line_len = simple_file_get_line_len(info_ptr -> file , info_ptr -> line_pos);
+    size_t line_len = simple_file_get_line_len(info_ptr -> file , info_ptr -> line_pos);
     size_t line_no = simple_file_get_line_no(info_ptr -> file);
 
     if(info_ptr -> display_line_no){
         int log_of_line_no = (int)log10(line_no);
-        info_ptr -> indent = log_of_line_no + 2 + info_ptr -> highligh_current_line + 1;
+        info_ptr -> indent = log_of_line_no + 2 + info_ptr -> highlight_current_line + 1;
     }else{
         info_ptr -> indent = 0;
     }
@@ -47,36 +47,50 @@ void update_values(text_display_info *info_ptr){
     unsigned int disp_height = info_ptr -> disp_end_y - info_ptr -> txt_start_y;
     unsigned int disp_width = info_ptr -> disp_end_x - info_ptr -> txt_start_x;
 
-    if(info_ptr -> col_pos >= info_ptr -> start_col + disp_width - info_ptr -> least_h_dist){
-        info_ptr -> start_col = info_ptr -> col_pos - (disp_width - info_ptr -> least_h_dist);
-    }else if(info_ptr -> col_pos <= info_ptr -> start_col + info_ptr -> least_h_dist && info_ptr -> start_col > 0){
-        if(info_ptr -> col_pos < info_ptr -> least_h_dist){
-            info_ptr -> start_col = 0;
-        }else{
-            info_ptr -> start_col = info_ptr -> col_pos - info_ptr -> least_h_dist;
+    if(info_ptr -> display_cursor){
+        if(info_ptr -> col_pos >= info_ptr -> start_col + disp_width - info_ptr -> least_h_dist){
+            info_ptr -> start_col = info_ptr -> col_pos - (disp_width - info_ptr -> least_h_dist);
+        }else if(info_ptr -> col_pos <= info_ptr -> start_col + info_ptr -> least_h_dist && info_ptr -> start_col > 0){
+            if(info_ptr -> col_pos < info_ptr -> least_h_dist){
+                info_ptr -> start_col = 0;
+            }else{
+                info_ptr -> start_col = info_ptr -> col_pos - info_ptr -> least_h_dist;
+            }
+        }
+
+        info_ptr -> cursor_x = (info_ptr -> col_pos - info_ptr -> start_col) + info_ptr -> txt_start_x;
+    }else{
+        info_ptr -> start_col = info_ptr -> col_pos;
+        if((line_len - info_ptr -> col_pos) + info_ptr -> least_h_dist < disp_width && line_len > disp_width){
+            info_ptr -> start_col = line_len - (disp_width) + info_ptr -> least_h_dist;
         }
     }
 
-    info_ptr -> cursor_x = (info_ptr -> col_pos - info_ptr -> start_col) + info_ptr -> txt_start_x;
 
+    if(info_ptr -> highlight_current_line || info_ptr -> display_cursor){
+        if(info_ptr -> line_pos >= info_ptr -> start_line + disp_height - info_ptr -> least_v_dist){
+            if(info_ptr -> start_line + disp_height + 1 >= line_no && line_no >= disp_height){
+                info_ptr -> start_line = line_no - disp_height;
+            }else if(line_no < disp_height){
+                info_ptr -> start_line = 0;
+            }else{
+                info_ptr -> start_line = info_ptr -> line_pos - (disp_height - info_ptr -> least_v_dist) + 1;
+            }
+        }else if(info_ptr -> line_pos <= info_ptr -> start_line + info_ptr -> least_v_dist && info_ptr -> start_line > 0){
+            if(info_ptr -> line_pos < info_ptr -> least_v_dist){
+                info_ptr -> start_line = 0;
+            }else{
+                info_ptr -> start_line = info_ptr -> line_pos - info_ptr -> least_v_dist;
+            }
+        }
 
-    if(info_ptr -> line_pos >= info_ptr -> start_line + disp_height - info_ptr -> least_v_dist){
-        if(info_ptr -> start_line + disp_height + 1 >= line_no && line_no >= disp_height){
+        info_ptr -> cursor_y = info_ptr -> txt_start_y + (info_ptr -> line_pos - info_ptr -> start_line);
+    }else{
+        info_ptr -> start_line = info_ptr -> line_pos;
+        if((line_no - info_ptr -> line_pos) < disp_height && line_no > disp_height){
             info_ptr -> start_line = line_no - disp_height;
-        }else if(line_no < disp_height){
-            info_ptr -> start_line = 0;
-        }else{
-            info_ptr -> start_line = info_ptr -> line_pos - (disp_height - info_ptr -> least_v_dist) + 1;
-        }
-    }else if(info_ptr -> line_pos <= info_ptr -> start_line + info_ptr -> least_v_dist && info_ptr -> start_line > 0){
-        if(info_ptr -> line_pos < info_ptr -> least_v_dist){
-            info_ptr -> start_line = 0;
-        }else{
-            info_ptr -> start_line = info_ptr -> line_pos - info_ptr -> least_v_dist;
         }
     }
-
-    info_ptr -> cursor_y = info_ptr -> txt_start_y + (info_ptr -> line_pos - info_ptr -> start_line);
 }
 
 void disp_file_name(text_display_info *info_ptr){
@@ -214,12 +228,15 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
         save_info -> cursor_x = save_info -> cursor_y = 0;
         save_info -> disp_start_x = save_info -> disp_end_x = save_info -> disp_start_y = save_info -> disp_end_y = save_info -> txt_start_x = save_info -> txt_start_y = save_info -> indent = 0;
         save_info -> background_pair = save_info -> text_pair = save_info -> line_highlight_pair = save_info -> side_strip_highlight_pair = save_info -> side_strip_pair = 0;
-        save_info -> display_line_no = save_info -> display_file_name = save_info -> highligh_current_line = false;
+        save_info -> display_line_no = save_info -> display_file_name = save_info -> highlight_current_line = false;
     }
 
     save_info -> file = file_ptr;
+
+    save_info -> display_cursor = disp_cursor;
     save_info -> display_line_no = display_line_no;
     save_info -> display_file_name = display_file_name;
+    save_info -> highlight_current_line = highlight_current_line;
 
     save_info -> disp_start_x = start_x;
     save_info -> disp_end_x = end_x;
@@ -227,11 +244,10 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
     save_info -> disp_start_y = start_y;
     save_info -> disp_end_y = end_y;
 
-    save_info -> highligh_current_line = highlight_current_line;
 
     save_info -> least_v_dist = least_v_dist;
     save_info -> least_h_dist = least_h_dist;
-    if(save_info -> least_h_dist == 0 || disp_cursor) save_info -> least_h_dist = 1;//for this to work the least_h_dist has to be at least 1
+    if(save_info -> least_h_dist == 0 && disp_cursor) save_info -> least_h_dist = 1;//for this to work the least_h_dist has to be at least 1
 
     save_info -> window = disp_window;
 

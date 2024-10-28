@@ -26,7 +26,7 @@ text_display_info *new_text_disp_info(){
     ret -> disp_start_x = ret -> disp_end_x = ret -> disp_start_y = ret -> disp_end_y = ret -> txt_start_x = ret -> txt_start_y = ret -> indent = 0;
     
     ret -> background_pair = ret -> text_pair = ret -> line_highlight_pair = ret -> side_strip_highlight_pair = ret -> side_strip_pair = 0;
-    ret -> display_line_no = ret -> display_file_name = ret -> highligh_current_line = false;
+    ret -> display_line_no = ret -> display_file_name = ret -> highlight_current_line = false;
 
     return ret;
 }
