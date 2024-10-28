@@ -22,3 +22,6 @@ vim like navigation controls (still working on moving multiple lines or columns)
 * w -> save changes
 * q -> quit
 * wq -> save & quit
+
+# flags/options
+* -v/--version -> program version
