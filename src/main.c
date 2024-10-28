@@ -1,6 +1,7 @@
 #include "../headers/parse_term_args.h"
 #include "../headers/simple_globals.h"
 #include "../headers/curses_header.h"
+#include "../headers/init_display.h"
 #include "../headers/msg_fmt.h"
 #include "../headers/display.h"
 #include "../headers/input.h"
@@ -12,55 +13,24 @@
 //while in other terminals you will get a ^V
 
 int main(int argc , char **argv){
-    
-    Current_Mode = Normal_Mode;
-    Quit = false;
-    Display_Started = false;
-
-    initscr();
-    keypad(stdscr , true);
-    nodelay(stdscr , true);
-    notimeout(stdscr , true);
-    start_color();
-    noecho();
-    cbreak();
-    curs_set(0);
-    refresh();
-
-    Tab_Size = DEFAULT_TAB_SIZE;
-
-    Screen_Width = getmaxx(stdscr);
-    Screen_Height = getmaxy(stdscr);
-
-    Text_Color = DEFAULT_TEXT_COLOR;
-    Title_Color = DEFAULT_TITLE_COLOR;
-    Outline_Color = DEFAULT_OUTLINE_COLOR;
-    Background_Color = DEFAULT_BACKGROUND_COLOR;
-    Line_Highlight_Color = DEFAULT_LINE_HIGHLIGHT_COLOR;
-    Outline_Highlight_Color = DEFAULT_OUTLINE_HIGHLIGHT_COLOR;
-
-    Mode_Text_Color = DEFAULT_MODE_TEXT_COLOR;
-    Mode_Background_Color = DEFAULT_MODE_BACKGROUND_COLOR;
-    Command_Text_Color = DEFAULT_COMMAND_TEXT_COLOR;
-    Lower_Strip_Text_Color = DEFAULT_LOWER_STRIP_TEXT_COLOR;
-    Lower_Strip_Background_Color = DEFAULT_LOWER_STRIP_BACKGROUND_COLOR;
-
-    Message_Text_Color = DEFAULT_MESSAGE_TEXT_COLOR;
-    Message_Background_Color = DEFAULT_MESSAGE_BACKGROUND_COLOR;
-
-
-    Txt_Disp_Start_X = 0;
-    Txt_Disp_Start_Y = 0;
-    Txt_Disp_End_X = Screen_Width - 1;
-    Txt_Disp_End_Y = Screen_Height - 1;
-    Least_H_Distance = 5;
-    Least_V_Distance = 3;
-
-    init_color_pairs();
     parse_term_args(argc , argv);
     display_messages();
 
-    Display_Started = true;
+    if(Current_File == NULL){
+        if(stdscr != NULL){
+            endwin();
+        }
+
+        return 0;
+    }
+
+    Current_Mode = Normal_Mode;
+    Quit = false;
+
+    if(stdscr == NULL){
+        init_display();
+    }
+
     render_background(stdscr , 0 , 0 , Screen_Width , Screen_Height , BACKGROUND);
     refresh();
 

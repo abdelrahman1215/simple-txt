@@ -2,7 +2,7 @@ CC = gcc
 C_Flags = -g3
 Data_Structures_Path = c_datastructures/bin/
 
-main : simple_file.o msg_fmt.o parse_commands.o parse_term_args.o open_files.o display.o input.o get_str.o datastructs
+main : simple_file.o msg_fmt.o parse_commands.o parse_term_args.o open_files.o display.o input.o get_str.o init_display.o datastructs
 	$(CC) $(C_Flags) -o simple-txt src/main.c bin/*.o -lpdcurses -L$(Data_Structures_Path) -ldynamic_array -llinked_list -lhashmap
 
 test : simple_file.o msg_fmt.o parse_commands.o parse_term_args.o open_files.o display.o input.o get_str.o datastructs
@@ -37,6 +37,9 @@ div_str.o : src/div_str.c bin/
 
 get_str.o : src/get_str.c bin/
 	$(CC) $(C_Flags) -c src/get_str.c -o bin/get_str.o
+
+init_display.o : src/init_display.c bin/
+	$(CC) $(C_Flags) -c src/init_display.c -o bin/init_display.o
 
 datastructs :
 	$(MAKE) -C c_datastructures libs

@@ -20,7 +20,7 @@ void display_messages(){
         msg_lens[i] = strlen(messages[i]);
     }
 
-    if(!Display_Started){
+    if(stdscr == NULL){
         bool Exit = false;
 
         for(size_t i = 0 ; i < msg_no ; i++){

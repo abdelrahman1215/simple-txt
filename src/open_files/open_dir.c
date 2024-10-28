@@ -1,5 +1,6 @@
 #include "../../headers/simple_globals.h"
 #include "../../headers/curses_header.h"
+#include "../../headers/init_display.h"
 #include "../../headers/simple_file.h"
 #include "../../headers/simple_str.h"
 #include "../../headers/open_files.h"
@@ -132,6 +133,9 @@ simple_file *make_disp_file(dir_entry *entries , size_t entry_no){
 void open_dir(char *dir_name){
     if(dir_name == NULL) return ;
     if(dir_name[0] == '\000') return ;
+    if(stdscr == NULL){
+        init_display();
+    }
 
     size_t entry_no;
     dir_entry *entries = get_entries(dir_name , &entry_no);
