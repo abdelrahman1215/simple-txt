@@ -171,7 +171,7 @@ void open_dir(char *dir_name){
     attroff(COLOR_PAIR(SIDE_STRIPS));
 
     for(int ch = getch() ; !Break ; ch = getch()){
-        update_text_display(disp_file , info , stdscr , BACKGROUND , TEXT , LINE_HIGHLIGHT , SIDE_STRIPS , SIDE_STRIP_HIGHLIGHT , 3 , 0 , false , false , true , false , 1 , Screen_Width - 1 , 1 , Screen_Height);
+        update_text_display(disp_file , info , stdscr , BACKGROUND , TEXT , LINE_HIGHLIGHT , SIDE_STRIPS , SIDE_STRIP_HIGHLIGHT , 3 , 0 , false , false , false , true , false , 1 , Screen_Width - 1 , 1 , Screen_Height);
 
         switch(ch){
             case KEY_UP:

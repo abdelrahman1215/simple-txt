@@ -22,7 +22,7 @@ struct text_display_info{
     unsigned int indent;
 
     unsigned int background_pair , text_pair , line_highlight_pair , side_strip_pair , side_strip_highlight_pair;
-    bool display_line_no , display_file_name , highlight_current_line , display_cursor;
+    bool display_line_no , relative_line_no , display_file_name , highlight_current_line , display_cursor;
 
     WINDOW *window;
 };
@@ -166,7 +166,11 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
         if(info_ptr -> start_line + i >= line_no){
             mvwprintw(info_ptr -> window , y , x , "%s" , empty_number);
         }else{
-            itoa(info_ptr -> start_line + i + 1 , number + (log_of_line_no - (int)log10(info_ptr -> start_line + i + 1)) + 1 , 10);
+            size_t line_number;
+            if(info_ptr -> relative_line_no && info_ptr -> start_line + i != info_ptr -> line_pos) line_number = info_ptr -> line_pos > i ? info_ptr -> line_pos - i : i - info_ptr -> line_pos;
+            else line_number = info_ptr -> start_line + i + 1;
+
+            itoa(line_number , number + (log_of_line_no - (int)log10(info_ptr -> start_line + i + 1)) + 1 , 10);
             mvwprintw(info_ptr -> window , y , x , "%s" , number);
         }
 
@@ -181,7 +185,7 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
     wattroff(info_ptr -> window , COLOR_PAIR(info_ptr -> side_strip_pair));
 }
 
-void update_text_display(simple_file *file_ptr , text_display_info *save_info , WINDOW *disp_window , unsigned int background_pair , unsigned int text_pair , unsigned int line_highlight_pair , unsigned int side_strip_pair , unsigned int side_strip_highlight_pair , unsigned int least_v_dist , unsigned int least_h_dist , bool display_line_no , bool display_file_name  , bool highlight_current_line , bool disp_cursor , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y){
+void update_text_display(simple_file *file_ptr , text_display_info *save_info , WINDOW *disp_window , unsigned int background_pair , unsigned int text_pair , unsigned int line_highlight_pair , unsigned int side_strip_pair , unsigned int side_strip_highlight_pair , unsigned int least_v_dist , unsigned int least_h_dist , bool display_line_no , bool relative_line_no , bool display_file_name  , bool highlight_current_line , bool disp_cursor , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned end_y){
     if(disp_window == NULL) return ;
     if(file_ptr == NULL) return ;
 
@@ -235,6 +239,7 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
 
     save_info -> display_cursor = disp_cursor;
     save_info -> display_line_no = display_line_no;
+    save_info -> relative_line_no = relative_line_no;
     save_info -> display_file_name = display_file_name;
     save_info -> highlight_current_line = highlight_current_line;
 
