@@ -12,7 +12,7 @@ https://github.com/user-attachments/assets/958031a5-4350-4ae3-ab88-63724108defa
 
 # controls
 ## navigation
-vim like navigation controls (still working on moving multiple lines or columns)
+vim like navigation controls
 ## editing
 * ctrl z / ctrl y -> undo redo
 * ctrl d -> delete a whole line
