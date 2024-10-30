@@ -60,7 +60,6 @@ int main(int argc , char **argv){
     text_display_info *save_text_info = new_text_disp_info();
 
     PANEL *Top_Panel;
-    WINDOW *Current_Win;
     while(!Quit){
         display_messages();
 
