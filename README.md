@@ -18,10 +18,11 @@ vim like navigation controls
 * ctrl d -> delete a whole line
 
 # commands
-* edit -> open files or directories
-* w -> save changes
-* q -> quit
-* wq -> save & quit
+* edit      -> open files or directories
+* w         -> save changes
+* q         -> quit
+* wq        -> save & quit
+* relative  -> turn relative line numbers on/off
 
 # flags/options
 * -v/--version -> program version
