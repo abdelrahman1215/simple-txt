@@ -1,7 +1,7 @@
-oredered according to level of importance
+ordered according to level of importance
 
 add command history
-make a binding that moves the cursot n lines up
+make a binding that moves the cursor n lines up
 add a relative_line_no option to update_text_display
 
 #turns out the color pairs can be redefined
