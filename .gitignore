@@ -4,3 +4,4 @@ bin/
 testprep.*
 test
 *.exe
+release_notes.txt
