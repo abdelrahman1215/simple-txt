@@ -40,3 +40,9 @@ void edit_file(char **args){
 
     return ;
 }
+
+//command : "relative"
+//tomens : 0
+void relative(char **args){
+    Relative_Line_Number = !Relative_Line_Number;
+}

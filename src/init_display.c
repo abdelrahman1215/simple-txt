@@ -45,5 +45,7 @@ void init_display(){
     Least_H_Distance = 5;
     Least_V_Distance = 3;
 
+    Relative_Line_Number = false;
+
     init_color_pairs();
 }
