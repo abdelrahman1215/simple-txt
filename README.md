@@ -17,12 +17,15 @@ vim like navigation controls
 * ctrl z / ctrl y -> undo redo
 * ctrl d -> delete a whole line
 
+## command autocomplete
+* TAB
+
 # commands
-* edit      -> open files or directories
-* w         -> save changes
-* q         -> quit
-* wq        -> save & quit
-* relative  -> turn relative line numbers on/off
+* edit -> open files or directories
+* w -> save changes
+* q -> quit
+* wq -> save & quit
+* relative -> turn relative line numbers on/off
 
 # flags/options
 * -v/--version -> program version
