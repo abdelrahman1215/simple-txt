@@ -10,8 +10,14 @@ typedef struct autocomp_info {
     char **rep_options;
 } autocomp_info;
 
+typedef struct input_history input_history;
+
+input_history *new_input_history(size_t max_history_size);
+
+void destroy_input_history(input_history *history_ptr);
+
 typedef autocomp_info (autocomp_func) (char *input , size_t current_pos , bool get_replacment);
 
-char *get_str(WINDOW *inp_window , autocomp_func autocomplete , unsigned int background_pair , unsigned int text_pair , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned int end_y);
+char *get_str(WINDOW *inp_window , input_history *history_ptr , autocomp_func autocomplete , unsigned int background_pair , unsigned int text_pair , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned int end_y);
 
 #endif

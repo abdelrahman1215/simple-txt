@@ -83,7 +83,10 @@ void command_mode(){
     
     wattroff(Lower_Strip_Window , COLOR_PAIR(LOWER_STRIP_TEXT));
 
-    char *command = get_str(Lower_Strip_Window , autocomplete , LOWER_STRIP_BACKGROUND , COMMAND , 1 , win_width - 1 , 0 , 1);
+    static input_history *history = NULL;
+    if(history == NULL) history = new_input_history(Hist_Size);
+    
+    char *command = get_str(Lower_Strip_Window , history , autocomplete , LOWER_STRIP_BACKGROUND , COMMAND , 1 , win_width - 1 , 0 , 1);
     if(command == NULL) return ;
 
     parse_command(command);

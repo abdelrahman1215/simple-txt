@@ -47,5 +47,7 @@ void init_display(){
 
     Relative_Line_Number = false;
 
+    Hist_Size = DEFAULT_HIST_SIZE;
+
     init_color_pairs();
 }

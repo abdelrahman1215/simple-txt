@@ -102,6 +102,10 @@ SIMPLE_GLOBAL unsigned int Least_H_Distance , Least_V_Distance;
 SIMPLE_GLOBAL unsigned int Screen_Width , Screen_Height;
 SIMPLE_GLOBAL WINDOW *Current_Win;
 
+#define DEFAULT_HIST_SIZE 10
+
+SIMPLE_GLOBAL size_t Hist_Size;
+
 #define TAB_MAX 8
 #define DEFAULT_TAB_SIZE 4
 SIMPLE_GLOBAL unsigned char Tab_Size;
