@@ -7,6 +7,7 @@
 #include "command_mode.c"
 #include "binding_map.c"
 
+#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -47,21 +48,25 @@ void move_n_cols_or_lines(int first_char){
     switch(ch){//will be equal to the last character returned by wgetch
         case 'j':
             if(moves_no <= curr_line) simple_file_move_nlines_up(Current_File , moves_no);
+            usleep(100000);
             
             break;
 
         case 'k':
             if(curr_line + moves_no < line_no) simple_file_move_nlines_down(Current_File , moves_no);
+            usleep(100000);
             
             break;
 
         case 'h':
             if(moves_no <= curr_col) simple_file_move_ncols_left(Current_File , moves_no);
+            usleep(100000);
             
             break;
 
         case 'l':
             if(curr_col + moves_no <= line_len) simple_file_move_ncols_right(Current_File , moves_no);
+            usleep(100000);
             
             break;
 
