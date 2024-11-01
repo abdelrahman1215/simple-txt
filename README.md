@@ -8,7 +8,7 @@ a vim inspired text editor written from scratch in c using pdcurses
 
 >note: the actual cursor is hidden , this cursor is displayed by the program
 
-https://github.com/user-attachments/assets/958031a5-4350-4ae3-ab88-63724108defa
+https://github.com/user-attachments/assets/df70d3b4-9830-4905-bc10-08c7dba91dc0
 
 # controls
 ## navigation
