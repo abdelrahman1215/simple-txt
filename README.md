@@ -1,7 +1,21 @@
 # simple-txt
 a vim inspired text editor written from scratch in c using pdcurses
 
->note: for now it only works on windows
+# building
+## prequisites
+* for windows [pdcurses](https://sourceforge.net/projects/pdcurses/)
+* for linux ncurses and ncursesw packages
+
+## compiling
+* for windows
+```
+make windows
+```
+
+* for linux
+```
+make linux
+```
 
 # screenshots / screen records
 ![screenshot1](https://github.com/abdelrahman1215/simple-txt/blob/main/demos/Screenshot%20(7).png)
