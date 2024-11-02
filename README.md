@@ -1,6 +1,16 @@
 # simple-txt
 a vim inspired text editor written from scratch in c using pdcurses
 
+* [building](https://github.com/abdelrahman1215/simple-txt?tab=readme-ov-file#building)
+
+* [screenshots/records](https://github.com/abdelrahman1215/simple-txt?tab=readme-ov-file#screenshots--screen-records)
+
+* [controls](https://github.com/abdelrahman1215/simple-txt?tab=readme-ov-file#controls)
+
+* [commands](https://github.com/abdelrahman1215/simple-txt?tab=readme-ov-file#commands)
+
+* [flags/options](https://github.com/abdelrahman1215/simple-txt?tab=readme-ov-file#flagsoptions)
+
 # building
 ## prequisites
 * for windows : 
