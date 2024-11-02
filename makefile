@@ -1,48 +1,5 @@
-CC = gcc
-C_Flags = -g3
-Data_Structures_Path = c_datastructures/bin/
+windows:
+	$(MAKE) --makefile=makefile.windows
 
-main : simple_file.o msg_fmt.o parse_commands.o parse_term_args.o open_files.o display.o input.o get_str.o init_display.o datastructs
-	$(CC) $(C_Flags) -o simple-txt src/main.c bin/*.o -lpdcurses -L$(Data_Structures_Path) -ldynamic_array -llinked_list -lhashmap
-
-test : simple_file.o msg_fmt.o parse_commands.o parse_term_args.o open_files.o display.o input.o get_str.o datastructs
-	$(CC) $(C_Flags) -o test test.c bin/*.o -lpdcurses -L$(Data_Structures_Path) -ldynamic_array -llinked_list -lhashmap
-
-simple_str.o : src/simple_str.c bin/
-	$(CC) $(C_Flags) -c src/simple_str.c -o bin/simple_str.o
-
-simple_file.o : src/file_processing/load_file.c src/file_processing/edit_file.c bin/ simple_str.o div_str.o
-	$(CC) $(C_Flags) -c src/file_processing/simple_file.c -o bin/simple_file.o
-
-msg_fmt.o : src/msg_fmt/msg_fmt.c bin/ 
-	$(CC) $(C_Flags) -c src/msg_fmt/msg_fmt.c -o bin/msg_fmt.o
-
-parse_commands.o : src/commands/parse_commands.c bin/
-	$(CC) $(C_Flags) -c src/commands/parse_commands.c -o bin/parse_commands.o
-
-open_files.o : src/open_files/open_file.c bin/
-	$(CC) $(C_Flags) -c src/open_files/open_file.c -o bin/open_files.o
-
-parse_term_args.o : src/term_args/parse_term_args.c bin/
-	$(CC) $(C_Flags) -c src/term_args/parse_term_args.c -o bin/parse_term_args.o
-
-display.o : src/display/display.c bin/
-	$(CC) $(C_Flags) -c src/display/display.c -o bin/display.o
-
-input.o : src/input/handle_input.c bin/
-	$(CC) $(C_Flags) -c src/input/handle_input.c -o bin/input.o
-
-div_str.o : src/div_str.c bin/
-	$(CC) $(C_Flags) -c src/div_str.c -o bin/div_str.o
-
-get_str.o : src/get_str.c bin/
-	$(CC) $(C_Flags) -c src/get_str.c -o bin/get_str.o
-
-init_display.o : src/init_display.c bin/
-	$(CC) $(C_Flags) -c src/init_display.c -o bin/init_display.o
-
-datastructs :
-	$(MAKE) -C c_datastructures libs
-
-bin/ : 
-	$(shell mkdir bin)
+linux:
+	$(MAKE) --makefile=makefile.linux

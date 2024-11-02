@@ -170,7 +170,7 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
             if(info_ptr -> relative_line_no && info_ptr -> start_line + i != info_ptr -> line_pos) line_number = info_ptr -> line_pos > (info_ptr -> start_line + i) ? info_ptr -> line_pos - (info_ptr -> start_line + i) : (info_ptr -> start_line + i) - info_ptr -> line_pos;
             else line_number = info_ptr -> start_line + i + 1;
 
-            itoa(line_number , number + (log_of_line_no - (int)log10(line_number)) + 1 , 10);
+            sprintf(number + (log_of_line_no - (int)log10(line_number)) + 1 , "%d" , line_number);
             mvwprintw(info_ptr -> window , y , x , "%s" , number);
         }
 
