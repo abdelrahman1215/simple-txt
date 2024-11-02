@@ -5,7 +5,7 @@ a vim inspired text editor written from scratch in c using pdcurses
 ## prequisites
 * for windows : 
     * [pdcurses](https://sourceforge.net/projects/pdcurses/)
-* for linux 
+* for linux :
     * ncurses package
 
 ## compiling
