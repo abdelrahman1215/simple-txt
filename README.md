@@ -3,8 +3,10 @@ a vim inspired text editor written from scratch in c using pdcurses
 
 # building
 ## prequisites
-* for windows [pdcurses](https://sourceforge.net/projects/pdcurses/)
-* for linux ncurses and ncursesw packages
+* for windows : 
+    * [pdcurses](https://sourceforge.net/projects/pdcurses/)
+* for linux 
+    * ncurses package
 
 ## compiling
 * for windows
