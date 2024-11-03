@@ -69,7 +69,7 @@ void insert_mode(int input , WINDOW *inp_window){
 
             break;
         
-        default:
+        default:{
             char tmp[2] = {'\000' , '\000'};
 
             char tab[Tab_Size + 1];
@@ -97,5 +97,6 @@ void insert_mode(int input , WINDOW *inp_window){
             destroy_simple_str(buffer);
 
             break;
+        }
     } 
 }

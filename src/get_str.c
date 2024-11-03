@@ -191,7 +191,7 @@ char *get_str(WINDOW *inp_window , input_history *history_ptr , autocomp_func au
 
                 break;
             
-            default :
+            default :{
                 simple_str *buffer_str = new_simple_str("");
                 char tmp_buff[2] = {'\000' , '\000'};
 
@@ -215,6 +215,7 @@ char *get_str(WINDOW *inp_window , input_history *history_ptr , autocomp_func au
                 simple_file_add(buffer , 0 , col_pos , buff_text);
 
                 break;
+            }
         }
 
         if(get_history && history_ptr != NULL/*this operand is here just to silence clang-tidy warnings*/){

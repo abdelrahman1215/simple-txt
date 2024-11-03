@@ -90,8 +90,8 @@ void normal_mode(int input , WINDOW *inp_window){
         case 'l':
         case 'L':
         case KEY_RIGHT : 
-                simple_file_move_ncols_right(Current_File , 1);
-                break;
+            simple_file_move_ncols_right(Current_File , 1);
+            break;
 
         case 'h':
         case 'H':
