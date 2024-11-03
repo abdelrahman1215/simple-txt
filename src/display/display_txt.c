@@ -281,7 +281,7 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
     size_t max_len = save_info -> disp_end_x - save_info -> txt_start_x;
     
     char *rows[row_no];
-    for(size_t i = 0 ; i < row_no ; i++) rows[i] = calloc(max_len + 1 , sizeof(char));
+    for(unsigned int i = 0 ; i < row_no ; i++) rows[i] = calloc(max_len + 1 , sizeof(char));
 
     for(unsigned int i = 0 ; i < row_no ; i++){
         memset(rows[i] , ' ' , max_len);
