@@ -280,10 +280,12 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
     unsigned int row_no = save_info -> disp_end_y - save_info -> txt_start_y;
     size_t max_len = save_info -> disp_end_x - save_info -> txt_start_x;
     
-    char rows[row_no][max_len + 1];
+    char *rows[row_no];
+    for(size_t i = 0 ; i < row_no ; i++) rows[i] = calloc(max_len + 1 , sizeof(char));
+
     for(unsigned int i = 0 ; i < row_no ; i++){
-        memset(rows[i] , ' ' , max_len + 1);
-        rows[i][max_len] = '\000';
+        memset(rows[i] , ' ' , max_len);
+        //rows[i][max_len] = '\000';
     }
 
     unsigned int used_rows = 0;
@@ -312,6 +314,8 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
     }
     wattroff(save_info -> window , COLOR_PAIR(save_info -> text_pair));
 
+    for(size_t i = 0 ; i < row_no ; i++) free(rows[i]);
+
     wattron(save_info -> window , COLOR_PAIR(save_info -> side_strip_pair));
     if(used_rows < row_no){
         mvwhline(save_info -> window , save_info -> txt_start_y + used_rows , save_info -> txt_start_x + 1 , 0 , save_info -> disp_end_x - save_info -> txt_start_x - 2);
@@ -328,6 +332,7 @@ void update_text_display(simple_file *file_ptr , text_display_info *save_info , 
     }
 
     wmove(save_info -> window , save_info -> cursor_y , save_info -> cursor_x);
+
 
     if(created_tmp_save_info) free(save_info);
 }

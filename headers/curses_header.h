@@ -2,7 +2,7 @@
 #define CURSES_HEADER
 
 #ifdef LINUX
-#include <ncurses.h>
+#include <curses.h>
 #include <panel.h>
 #else
 #include <pdcurses.h>

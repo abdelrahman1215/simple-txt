@@ -170,6 +170,9 @@ void open_dir(char *dir_name){
 
     attroff(COLOR_PAIR(SIDE_STRIPS));
 
+    size_t line;
+    dir_entry target;
+
     for(int ch = getch() ; !Break ; ch = getch()){
         update_text_display(disp_file , info , stdscr , BACKGROUND , TEXT , LINE_HIGHLIGHT , SIDE_STRIPS , SIDE_STRIP_HIGHLIGHT , 3 , 0 , false , false , false , true , false , 1 , Screen_Width - 1 , 1 , Screen_Height);
 
@@ -196,8 +199,8 @@ void open_dir(char *dir_name){
 
             case '\n':
             case '\r':
-                size_t line = simple_file_get_curr_line(disp_file);
-                dir_entry target = entries[line + 1/*because the ../ folder was skipped*/];
+                line = simple_file_get_curr_line(disp_file);
+                target = entries[line + 1/*because the ../ folder was skipped*/];
                 simple_str_add(file_path , target.entry_name , simple_str_get_strlen(file_path));
 
                 if(target.is_dir){
