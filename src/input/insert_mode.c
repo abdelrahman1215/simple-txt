@@ -15,6 +15,9 @@ void insert_mode(int input , WINDOW *inp_window){
 
     size_t line_len = simple_file_get_line_len(Current_File , line_pos);
 
+    char tmp[2] = {'\000' , '\000'};
+    char tab[Tab_Size + 1];
+
     switch(input){
         case '\e'://escape
             Current_Mode = Normal_Mode;
@@ -69,10 +72,7 @@ void insert_mode(int input , WINDOW *inp_window){
 
             break;
         
-        default:{
-            char tmp[2] = {'\000' , '\000'};
-
-            char tab[Tab_Size + 1];
+        default:
             memset(tab , ' ' , Tab_Size);
             tab[Tab_Size] = '\000';
 
@@ -97,6 +97,6 @@ void insert_mode(int input , WINDOW *inp_window){
             destroy_simple_str(buffer);
 
             break;
-        }
+        
     } 
 }
