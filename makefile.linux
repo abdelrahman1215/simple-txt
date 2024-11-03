@@ -3,7 +3,7 @@ C_Flags = -g3 -DLINUX
 Data_Structures_Path = c_datastructures/bin/
 
 main : simple_file.o msg_fmt.o parse_commands.o parse_term_args.o open_files.o display.o input.o get_str.o init_display.o datastructs
-	$(CC) $(C_Flags) -o simple-txt src/main.c bin/*.o -lm -lpanel -lncursesw -L$(Data_Structures_Path) -ldynamic_array -llinked_list -lhashmap
+	$(CC) $(C_Flags) -o simple-txt src/main.c bin/*.o -lm -lpanel -lncurses -L$(Data_Structures_Path) -ldynamic_array -llinked_list -lhashmap
 
 test : simple_file.o msg_fmt.o parse_commands.o parse_term_args.o open_files.o display.o input.o get_str.o datastructs
 	$(CC) $(C_Flags) -o test test.c bin/*.o -lpdcurses -L$(Data_Structures_Path) -ldynamic_array -llinked_list -lhashmap

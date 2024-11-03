@@ -119,7 +119,7 @@ void update_lower_strip(WINDOW *disp_window){
     int log_of_line_pos = (int)log10(line_pos + 1) , log_of_col_pos = (int)log10(col_pos + 1);
 
     if(log_of_col_pos + log_of_line_pos + 11/*for the written text*/ + MODE_MAX_LEN < win_width){
-        mvwprintw(disp_window , win_height - 1 , win_width - (log_of_col_pos + log_of_line_pos + 11) , "Ln %i,Col %i" , line_pos + 1 , col_pos + 1);
+        mvwprintw(disp_window , win_height - 1 , win_width - (log_of_col_pos + log_of_line_pos + 11) , "Ln %li,Col %li" , line_pos + 1 , col_pos + 1);
     }
 
     wattroff(disp_window , COLOR_PAIR(LOWER_STRIP_TEXT));

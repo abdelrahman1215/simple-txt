@@ -172,6 +172,8 @@ char *get_str(WINDOW *inp_window , input_history *history_ptr , autocomp_func au
 
                 break;
 
+            case KEY_BACKSPACE:
+            case 127:
             case '\b':
                 if(col_pos > 0){
                     simple_file_delete(buffer , 0 , col_pos - 1 , 1);

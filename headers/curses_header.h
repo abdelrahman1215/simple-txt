@@ -2,8 +2,8 @@
 #define CURSES_HEADER
 
 #ifdef LINUX
-#include <ncursesw/curses.h>
-#include <ncursesw/panel.h>
+#include <ncurses.h>
+#include <panel.h>
 #else
 #include <pdcurses.h>
 #endif
