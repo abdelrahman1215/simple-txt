@@ -52,7 +52,7 @@ void move_to_line(char **args){
     char *str_line_no = args[0];
     size_t line_no = atoi(str_line_no);
     if(line_no == 0 || line_no > simple_file_get_line_no(Current_File)){
-        custom_msg(Error , "ln : Invalid line number");
+        custom_msg(Error , " ln:Invalid line number");
 
         return;
     }
@@ -69,7 +69,7 @@ void move_to_column(char **args){
     size_t col_no = atoi(str_col_no);
     size_t curr_line = simple_file_get_curr_line(Current_File);
     if(col_no == 0 || col_no > simple_file_get_line_len(Current_File , curr_line) + 1){
-        custom_msg(Error , "col : Invalid col number");
+        custom_msg(Error , " col:Invalid col number");
 
         return ;
     }
