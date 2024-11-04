@@ -31,32 +31,8 @@ int main(int argc , char **argv){
         init_display();
     }
 
-    render_background(stdscr , 0 , 0 , Screen_Width , Screen_Height , BACKGROUND);
-    refresh();
+    Hist_Size = DEFAULT_HIST_SIZE;
 
-    Text_Window = newwin(Screen_Height - 1 , Screen_Width - 2 , 0 , 1);
-    wattrset(Text_Window , COLOR_PAIR(TEXT_BACKGROUND));
-    nodelay(Text_Window , true);
-    keypad(Text_Window , true);
-    wnoutrefresh(Text_Window);
-
-    Lower_Strip_Window = newwin(1 , Screen_Width , Screen_Height - 1 , 0);
-    wattrset(Lower_Strip_Window , COLOR_PAIR(LOWER_STRIP_BACKGROUND));
-    nodelay(Lower_Strip_Window , true);
-    keypad(Lower_Strip_Window , true);
-    wnoutrefresh(Lower_Strip_Window);
-
-    Msg_Window = newwin(3 , Screen_Width , Screen_Height - 4 , 0);
-    wattrset(Msg_Window , COLOR_PAIR(LOWER_STRIP_BACKGROUND));
-    nodelay(Msg_Window , true);
-    keypad(Msg_Window , true);
-
-    Std_Panel = new_panel(stdscr);
-    Msg_Panel = new_panel(Msg_Window);
-    Lower_Strip_Panel = new_panel(Lower_Strip_Window);
-    Text_Panel = new_panel(Text_Window);
-
-    hide_panel(Msg_Panel);
     text_display_info *save_text_info = new_text_disp_info();
 
     PANEL *Top_Panel;

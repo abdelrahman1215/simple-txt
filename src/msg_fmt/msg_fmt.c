@@ -96,16 +96,17 @@ void term_arg_error(const char *arg ,  parsing_term_errors error_type){
     switch(error_type){
         case Too_Few_Args :
             sprintf(error , "too few arguments for option \"%s\"" , arg);
+            enqueue_msg(Error , error);
 
             break;
 
         case Too_Many_Files : 
             sprintf(error , "too many files , only one was loaded");
+            enqueue_msg(Warning , error);
 
             break;
             
         default : return ;
     }
 
-    enqueue_msg(Error , error);
 }

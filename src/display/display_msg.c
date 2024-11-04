@@ -1,5 +1,6 @@
 #include "../../headers/simple_globals.h"
 #include "../../headers/curses_header.h"
+#include "../../headers/init_display.h"
 #include "../../headers/display.h"
 #include "../../headers/msg_fmt.h"
 
@@ -9,8 +10,6 @@ void display_messages(){
     size_t msg_no = get_msg_no();
     if(msg_no == 0) return ;
 
-    unsigned int max_win_height = (Screen_Height / 2) - 1;
-    unsigned int disp_width = Screen_Width - 2;
 
     char *messages[msg_no];
     size_t msg_lens[msg_no];
@@ -20,20 +19,34 @@ void display_messages(){
         msg_lens[i] = strlen(messages[i]);
     }
 
-    if(stdscr == NULL){
-        bool Exit = false;
+    bool Exit = false;
+    bool use_curses = true;
+    for(size_t i = 0 ; i < msg_no ; i++){
+        if(msg_types[i] == Error){
+            use_curses = false;
+            Exit = true;
 
-        for(size_t i = 0 ; i < msg_no ; i++){
-            printf("%s\n" , messages[i]);
-            if(msg_types[i] == Error) Exit = true;
+            break;
         }
-
-        if(Exit){
-            exit(1);
-        }
-
-        return ;
     }
+
+    if(stdscr == NULL){
+        if(use_curses){
+            init_display();
+        }else{
+            for(size_t i = 0 ; i < msg_no ; i++){
+                printf("%s\n" , messages[i]);
+            }
+
+            if(Exit){
+                exit(1);
+            }
+        }
+
+    }
+
+    unsigned int max_win_height = (Screen_Height / 2) - 1;
+    unsigned int disp_width = Screen_Width - 2;
 
     size_t line_no = 0;
     for(size_t i = 0 ; i < msg_no ; i++){
