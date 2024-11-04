@@ -3,8 +3,6 @@
 #include "init_maps.c"
 
 void parse_term_args(int argc , char **argv){
-    //remove this if statement if flags or options are made in the future
-    if(argc > 2) return ;
     if(flags_map == NULL){
         init_flag_map();
         init_option_map();
@@ -23,6 +21,9 @@ void parse_term_args(int argc , char **argv){
         for(int i = 1 ; i < argc ; i++){
             if(argv[i][0] == '-'){
                 flag_entry = hashmap_lookup_entry(argv[i] , flags_map);
+                if(flag_entry == NULL) continue;
+
+                   
                 flag_inf = hashmap_get_obj(flag_entry);
 
                 flag_inf -> flag_exec();
