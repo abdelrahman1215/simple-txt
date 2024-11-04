@@ -187,6 +187,9 @@ void __load_from_str__(simple_file *file_ptr , char *src){
 
                 break;
 
+            case CTRL('M'):
+                break;
+
             case '\t':
                 simple_str_add(line , tab , simple_str_get_strlen(line));
 
