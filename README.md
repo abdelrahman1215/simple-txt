@@ -1,5 +1,5 @@
 # simple-txt
-a vim inspired text editor written from scratch in c using pdcurses
+a vim inspired text editor written from scratch in c using the curses library (pdcurses for windows and ncurses for linux)
 
 * [building](https://github.com/abdelrahman1215/simple-txt?tab=readme-ov-file#building)
 
