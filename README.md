@@ -52,6 +52,8 @@ vim like navigation controls
 * q -> quit
 * wq -> save & quit
 * relative -> turn relative line numbers on/off
+* ln -> jump to the nth line
+* col -> jump to the nth column
 
 # flags/options
 * -v/--version -> program version
