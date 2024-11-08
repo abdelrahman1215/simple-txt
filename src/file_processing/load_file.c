@@ -228,6 +228,7 @@ simple_file *load_from_str(const char *src , loading_err *get_err){
     strncpy(copy , src , len);
     __load_from_str__(ret , copy);
 
+    ret -> max_reached_column = 0;
     ret -> changes_saved = false;
     ret -> column = 0;
     ret -> line = 0;
@@ -288,6 +289,7 @@ simple_file *load_file(const char *file_name , bool create_if_not_found , loadin
     }
     
 
+    ret -> max_reached_column = 0;
     ret -> column = 0;
     ret -> line = 0;
 

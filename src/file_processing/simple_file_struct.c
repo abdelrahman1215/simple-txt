@@ -11,6 +11,7 @@ struct file_struct{
 
     dynamic_array *lines;
     size_t line , column;
+    size_t max_reached_column;
 
     linked_list *changes_stack;
     linked_list *undone_stack;

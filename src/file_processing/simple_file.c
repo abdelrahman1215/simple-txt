@@ -8,23 +8,29 @@ void simple_file_move_ncols_right(simple_file *file_ptr , size_t cols){
             file_ptr -> column = simple_file_get_line_len(file_ptr , file_ptr -> line);
         }
 
+        if(file_ptr -> max_reached_column < file_ptr -> column) file_ptr -> max_reached_column = file_ptr -> column; 
+
         return;
     }
 
     file_ptr -> column += cols;
+    if(file_ptr -> max_reached_column < file_ptr -> column) file_ptr -> max_reached_column = file_ptr -> column; 
 }
 
 void simple_file_move_ncols_left(simple_file *file_ptr , size_t cols){
     if(file_ptr == NULL) return ;
-    if(file_ptr -> column  < cols){
+    if(file_ptr -> column < cols){
         if(cols > 1){
             file_ptr -> column = 0;
         }
+
+        file_ptr -> max_reached_column = file_ptr -> column;
 
         return;
     }
 
     file_ptr -> column -= cols;
+    file_ptr -> max_reached_column = file_ptr -> column;
 }
 
 void simple_file_move_nlines_down(simple_file *file_ptr , size_t lines){
@@ -39,8 +45,12 @@ void simple_file_move_nlines_down(simple_file *file_ptr , size_t lines){
 
     file_ptr -> line += lines;
 
-    if(file_ptr -> column > simple_file_get_line_len(file_ptr , file_ptr -> line)){
-        file_ptr -> column = simple_file_get_line_len(file_ptr , file_ptr -> line);
+    size_t line_len = simple_file_get_line_len(file_ptr , file_ptr -> line);
+    if(file_ptr -> column > line_len){
+        file_ptr -> column = line_len;
+    }else if(file_ptr -> column < file_ptr -> max_reached_column){
+        if(line_len >= file_ptr -> max_reached_column) file_ptr -> column = file_ptr -> max_reached_column;
+        else file_ptr -> column = line_len;
     }
 }
 
@@ -56,8 +66,12 @@ void simple_file_move_nlines_up(simple_file *file_ptr , size_t lines){
 
     file_ptr -> line -= lines;
 
-    if(file_ptr -> column > simple_file_get_line_len(file_ptr , file_ptr -> line)){
-        file_ptr -> column = simple_file_get_line_len(file_ptr , file_ptr -> line);
+    size_t line_len = simple_file_get_line_len(file_ptr , file_ptr -> line);
+    if(file_ptr -> column > line_len){
+        file_ptr -> column = line_len;
+    }else if(file_ptr -> column < file_ptr -> max_reached_column){
+        if(line_len >= file_ptr -> max_reached_column) file_ptr -> column = file_ptr -> max_reached_column;
+        else file_ptr -> column = line_len;
     }
 }
 
