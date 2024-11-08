@@ -22,9 +22,9 @@ void simple_file_move_ncols_left(simple_file *file_ptr , size_t cols){
     if(file_ptr -> column < cols){
         if(cols > 1){
             file_ptr -> column = 0;
+            file_ptr -> max_reached_column = file_ptr -> column;
         }
 
-        file_ptr -> max_reached_column = file_ptr -> column;
 
         return;
     }
