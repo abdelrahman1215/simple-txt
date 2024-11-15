@@ -2,7 +2,7 @@ CC = gcc
 C_Flags = -g3 -DLINUX
 Data_Structures_Path = c_datastructures/bin/
 
-main : simple_file.o msg_fmt.o parse_commands.o parse_term_args.o open_files.o display.o input.o get_str.o init_display.o datastructs
+main : simple_file.o msg_fmt.o parse_commands.o parse_term_args.o open_files.o display.o input.o get_str.o init_display.o manual.o datastructs
 	$(CC) $(C_Flags) -o simple-txt src/main.c bin/*.o -lm -lpanel -lncurses -L$(Data_Structures_Path) -ldynamic_array -llinked_list -lhashmap
 
 test : simple_file.o msg_fmt.o parse_commands.o parse_term_args.o open_files.o display.o input.o get_str.o datastructs
@@ -40,6 +40,9 @@ get_str.o : src/get_str.c bin/
 
 init_display.o : src/init_display.c bin/
 	$(CC) $(C_Flags) -c src/init_display.c -o bin/init_display.o
+
+manual.o : src/manual.c bin/
+	$(CC) $(C_Flags) -c src/manual.c -o bin/manual.o
 
 datastructs :
 	$(MAKE) -C c_datastructures libs

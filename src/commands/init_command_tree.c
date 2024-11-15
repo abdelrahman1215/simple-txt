@@ -10,7 +10,8 @@ command_info command_arr[] = {
     {.command = "edit" , .command_exec = edit_file , .token_no = 1} ,
     {.command = "relative" , .command_exec = relative , .token_no = 0},
     {.command = "ln", .command_exec = move_to_line , .token_no = 1},
-    {.command = "col", .command_exec = move_to_column , .token_no = 1}
+    {.command = "col", .command_exec = move_to_column , .token_no = 1},
+    {.command = "man", .command_exec = manual , .token_no = 0}
 };
 
 command_tree *Command_Tree = NULL;

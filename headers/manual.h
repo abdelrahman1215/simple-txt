@@ -5,7 +5,7 @@ Usage : ./(simple-txt executable) [options/flags] file\n\
 \n\
 Flags :\n\
     -h / --help : get the help page\n\
-    -v / version : get the program's version\n\
+    -v / --version : get the program's version\n\
 \n\
 Options :\n\
 \n\
@@ -32,11 +32,10 @@ Commands :\n\
     relative : enable / disable relative numbers\n\
     ln (line number) : jump to line (number)\n\
     col (column number) : jump to column (number)\n\
+    man : get the manual page\n\
 \
 "
 
-char *get_manual(){//in case i decided to store the manual in a text file later
-    return MANUAL;
-}
+char *get_manual();
 
 #endif

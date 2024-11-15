@@ -1,7 +1,9 @@
 #include "../../headers/simple_globals.h"
 #include "../../headers/simple_file.h"
-#include "../../headers/msg_fmt.h"
 #include "../../headers/open_files.h"
+#include "../../headers/display.h"
+#include "../../headers/msg_fmt.h"
+#include "../../headers/manual.h"
 
 #include <stdlib.h>
 
@@ -75,4 +77,79 @@ void move_to_column(char **args){
     }
 
     simple_file_move_to_xy(Current_File , curr_line , col_no - 1);
+}
+
+//command : "man"
+//tokens : 0
+void manual(char **args){
+    char *manual = get_manual();
+
+    unsigned int disp_width = Screen_Width - 2;
+
+    loading_err error;
+    simple_file *display_file = load_from_str("" , &error);
+
+    size_t line_no = 0;
+    char buffer[disp_width + 1];
+    buffer[disp_width] = '\000';
+    for(size_t i = 0 , copy_start = 0 , copy_end = 0 , copy_len = 0 ;; i++){
+        if(manual[i] == '\000' || manual[i] == '\n' || i - copy_end/*last copy end*/ >= disp_width){
+            copy_start = copy_end + (copy_end > 0);
+            copy_end = i;
+
+            copy_len = copy_end - copy_start;
+            strncpy(buffer , manual + copy_start , copy_len);
+
+            buffer[copy_len] = '\000';
+
+            size_t line_index = simple_file_get_curr_line(display_file);
+            size_t line_len = simple_file_get_line_len(display_file , line_index);
+            simple_file_add(display_file , line_index , line_len , buffer);
+            if(manual[i] != '\000'){
+                line_index = simple_file_get_curr_line(display_file);
+                line_len = simple_file_get_line_len(display_file , line_index);
+                simple_file_add(display_file , line_index , line_len , "\n");
+            }
+        }
+
+        if(manual[i] == '\000') break;
+    }
+
+    simple_file_move_to_xy(display_file , 0 , 0);
+
+    WINDOW *display_win = stdscr;
+
+    render_background(display_win , 0 , 0 , Screen_Width , Screen_Height , BACKGROUND);
+    
+    wattron(display_win , COLOR_PAIR(SIDE_STRIPS));
+    
+    mvwprintw(display_win , 0 , 1 , "press esc to exit");
+
+    wattroff(display_win , COLOR_PAIR(SIDE_STRIPS));
+
+
+    text_display_info *info = new_text_disp_info();
+    flushinp();
+
+    size_t curr_line;
+    size_t file_line_no = simple_file_get_line_no(display_file);
+    for(int ch = getch() ; ch != '\e' ; ch = getch()){
+        update_text_display(display_file , info , display_win , BACKGROUND , TEXT , 0 , 0 , 0 , 0 , 0 , false , false , false , false , false , 1 , Screen_Width - 1 , 1 , Screen_Height);
+        refresh();
+
+        curr_line = simple_file_get_curr_line(display_file);
+        switch(ch){
+            case KEY_UP:
+                simple_file_move_nlines_up(display_file , 1);
+
+                break;
+
+            case KEY_DOWN:
+                if(curr_line + Screen_Height - 1 < file_line_no){
+                    simple_file_move_nlines_down(display_file , 1);
+                }
+
+                break;
+        }
+    }
 }
