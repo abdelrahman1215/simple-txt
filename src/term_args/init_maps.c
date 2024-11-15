@@ -24,11 +24,15 @@ option_info options[] = {};
 
 char *flag_names[] = {
     "-v",
-    "--version"
+    "--version",
+    "-h",
+    "--help"
 };
 flag_info flags[] = {
     {.flag_exec = version},
-    {.flag_exec = version}
+    {.flag_exec = version},
+    {.flag_exec = help_flag},
+    {.flag_exec = help_flag}
 };
 
 void init_flag_map(){

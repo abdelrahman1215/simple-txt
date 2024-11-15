@@ -1,4 +1,5 @@
 #include "../../headers/simple_globals.h"
+#include "../../headers/manual.h"
 
 #include "stdlib.h"
 
@@ -9,6 +10,14 @@
 //-v --version
 void version(){
     printf("%s\n" , VERSION);
+
+    exit(0);
+}
+
+//-h --help
+void help_flag(){
+    char *manual = get_manual();
+    printf("%s\n" , manual);
 
     exit(0);
 }
