@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-typedef enum loading_err {Ok = 0 , Is_Dir = 1 , File_Not_Found = 2 , Alloc_Err = 3 , Invalid_Arg = 4 , Invalid_File_Name = 5} loading_err;
+typedef enum loading_err {Ok = 0 , Is_Dir = 1 , File_Not_Found = 2 , Alloc_Err = 3 , Invalid_Arg = 4 , Invalid_File_Name = 5 , Invalid_File_Type} loading_err;
 
 typedef struct file_struct simple_file;
 

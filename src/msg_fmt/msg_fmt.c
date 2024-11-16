@@ -20,7 +20,9 @@ void loading_msg(const char *file_name , loading_err error){
     memset(msg , 0 , 1024);
     switch(error){
         case File_Not_Found :
-            sprintf(msg , "created new file \"%s\"" , file_name);
+            if(strcmp(file_name , "Untitled") != 0){
+                sprintf(msg , "created new buffer : \"%s\"" , file_name);
+            }
             
             break;
 
@@ -45,12 +47,17 @@ void loading_error(const char *file_name ,  loading_err error_type){
     if(file_name == NULL) return ;
     if(file_name[0] == '\000') return ;
 
-    char error[1024] = "loading error : ";
-    strncpy(error , "loading error : " , strlen("loading error : "));
-
-    strncat(error , file_name , strlen(file_name));
-
+    char error[1024];
     switch(error_type){
+        case Invalid_File_Type :
+            sprintf(error , " \"%s\" : invalid file type" , file_name);
+            
+            break;
+
+        case File_Not_Found :
+            loading_msg(file_name , error_type);
+
+            return;
 
         default : return ;
     }

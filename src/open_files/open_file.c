@@ -4,9 +4,32 @@
 #include "open_dir.c"
 
 #include <unistd.h>
+#include <magic.h>
 
 void open_file(char *file_name){
     if(file_name[0] == '\000') return ;
+    if(is_dir(file_name)) {
+        open_dir(file_name);
+
+        return;
+    }else{
+        magic_t cookie = magic_open(MAGIC_MIME_TYPE);
+        if(cookie == NULL) return;
+
+        if(magic_load(cookie , NULL) != 0){
+            magic_close(cookie);
+        }
+
+        const char *type = magic_file(cookie , file_name);
+        if(strncmp(type , "text" , 4) != 0){
+            if(strncmp(type , "cannot" , 6) != 0){
+                loading_error(file_name , Invalid_File_Type);
+                return;
+            }
+        }
+
+        magic_close(cookie);
+    }
 
     loading_err error;
     simple_file *tmp = load_file(file_name , true , &error);
@@ -26,6 +49,5 @@ void open_file(char *file_name){
         Current_File = tmp;
     }
 
-    if(error == Is_Dir) open_dir(file_name);
     loading_error(file_name , error);
 }
