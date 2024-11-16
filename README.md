@@ -15,8 +15,11 @@ a vim inspired text editor written from scratch in c using the curses library (p
 ## prequisites
 * for windows : 
     * [pdcurses](https://sourceforge.net/projects/pdcurses/)
+    * install libmagic
+    > if you are using msys2 install mingw-w64-x86_64-file (mingw-w64-ucrt-x86_64-file if you are using UCRT)
+
 * for linux :
-    * ncurses package
+    * ncurses and libmagic packages
 
 ## compiling
 * for windows
