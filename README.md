@@ -57,6 +57,8 @@ vim like navigation controls
 * relative -> turn relative line numbers on/off
 * ln -> jump to the nth line
 * col -> jump to the nth column
+* man -> get the manual page
 
 # flags/options
 * -v/--version -> program version
+* -h/--help -> get manual page
