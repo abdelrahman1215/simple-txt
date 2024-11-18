@@ -175,17 +175,7 @@ void open_dir(char *dir_name){
     dir_entry target;
 
     for(int ch = getch() ; !Break ; ch = getch()){
-        update_text_display(disp_file , info , stdscr , BACKGROUND , TEXT , LINE_HIGHLIGHT , SIDE_STRIPS , SIDE_STRIP_HIGHLIGHT , 3 , 0 , false , false , false , true , false , 1 , Screen_Width - 1 , 3 , Screen_Height);
-
-        attron(COLOR_PAIR(COMMAND));
-
-        mvhline(1 , 0 , ' ' , Screen_Width);
-
-        char *tmp_path = simple_str_get_string(file_path);
-        mvprintw(1 , 1 , "open directory : %s" , tmp_path);
-        free(tmp_path);
-
-        attroff(COLOR_PAIR(COMMAND));
+        update_text_display(disp_file , info , stdscr , BACKGROUND , TEXT , LINE_HIGHLIGHT , SIDE_STRIPS , SIDE_STRIP_HIGHLIGHT , 3 , 0 , false , false , false , true , false , 1 , Screen_Width - 1 , 2 , Screen_Height);
 
         switch(ch){
             case KEY_UP:
