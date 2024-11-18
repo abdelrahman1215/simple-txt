@@ -83,7 +83,7 @@ add_end _add_(simple_file *file_ptr , size_t line_index , size_t pos_index , cha
     }
 
     size_t init_len = simple_str_get_strlen(*target);
-    bool dd = pos_index < init_len;
+    bool less_than_init_len = pos_index < init_len;
 
     simple_str_add(*target , divided[0] , pos_index);
 
@@ -95,25 +95,29 @@ add_end _add_(simple_file *file_ptr , size_t line_index , size_t pos_index , cha
         added_lines_no = line_no - 1;
         simple_file_add_empty_lines(file_ptr , added_lines_no , line_index + 1);
 
-        if(dd){
+        if(less_than_init_len){
             simple_str_delete(*target , pos_index + strlen(divided[0]) , init_len - pos_index);
             free(target);
 
             target = (simple_str **)dynamic_array_get_element(contents , line_index + added_lines_no);
             simple_str_add(*target , text + pos_index + strlen(divided[0]) , 0);
             free(target);
+            target = NULL;
             free(text);
+            text = NULL;
         }
 
         for(size_t i = 1 ; i < line_no ; i++){
+            if(target != NULL) free(target);
             target = (simple_str **)dynamic_array_get_element(contents , line_index + i);
             init_len = simple_str_get_strlen(*target);
 
             simple_str_add(*target , divided[i] , 0);
+            if(text != NULL) free(text);
             text = simple_str_get_string(*target);
 
 
-            if(i + 1 < line_no && dd){
+            if(i + 1 < line_no && less_than_init_len){
                 simple_str_delete(*target , strlen(divided[0]) , init_len);
                 free(target);
 
@@ -121,12 +125,18 @@ add_end _add_(simple_file *file_ptr , size_t line_index , size_t pos_index , cha
                 simple_str_add(*target , text + strlen(divided[i]) , 0);
 
                 free(target);
+                target = NULL;
                 free(text);
+                text = NULL;
             }else{
                 free(target);
+                target = NULL;
                 free(text);
+                text = NULL;
             }
         }
+
+        if(text != NULL) free(text);
     }else{
         free(target);
     }

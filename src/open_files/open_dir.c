@@ -160,6 +160,7 @@ void open_dir(char *dir_name){
 
     bool Break = false;
     simple_str *file_path = new_simple_str(dir_name);
+
     if(dir_name[strlen(dir_name) - 1] != '/' && dir_name[strlen(dir_name) - 1] != '\\'){
         simple_str_add(file_path , "/" , simple_str_get_strlen(file_path));
     }
@@ -174,7 +175,17 @@ void open_dir(char *dir_name){
     dir_entry target;
 
     for(int ch = getch() ; !Break ; ch = getch()){
-        update_text_display(disp_file , info , stdscr , BACKGROUND , TEXT , LINE_HIGHLIGHT , SIDE_STRIPS , SIDE_STRIP_HIGHLIGHT , 3 , 0 , false , false , false , true , false , 1 , Screen_Width - 1 , 1 , Screen_Height);
+        update_text_display(disp_file , info , stdscr , BACKGROUND , TEXT , LINE_HIGHLIGHT , SIDE_STRIPS , SIDE_STRIP_HIGHLIGHT , 3 , 0 , false , false , false , true , false , 1 , Screen_Width - 1 , 3 , Screen_Height);
+
+        attron(COLOR_PAIR(COMMAND));
+
+        mvhline(1 , 0 , ' ' , Screen_Width);
+
+        char *tmp_path = simple_str_get_string(file_path);
+        mvprintw(1 , 1 , "open directory : %s" , tmp_path);
+        free(tmp_path);
+
+        attroff(COLOR_PAIR(COMMAND));
 
         switch(ch){
             case KEY_UP:
@@ -213,6 +224,7 @@ void open_dir(char *dir_name){
                         destroy_simple_file(disp_file);
                         destroy_simple_str(file_path);
                         free(info);
+                        free(tmp);
 
                         return ;
                     }
@@ -223,25 +235,30 @@ void open_dir(char *dir_name){
                         destroy_simple_str(file_path);
                         free(entries);
                         free(info);
+                        free(tmp);
 
                         return ;
                     }
 
+                    free(tmp);
                     break;
                 }
 
-                char *tmp_path = simple_str_get_string(file_path);
-                open_file(tmp_path);
                 Break = true;
-
-                free(tmp_path);
 
                 break;
         }
     }
 
     destroy_simple_file(disp_file);
-    destroy_simple_str(file_path);
     free(entries);
     free(info);
+
+    size_t path_len = simple_str_get_strlen(file_path);
+    char path[path_len + 1];
+    memset(path , 0 , path_len + 1);
+    simple_str_copy_str(file_path , 0 , path , path_len + 1);
+
+    destroy_simple_str(file_path);
+    open_file(path);
 }

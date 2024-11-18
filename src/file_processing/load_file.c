@@ -233,6 +233,8 @@ simple_file *load_from_str(const char *src , loading_err *get_err){
     ret -> column = 0;
     ret -> line = 0;
 
+    free(copy);
+
     return ret;
 }
 

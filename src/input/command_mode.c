@@ -92,4 +92,5 @@ void command_mode(){
     if(command == NULL) return ;
 
     parse_command(command);
+    free(command);
 }

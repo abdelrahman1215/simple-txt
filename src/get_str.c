@@ -192,7 +192,6 @@ char *get_str(WINDOW *inp_window , input_history *history_ptr , autocomp_func au
                 break;
             
             default :{
-                simple_str *buffer_str = new_simple_str("");
                 char tmp_buff[2] = {'\000' , '\000'};
 
                 for(int tmp = ch ; tmp != ERR ; tmp = wgetch(inp_window)){
@@ -203,16 +202,8 @@ char *get_str(WINDOW *inp_window , input_history *history_ptr , autocomp_func au
                         tmp_buff[0] = ' ';
                     }
 
-                    simple_str_add(buffer_str , tmp_buff , simple_str_get_strlen(buffer_str));
+                    simple_file_add(buffer , 0 , simple_file_get_line_len(buffer , 0) , tmp_buff);
                 }
-
-                size_t buff_len = simple_str_get_strlen(buffer_str);
-                char buff_text[buff_len + 1];
-                memset(buff_text , 0 , buff_len + 1);
-
-                simple_str_copy_str(buffer_str , 0 , buff_text , simple_str_get_strlen(buffer_str) + 1);
-
-                simple_file_add(buffer , 0 , col_pos , buff_text);
 
                 break;
             }
