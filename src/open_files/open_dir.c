@@ -157,6 +157,7 @@ void open_dir(char *dir_name){
     }
 
     render_background(stdscr , 0 , 0 , Screen_Width , Screen_Height , BACKGROUND);
+    refresh();
 
     bool Break = false;
     simple_str *file_path = new_simple_str(dir_name);
