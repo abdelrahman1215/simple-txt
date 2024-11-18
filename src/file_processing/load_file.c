@@ -268,7 +268,7 @@ simple_file *load_file(const char *file_name , bool create_if_not_found , loadin
     char *file_text = __get_file_text__(file_name , create_if_not_found , &err , ret);
     if(err != Ok){
         *get_err = err;
-        if(err == Alloc_Err) return NULL;
+        if(err == Alloc_Err || err == Invalid_File_Name) return NULL;
     }
 
     __load_from_str__(ret , file_text);
