@@ -58,6 +58,7 @@ vim like navigation controls
 * ln -> jump to the nth line
 * col -> jump to the nth column
 * man -> get the manual page
+* pwd -> get the current working directory
 
 # flags/options
 * -v/--version -> program version

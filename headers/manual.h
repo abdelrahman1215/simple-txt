@@ -33,6 +33,7 @@ Commands :\n\
     ln (line number) : jump to line (number)\n\
     col (column number) : jump to column (number)\n\
     man : get the manual page\n\
+    pwd : get the current working directory\n\
 \
 "
 

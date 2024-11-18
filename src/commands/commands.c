@@ -6,6 +6,7 @@
 #include "../../headers/manual.h"
 
 #include <stdlib.h>
+#include <unistd.h>
 
 //command : "w"
 //tokens_no : 0
@@ -152,4 +153,13 @@ void manual(char **args){
                 break;
         }
     }
+}
+
+//command : "pwd"
+//tokens : 0
+void pwd(char **args){
+    char cwd[261] = {'\000'};
+    getcwd(cwd , 261);
+
+    custom_msg(Message , cwd);
 }
