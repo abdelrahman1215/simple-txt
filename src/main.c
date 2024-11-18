@@ -37,11 +37,10 @@ int main(int argc , char **argv){
 
     PANEL *Top_Panel;
     while(!Quit){
-        display_messages();
-
         update_lower_strip(Lower_Strip_Window);
         render_background(stdscr , 0 , 0 , Screen_Width , Screen_Height , BACKGROUND);
         update_text_display(Current_File , save_text_info , Text_Window , BACKGROUND , TEXT , LINE_HIGHLIGHT , SIDE_STRIPS , SIDE_STRIP_HIGHLIGHT , Least_V_Distance , Least_H_Distance , true , Relative_Line_Number , true , true , true , 0 , 0 , 0 , 0);
+        display_messages();
 
         update_panels();
         doupdate();
