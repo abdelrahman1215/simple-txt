@@ -36,8 +36,7 @@ make linux
 ![screenshot1](https://github.com/abdelrahman1215/simple-txt/blob/main/demos/Screenshot%20(7).png)
 
 >note: the actual cursor is hidden , this cursor is displayed by the program
-
-https://github.com/user-attachments/assets/56f12c0b-a72f-49d2-826e-42f5ee42f099
+![record1](https://github.com/abdelrahman1215/simple-txt/blob/main/demos/rec.gif?raw=true)
 
 # controls
 ## navigation
