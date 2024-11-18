@@ -49,6 +49,11 @@ void loading_error(const char *file_name ,  loading_err error_type){
 
     char error[1024];
     switch(error_type){
+        case Invalid_File_Name :
+            sprintf(error , " \"%s\" : invalid file name" , file_name);
+            
+            break;
+
         case Invalid_File_Type :
             sprintf(error , " \"%s\" : invalid file type" , file_name);
             
