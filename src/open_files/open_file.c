@@ -21,7 +21,7 @@ void open_file(char *file_name){
         }
 
         const char *type = magic_file(cookie , file_name);
-        if(strncmp(type , "text" , 4) != 0){
+        if(strncmp(type , "text" , 4) != 0 && strncmp(type , "inode/x-empty" , 13) != 0){
             if(strncmp(type , "cannot" , 6) != 0){
                 loading_error(file_name , Invalid_File_Type);
                 return;
