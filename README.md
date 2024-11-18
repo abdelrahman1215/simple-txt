@@ -33,7 +33,7 @@ make linux
 ```
 
 # screenshots / screen records
-![screenshot1](https://github.com/abdelrahman1215/simple-txt/blob/main/demos/Screenshot%20(7).png)
+![screenshot1](https://github.com/abdelrahman1215/simple-txt/blob/main/demos/Screenshot%20(7).png?raw=true)
 
 >note: the actual cursor is hidden , this cursor is displayed by the program
 
