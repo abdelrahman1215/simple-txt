@@ -3,8 +3,24 @@
 #include "../../headers/msg_fmt.h"
 #include "open_dir.c"
 
+#include <stdbool.h>
 #include <unistd.h>
 #include <magic.h>
+
+#define arr_size(arr) sizeof(arr) / sizeof(arr[0])
+
+bool is_valid_type(const char *type){
+    char *valid_types[] = {
+        "text",//any text file
+        "inode/x-empty"//an empty file with no extesions
+    };
+
+    for(int i = 0 ; i < arr_size(valid_types) ; i++){
+        if(strncmp(type , valid_types[i] , strlen(valid_types[i])) == 0) return true;
+    }
+
+    return false;
+}
 
 void open_file(char *file_name){
     if(file_name[0] == '\000') return ;
@@ -21,7 +37,7 @@ void open_file(char *file_name){
         }
 
         const char *type = magic_file(cookie , file_name);
-        if(strncmp(type , "text" , 4) != 0 && strncmp(type , "inode/x-empty" , 13) != 0){
+        if(!is_valid_type(type)){
             if(strncmp(type , "cannot" , 6) != 0){
                 loading_error(file_name , Invalid_File_Type);
                 return;
