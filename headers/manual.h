@@ -12,6 +12,8 @@ Options :\n\
 Navigation :\n\
     arrow keys\n\
     h,j,k & l : move left, up, down & right respectively (in normal mode only)\n\
+    ALT-left : move to the start of the line\n\
+    ALT-right : move to the end of the line\n\
 \n\
 Bindings :\n\
     i (lower case) : enter insert mode\n\
