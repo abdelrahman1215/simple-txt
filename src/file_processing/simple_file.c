@@ -82,6 +82,8 @@ void simple_file_move_to_xy(simple_file *file_ptr , size_t line_index , size_t c
 
     file_ptr -> line = line_index;
     file_ptr -> column = column_index;
+
+    if(file_ptr -> max_reached_column < file_ptr -> column) file_ptr -> max_reached_column = file_ptr -> column; 
 }
 
 size_t simple_file_get_curr_line(simple_file *file_ptr){
