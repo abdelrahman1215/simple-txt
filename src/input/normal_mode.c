@@ -84,7 +84,9 @@ void move_n_cols_or_lines(int first_char){
 }
 
 void normal_mode(int input , WINDOW *inp_window){
-    if(input == ERR) return ; 
+    if(input == ERR) return ;
+
+    size_t curr_line = simple_file_get_curr_line(Current_File);
 
     switch(input){
         case 'l':
@@ -109,6 +111,16 @@ void normal_mode(int input , WINDOW *inp_window){
         case 'J':
         case KEY_UP : 
             simple_file_move_nlines_up(Current_File , 1);
+            break;
+
+        case ALT_LEFT :
+            simple_file_move_to_xy(Current_File , curr_line , 0);
+
+            break;
+
+        case ALT_RIGHT :
+            simple_file_move_to_xy(Current_File , curr_line , simple_file_get_line_len(Current_File , curr_line));
+
             break;
 
         case 'i':
