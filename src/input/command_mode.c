@@ -52,11 +52,9 @@ autocomp_info autocomplete(char *input , size_t pos , bool get_replacement){
             if(command_len == tok_len && i == 0){
                 ret.rep_options[ret.opt_no - 1] = calloc(command_len + 2 , sizeof(char));
                 strncpy(ret.rep_options[ret.opt_no - 1] , target_info -> command , command_len);   
-                ret.rep_options[ret.opt_no - 1][command_len] = ' ';
             }else{
-                ret.rep_options[i] = calloc(command_len + 2 , sizeof(char));
+                ret.rep_options[i] = calloc(command_len + 1 , sizeof(char));
                 strncpy(ret.rep_options[i] , target_info -> command , command_len);
-                ret.rep_options[i][command_len] = ' ';
                 i++;
             }
 

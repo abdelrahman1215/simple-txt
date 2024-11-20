@@ -202,7 +202,7 @@ char *get_str(WINDOW *inp_window , input_history *history_ptr , autocomp_func au
                         tmp_buff[0] = ' ';
                     }
 
-                    simple_file_add(buffer , 0 , simple_file_get_line_len(buffer , 0) , tmp_buff);
+                    simple_file_add(buffer , 0 , simple_file_get_curr_column(buffer) , tmp_buff);
                 }
 
                 break;
