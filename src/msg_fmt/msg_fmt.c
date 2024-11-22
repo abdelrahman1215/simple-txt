@@ -21,7 +21,7 @@ void loading_msg(const char *file_name , loading_err error){
     switch(error){
         case File_Not_Found :
             if(strcmp(file_name , "Untitled") != 0){
-                sprintf(msg , "created new buffer : \"%s\"" , file_name);
+                sprintf(msg , "Created new buffer : \"%s\"" , file_name);
             }
             
             break;
@@ -39,7 +39,7 @@ void wrote_into_file_msg(const char *file_name){
     char msg[1024];
     memset(msg , 0 , 1024);
 
-    sprintf(msg , "wrote changes into \"%s\"." , file_name);
+    sprintf(msg , "Wrote changes into \"%s\"." , file_name);
     enqueue_msg(Message , msg);
 }
 
@@ -50,12 +50,12 @@ void loading_error(const char *file_name ,  loading_err error_type){
     char error[1024];
     switch(error_type){
         case Invalid_File_Name :
-            sprintf(error , " \"%s\" : invalid file name" , file_name);
+            sprintf(error , " \"%s\" : Invalid file name" , file_name);
             
             break;
 
         case Invalid_File_Type :
-            sprintf(error , " \"%s\" : invalid file type" , file_name);
+            sprintf(error , " \"%s\" : Invalid file type" , file_name);
             
             break;
 
@@ -74,21 +74,16 @@ void parsing_error(const char *command ,  parsing_errors error_type){
     if(command == NULL) return ;
     if(command[0] == '\000') return ;
 
-    char error[1024] = "parsing error : ";
-    strncpy(error , "parsing error : " , strlen("parsing error : "));
+    char error[1024] = {'\000'};
 
     switch(error_type){
         case Command_Not_Found :
-            strncat(error , "the command \" " , strlen("the command \""));
-            strncat(error , command , strlen(command));
-            strncat(error , "\" was not found. " , strlen("\" was not found."));
+            sprintf(error , "Unknown command : \"%s\"" , command);
 
             break;
 
         case Not_Enough_Args :
-            strncat(error , "too few arguments for the command \" " , strlen("too few arguments for the command \""));
-            strncat(error , command , strlen(command));
-            strncat(error , "\". " , strlen("\"."));
+           sprintf(error , "Too few arguments for command : \"%s\"" , command);
 
             break;
             
@@ -107,13 +102,13 @@ void term_arg_error(const char *arg ,  parsing_term_errors error_type){
 
     switch(error_type){
         case Too_Few_Args :
-            sprintf(error , "too few arguments for option \"%s\"" , arg);
+            sprintf(error , "Too few arguments for option \"%s\"" , arg);
             enqueue_msg(Error , error);
 
             break;
 
         case Too_Many_Files : 
-            sprintf(error , "too many files , only one was loaded");
+            sprintf(error , "Too many files , only one was loaded");
             enqueue_msg(Warning , error);
 
             break;
