@@ -36,6 +36,7 @@ Commands :\n\
     col (column number) : jump to column (number)\n\
     man : get the manual page\n\
     pwd : get the current working directory\n\
+    cd : change the current directory\n\
 \
 "
 
