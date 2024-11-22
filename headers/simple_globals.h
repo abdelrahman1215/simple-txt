@@ -6,7 +6,7 @@
 
 #include <stddef.h>
 
-#define VERSION "version 0.3-alpha"
+#define VERSION "version 0.4-alpha"
 
 #define SIMPLE_GLOBAL __attribute__((__common__))
 
