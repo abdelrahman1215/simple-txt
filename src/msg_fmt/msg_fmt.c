@@ -3,7 +3,10 @@
 #include"msg_queue.c"
 
 #include <string.h>
+#include <stdarg.h>
 #include <stdio.h>
+
+#define DEF_MSG_LEN 1024
 
 void custom_msg(msg_type type , char *msg){
     if(msg == NULL) return ;
@@ -16,8 +19,7 @@ void loading_msg(const char *file_name , loading_err error){
     if(file_name == NULL) return ;
     if(file_name[0] == '\000') return ;
 
-    char msg[1024];
-    memset(msg , 0 , 1024);
+    char msg[DEF_MSG_LEN + 1] = {'\000'};
     switch(error){
         case File_Not_Found :
             if(strcmp(file_name , "Untitled") != 0){
@@ -36,8 +38,7 @@ void wrote_into_file_msg(const char *file_name){
     if(file_name == NULL) return ;
     if(file_name[0] == '\000') return ;
 
-    char msg[1024];
-    memset(msg , 0 , 1024);
+    char msg[DEF_MSG_LEN + 1] = {'\000'};
 
     sprintf(msg , "Wrote changes into \"%s\"." , file_name);
     enqueue_msg(Message , msg);
@@ -47,7 +48,7 @@ void loading_error(const char *file_name ,  loading_err error_type){
     if(file_name == NULL) return ;
     if(file_name[0] == '\000') return ;
 
-    char error[1024];
+    char error[DEF_MSG_LEN + 1] = {'\000'};
     switch(error_type){
         case Invalid_File_Name :
             sprintf(error , " \"%s\" : Invalid file name" , file_name);
@@ -74,7 +75,7 @@ void parsing_error(const char *command ,  parsing_errors error_type){
     if(command == NULL) return ;
     if(command[0] == '\000') return ;
 
-    char error[1024] = {'\000'};
+    char error[DEF_MSG_LEN + 1] = {'\000'};
 
     switch(error_type){
         case Command_Not_Found :
@@ -97,8 +98,7 @@ void term_arg_error(const char *arg ,  parsing_term_errors error_type){
     if(arg == NULL) return ;
     if(arg[0] == '\000') return ;
 
-    char error[1024];
-    memset(error , 0 , 1024 * sizeof(char));
+    char error[DEF_MSG_LEN + 1] = {'\000'};
 
     switch(error_type){
         case Too_Few_Args :
