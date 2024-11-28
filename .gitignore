@@ -5,4 +5,5 @@ testprep.*
 test
 *.exe
 release_notes.txt
+log.txt
 simple-txt
