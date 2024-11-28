@@ -8,11 +8,8 @@ void parse_term_args(int argc , char **argv){
         init_option_map();
     }
 
-    if(argc == 1){
-        open_file("Untitled");
-    }else{
-        unsigned char opened_files_no = 0;
-
+    unsigned char opened_files_no = 0;
+    if(argc > 1){
         entry *op_entry = NULL;
         option_info *op_inf = NULL;
 
@@ -66,5 +63,9 @@ void parse_term_args(int argc , char **argv){
             open_file(argv[i]);
             opened_files_no ++;
         }
+    }
+
+    if(opened_files_no == 0){
+        open_dir("./");
     }
 }
