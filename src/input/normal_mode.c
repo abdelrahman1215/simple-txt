@@ -113,12 +113,20 @@ void normal_mode(int input , WINDOW *inp_window){
             simple_file_move_nlines_up(Current_File , 1);
             break;
 
-        case A_LEFT :
+        #ifdef LINUX
+        case 544 ://alt + left
+        #else
+        case ALT_LEFT :
+        #endif
             simple_file_move_to_xy(Current_File , curr_line , 0);
 
             break;
 
-        case A_RIGHT :
+        #ifdef LINUX
+        case 559 ://alt + right
+        #else
+        case ALT_RIGHT :
+        #endif
             simple_file_move_to_xy(Current_File , curr_line , simple_file_get_line_len(Current_File , curr_line));
 
             break;
