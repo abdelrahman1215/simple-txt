@@ -1,5 +1,8 @@
+#include "../../headers/curses_header.h"
+#include "../../headers/init_display.h"
 #include "../../headers/open_files.h"
 #include "../../headers/msg_fmt.h"
+
 #include "init_maps.c"
 
 void parse_term_args(int argc , char **argv){
@@ -66,6 +69,7 @@ void parse_term_args(int argc , char **argv){
     }
 
     if(opened_files_no == 0){
-        open_dir("./");
+        init_display();
+        open_dir("./" , stdscr , 1 , Screen_Width - 1 , 2 , Screen_Height);
     }
 }

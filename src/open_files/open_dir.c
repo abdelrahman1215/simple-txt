@@ -130,7 +130,7 @@ simple_file *make_disp_file(dir_entry *entries , size_t entry_no){
     return ret;
 }
 
-void open_dir(char *dir_name){
+void open_dir(char *dir_name , WINDOW *disp_window , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned int end_y){
     if(dir_name == NULL) return ;
     if(dir_name[0] == '\000') return ;
     if(stdscr == NULL){
@@ -175,7 +175,7 @@ void open_dir(char *dir_name){
     dir_entry target;
 
     for(int ch = getch() ; !Break ; ch = getch()){
-        update_text_display(disp_file , info , stdscr , BACKGROUND , TEXT , LINE_HIGHLIGHT , SIDE_STRIPS , SIDE_STRIP_HIGHLIGHT , 3 , 0 , false , false , false , true , false , 1 , Screen_Width - 1 , 2 , Screen_Height);
+        update_text_display(disp_file , info , disp_window , BACKGROUND , TEXT , LINE_HIGHLIGHT , SIDE_STRIPS , SIDE_STRIP_HIGHLIGHT , 3 , 0 , false , false , false , true , false , start_x , end_x , start_y , end_y);
 
         switch(ch){
             case KEY_UP:
