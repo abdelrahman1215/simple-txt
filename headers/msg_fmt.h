@@ -13,6 +13,7 @@ size_t get_msg_no();
 void custom_msg(msg_type type , char *msg);
 void loading_msg(const char *file_name , loading_err error);
 void wrote_into_file_msg(const char *file_name);
+void command_msg(msg_type type , char *command_name , char *msg , char *arg);
 
 void loading_error(const char *file_name ,  loading_err error_type);
 void parsing_error(const char *command ,  parsing_errors error_type);

@@ -117,3 +117,14 @@ void term_arg_error(const char *arg ,  parsing_term_errors error_type){
     }
 
 }
+
+void command_msg(msg_type type , char *command_name , char *msg , char *arg){
+    if(command_name == NULL || msg == NULL) return ;
+
+    char message[DEF_MSG_LEN + 1] = {'\000'};
+
+    if(arg == NULL) sprintf(message , "%s : %s" , command_name , msg);
+    else sprintf(message , "%s : %s \"%s\"" , command_name , msg , arg);
+
+    enqueue_msg(type , message);
+}
