@@ -6,6 +6,10 @@
 #include <string.h>
 #include <ctype.h>
 
+#define ROOT_NODE_NO 94
+#define IS_VALID_CHAR(ch) (ch > 32 && ch < 127)
+#define FIND_ROOT(ch) (ch - 32)
+
 typedef struct command_node command_node;
 
 typedef struct command_tree command_tree;
@@ -18,7 +22,7 @@ typedef struct command_node{
 }command_node;
 
 struct command_tree{
-    command_node *root_nodes[52];
+    command_node *root_nodes[ROOT_NODE_NO];
 };
 
 command_node *create_command_node(const char *command , short token_no , command_func *command_exec){
@@ -49,10 +53,8 @@ command_node *create_command_node(const char *command , short token_no , command
 }
 
 command_tree *new_command_tree(){
-    command_tree *ret = malloc(sizeof(command_tree));
+    command_tree *ret = calloc(1 , sizeof(command_tree));
     if(ret == NULL) return NULL;
-
-    memset(ret -> root_nodes , 0 , 52 * sizeof(command_tree *));
 
     return ret;
 }
@@ -70,7 +72,7 @@ void free_subtree(command_node *node_ptr){
 void destroy_command_tree(command_tree *tree_ptr){
     if(tree_ptr == NULL) return ;
 
-    for(int i = 0 ; i < 52 ; i++){
+    for(int i = 0 ; i < ROOT_NODE_NO ; i++){
         if(tree_ptr -> root_nodes[i] == NULL){
             continue;
         }
@@ -83,13 +85,13 @@ void destroy_command_tree(command_tree *tree_ptr){
 void command_tree_add_node(command_tree *tree_ptr , const char *command , unsigned short token_no , command_func *command_exec){
     if(tree_ptr == NULL || command == NULL || command_exec == NULL) return ;
     for(size_t i = 0 ; command[i] ; i++){
-        if(isalpha(command[i] == 0)) return ;
+        if(!IS_VALID_CHAR(command[i])) return ;
     }
 
     command_node *new_node = create_command_node(command , token_no , command_exec);
     if(new_node == NULL) return ;
 
-    command_node **nd = &(tree_ptr -> root_nodes[command[0] - 'A' - ((islower(command[0]) != 0) * 6)])/*to deal with the diference in value between 'Z' and 'a'*/;
+    command_node **nd = &(tree_ptr -> root_nodes[FIND_ROOT(command[0])])/*to deal with the diference in value between 'Z' and 'a'*/;
     int str_diff = 0;
     size_t min_len;
     while(1){
@@ -140,7 +142,7 @@ void command_tree_add_node(command_tree *tree_ptr , const char *command , unsign
 command_node **_command_tree_find_node_ptr_(command_tree *tree_ptr , const char *command){
     if(tree_ptr == NULL || command == NULL) return NULL;
     for(size_t i = 0 ; command[i] ; i++){
-        if(isalpha(command[i]) == 0) return NULL;
+        if(!IS_VALID_CHAR(command[i])) return NULL;
     }
 
     command_node **ret;
@@ -148,7 +150,7 @@ command_node **_command_tree_find_node_ptr_(command_tree *tree_ptr , const char 
 
     int str_diff;
     size_t min_len;
-    for(ret = &(tree_ptr -> root_nodes[command[0] - 'A' - ((islower(command[0]) != 0) * 6)]) ; *ret != NULL ; ret = &((*ret) -> first_offspring)){
+    for(ret = &(tree_ptr -> root_nodes[FIND_ROOT(command[0])]) ; *ret != NULL ; ret = &((*ret) -> first_offspring)){
         while(1){
             min_len = (*ret) -> info.command_len < len ? (*ret) -> info.command_len : len;
             str_diff = strncmp((*ret) -> info.command , command , min_len);
@@ -180,7 +182,7 @@ command_node **_command_tree_find_node_ptr_(command_tree *tree_ptr , const char 
 command_node *_command_tree_find_nearest_in_subtree_ptr_(command_node *subtree , const char *command){
     if(subtree == NULL || command == NULL) return NULL;
     for(size_t i = 0 ; command[i] ; i++){
-        if(isalpha(command[i] == 0)) return NULL;
+        if(!IS_VALID_CHAR(command[i])) return NULL;
     }
 
     command_node *ret;
@@ -247,13 +249,13 @@ void _add_subtree_to_list_(command_node *subtree , linked_list *list){
 linked_list *command_tree_nearest_commands_list(command_tree *tree_ptr , const char *command){
     if(tree_ptr == NULL || command == NULL) return NULL;
     for(const char *ch = command ; *ch ; ch++){
-        if(!isalpha(*ch)) return NULL;
+        if(!IS_VALID_CHAR(*ch)) return NULL;
     }
 
     linked_list *ret = new_linked_list();
     if(ret == NULL) return NULL;
 
-    command_node *subtree = tree_ptr -> root_nodes[command[0] - 'A' - ((islower(command[0]) != 0) * 6)];
+    command_node *subtree = tree_ptr -> root_nodes[FIND_ROOT(command[0])];
     subtree = _command_tree_find_nearest_in_subtree_ptr_(subtree , command);
     _add_subtree_to_list_(subtree , ret);
     
