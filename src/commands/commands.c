@@ -22,6 +22,19 @@ void write_to_current_file(char **args){
 //command : "q"
 //tokens_no : 0
 void quit(char **args){
+    if(!simple_file_changes_saved(Current_File)){
+        custom_msg(Error , "save unsaved changes first or use q!");
+        return;
+    }
+
+    Quit = true;
+
+    return ;
+}
+
+//command : "q!"
+//tokens_no : 0
+void forced_quit(char **args){
     Quit = true;
 
     return ;
@@ -39,6 +52,20 @@ void write_and_quit(char **args){
 //command : "edit"
 //tokens_no : 1
 void edit_file(char **args){
+    if(Current_File != NULL){
+        if(!simple_file_changes_saved(Current_File)){
+            custom_msg(Error , "save current file first or use edit!");
+            return ;
+        }
+    }
+
+    open_file(args[0]);
+
+    return ;
+}
+//command : "edit!"
+//tokens_no : 1
+void forced_edit_file(char **args){
     open_file(args[0]);
 
     return ;
@@ -55,7 +82,7 @@ void move_to_line(char **args){
     char *str_line_no = args[0];
     size_t line_no = atoi(str_line_no);
     if(line_no == 0 || line_no > simple_file_get_line_no(Current_File)){
-        custom_msg(Error , "ln : Invalid line number");
+        command_msg(Message , "ln" , args[0] , "Invalid line number");
 
         return;
     }
@@ -72,7 +99,7 @@ void move_to_column(char **args){
     size_t col_no = atoi(str_col_no);
     size_t curr_line = simple_file_get_curr_line(Current_File);
     if(col_no == 0 || col_no > simple_file_get_line_len(Current_File , curr_line) + 1){
-        custom_msg(Error , " col : Invalid col number");
+        command_msg(Message , "col" , args[0] , "Invalid column number");
 
         return ;
     }
@@ -158,22 +185,20 @@ void manual(char **args){
 //command : "pwd"
 //tokens : 0
 void pwd(char **args){
-    char cwd[267] = {'\000'};
-    strcpy(cwd , "cwd : ");
+    char cwd[261] = {'\000'};
+    getcwd(cwd , 261);
 
-    getcwd(cwd + 6 , 261);
-
-    custom_msg(Message , cwd);
+    command_msg(Message , "cwd" , cwd , NULL);
 }
 
 //command : "cd"
 //tokens : 1
 void change_directory(char **args){
     char *target_path = args[0];
+    if(args[0][0] == '.' && (args[0][1] == '\000' || args[0][1] == '\\' || args[0][1] == '/')) return ;
 
     int err = chdir(target_path);
     
-    if(err != 0){
-        custom_msg(Error , "cd : invalid path");
-    }
+    if(err != 0) command_msg(Error , "cd" , "invalid path" , NULL);
+    else pwd(NULL);
 }
