@@ -6,9 +6,9 @@
 #include <string.h>
 #include <ctype.h>
 
-#define ROOT_NODE_NO 94
-#define IS_VALID_CHAR(ch) (ch > 32 && ch < 127)
-#define FIND_ROOT(ch) (ch - 32)
+#define ROOT_NODE_NO 94//all typable ascii characters but ' '
+#define IS_VALID_CHAR(ch) (ch > 32 && ch < 127)//is typable and not ' '
+#define FIND_ROOT(ch) (ch - 33)//char(33) is the first element
 
 typedef struct command_node command_node;
 
