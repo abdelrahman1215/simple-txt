@@ -53,7 +53,7 @@ vim like navigation controls
 * edit -> open files or directories
 * w -> save changes
 * q -> quit
-* wq -> save & quit
+* wq or x -> save & quit
 * relative -> turn relative line numbers on/off
 * ln -> jump to the nth line
 * col -> jump to the nth column

@@ -8,6 +8,7 @@ command_info command_arr[] = {
     {.command = "q" , .command_exec = quit , .token_no = 0} ,
     {.command = "q!" , .command_exec = forced_quit , .token_no = 0} ,
     {.command = "wq" , .command_exec = write_and_quit , .token_no = 0} ,
+    {.command = "x" , .command_exec = write_and_quit , .token_no = 0} ,
     {.command = "edit" , .command_exec = edit_file , .token_no = 1} ,
     {.command = "edit!" , .command_exec = forced_edit_file , .token_no = 1} ,
     {.command = "relative" , .command_exec = relative , .token_no = 0},

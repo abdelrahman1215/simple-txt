@@ -29,7 +29,7 @@ Editing :\n\
 Commands :\n\
     w : save changes\n\
     q : quit program\n\
-    wq : save and quit\n\
+    wq or x : save and quit\n\
     edit (file name) : open a file / directory\n\
     relative : enable / disable relative numbers\n\
     ln (line number) : jump to line (number)\n\
