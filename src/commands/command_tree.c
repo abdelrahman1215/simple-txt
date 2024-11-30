@@ -248,8 +248,8 @@ void _add_subtree_to_list_(command_node *subtree , linked_list *list){
 
 linked_list *command_tree_nearest_commands_list(command_tree *tree_ptr , const char *command){
     if(tree_ptr == NULL || command == NULL) return NULL;
-    for(const char *ch = command ; *ch ; ch++){
-        if(!IS_VALID_CHAR(*ch)) return NULL;
+    for(size_t i = 0 ; command[i] != '\000' ; i++){
+        if(!IS_VALID_CHAR(command[i])) return NULL;
     }
 
     linked_list *ret = new_linked_list();
