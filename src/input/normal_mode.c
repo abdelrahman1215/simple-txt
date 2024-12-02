@@ -46,13 +46,15 @@ void move_n_cols_or_lines(int first_char){
     size_t curr_line = simple_file_get_curr_line(Current_File) , curr_col = simple_file_get_curr_column(Current_File);
     size_t line_no = simple_file_get_line_no(Current_File) , line_len = simple_file_get_line_len(Current_File , curr_line);
     switch(ch){//will be equal to the last character returned by wgetch
-        case 'j':
+        case 'k':
+        case 'K':
             if(moves_no <= curr_line) simple_file_move_nlines_up(Current_File , moves_no);
             usleep(100000);
             
             break;
 
-        case 'k':
+        case 'j':
+        case 'J':
             if(curr_line + moves_no < line_no) simple_file_move_nlines_down(Current_File , moves_no);
             usleep(100000);
             
@@ -101,14 +103,14 @@ void normal_mode(int input , WINDOW *inp_window){
             simple_file_move_ncols_left(Current_File , 1);
             break;
         
-        case 'k':
-        case 'K':
+        case 'j':
+        case 'J':
         case KEY_DOWN : 
             simple_file_move_nlines_down(Current_File , 1);
             break;
 
-        case 'j':
-        case 'J':
+        case 'k':
+        case 'K':
         case KEY_UP : 
             simple_file_move_nlines_up(Current_File , 1);
             break;
