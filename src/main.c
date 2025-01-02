@@ -16,8 +16,9 @@
 int main(int argc , char **argv){
     parse_term_args(argc , argv);
     display_messages();
-    while(Current_File == NULL){
-        open_dir("./" , stdscr , 1 , Screen_Width - 1 , 2 , Screen_Height);
+
+    while(Current_File == NULL && !Quit){
+        open_dir(Last_Opened_Path , stdscr , 1 , Screen_Width - 1 , 2 , Screen_Height);
         display_messages();
     }
 

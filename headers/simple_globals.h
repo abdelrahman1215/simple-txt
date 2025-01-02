@@ -5,6 +5,7 @@
 #include "simple_file.h"
 
 #include <stddef.h>
+#include <limits.h>
 
 #define VERSION "version 0.4-alpha"
 
@@ -97,6 +98,7 @@ SIMPLE_GLOBAL unsigned short Message_Background_Color;
 SIMPLE_GLOBAL bool Quit;
 SIMPLE_GLOBAL bool Relative_Line_Number;
 SIMPLE_GLOBAL simple_file *Current_File;
+SIMPLE_GLOBAL char Last_Opened_Path[PATH_MAX + 1];
 SIMPLE_GLOBAL unsigned int Txt_Disp_Start_X , Txt_Disp_Start_Y , Txt_Disp_End_X , Txt_Disp_End_Y;
 SIMPLE_GLOBAL unsigned int Least_H_Distance , Least_V_Distance;
 SIMPLE_GLOBAL unsigned int Screen_Width , Screen_Height;

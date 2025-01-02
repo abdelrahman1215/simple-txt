@@ -130,7 +130,7 @@ simple_file *make_disp_file(dir_entry *entries , size_t entry_no){
     return ret;
 }
 
-void open_dir(char *dir_name , WINDOW *disp_window , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned int end_y){
+void open_dir(const char *dir_name , WINDOW *disp_window , unsigned int start_x , unsigned int end_x , unsigned int start_y , unsigned int end_y){
     if(dir_name == NULL) return ;
     if(dir_name[0] == '\000') return ;
     if(stdscr == NULL){

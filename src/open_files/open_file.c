@@ -22,7 +22,7 @@ bool is_valid_type(const char *type){
     return false;
 }
 
-void open_file(char *file_name){
+void open_file(const char *file_name){
     if(file_name[0] == '\000') return ;
     if(is_dir(file_name)) {
         open_dir(file_name , stdscr , 1 , Screen_Width - 1 , 2 , Screen_Height);
@@ -34,12 +34,25 @@ void open_file(char *file_name){
 
         if(magic_load(cookie , NULL) != 0){
             magic_close(cookie);
+            return;
         }
 
         const char *type = magic_file(cookie , file_name);
         if(!is_valid_type(type)){
+            memset(Last_Opened_Path , 0 , PATH_MAX + 1);
+            size_t path_len = strlen(file_name);
+            size_t dir_path_len;
+            for(dir_path_len = path_len ; dir_path_len > 0 ; dir_path_len--){
+                if(file_name[dir_path_len - 1] == '\\' || file_name[dir_path_len - 1] == '/') break;
+            }
+
+            strncpy(Last_Opened_Path , file_name , dir_path_len);
+            
             if(strncmp(type , "cannot" , 6) != 0){
                 loading_error(file_name , Invalid_File_Type);
+                magic_close(cookie);
+
+
                 return;
             }
         }
@@ -59,4 +72,13 @@ void open_file(char *file_name){
     }
 
     loading_error(file_name , error);
+
+    memset(Last_Opened_Path , 0 , PATH_MAX + 1);
+    size_t path_len = strlen(file_name);
+    size_t dir_path_len;
+    for(dir_path_len = path_len ; dir_path_len > 0 ; dir_path_len--){
+        if(file_name[dir_path_len - 1] == '\\' || file_name[dir_path_len - 1] == '/') break;
+    }
+
+    strncpy(Last_Opened_Path , file_name , dir_path_len);
 }
