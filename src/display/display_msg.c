@@ -1,8 +1,8 @@
 #include "../../headers/simple_globals.h"
 #include "../../headers/curses_header.h"
-#include "../../headers/init_display.h"
 #include "../../headers/display.h"
 #include "../../headers/msg_fmt.h"
+#include "../../headers/init.h"
 
 #include <stdlib.h>
 
@@ -32,7 +32,9 @@ void display_messages(){
 
     if(stdscr == NULL){
         if(use_curses){
-            init_display();
+            init_display_attrs();
+            init_values();
+            start_display();
         }else{
             for(size_t i = 0 ; i < msg_no ; i++){
                 printf("%s\n" , messages[i]);

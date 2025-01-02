@@ -1,10 +1,10 @@
 #include "../../headers/simple_globals.h"
 #include "../../headers/curses_header.h"
-#include "../../headers/init_display.h"
 #include "../../headers/simple_file.h"
 #include "../../headers/simple_str.h"
 #include "../../headers/open_files.h"
 #include "../../headers/display.h"
+#include "../../headers/init.h"
 
 #include <sys/stat.h>
 #include <stdbool.h>
@@ -12,7 +12,7 @@
 #include <dirent.h>
 
 typedef struct dir_entry{
-    char entry_name[260];
+    char entry_name[PATH_MAX + 1];
     bool is_dir;
 } dir_entry;
 
@@ -40,7 +40,7 @@ dir_entry *get_entries(const char *dir_name , size_t *get_entry_no){
         if((dir_name[i] == '\\' || dir_name[i] == '/') && dir_name[i + 1] == '\000') add_slash = false;
     }
 
-    size_t path_len = dir_name_len + add_slash + 260;
+    size_t path_len = dir_name_len + add_slash + PATH_MAX + 1;
     char *path = calloc(path_len , sizeof(char));
     if(path == NULL){
         closedir(directory);
@@ -65,7 +65,7 @@ dir_entry *get_entries(const char *dir_name , size_t *get_entry_no){
 
     entry = readdir(directory);
     for(size_t i = 0 ; entry != NULL ; entry = readdir(directory) , i++){
-        strncpy(entries[i].entry_name , entry -> d_name , 260);
+        strncpy(entries[i].entry_name , entry -> d_name , PATH_MAX);
 
         sprintf(path + add_start , "%s" , entry -> d_name);
         entries[i].is_dir = is_dir(path);
@@ -134,7 +134,9 @@ void open_dir(char *dir_name , WINDOW *disp_window , unsigned int start_x , unsi
     if(dir_name == NULL) return ;
     if(dir_name[0] == '\000') return ;
     if(stdscr == NULL){
-        init_display();
+        init_display_attrs();
+        init_values();
+        start_display();
     }
 
     size_t entry_no;

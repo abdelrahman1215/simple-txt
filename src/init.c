@@ -1,9 +1,9 @@
 #include "../headers/simple_globals.h"
 #include "../headers/curses_header.h"
-#include "../headers/init_display.h"
 #include "../headers/display.h"
+#include "../headers/init.h"
 
-void init_display(){
+void init_display_attrs(){
     if(stdscr != NULL) return ;
 
     initscr();
@@ -15,7 +15,9 @@ void init_display(){
     cbreak();
     curs_set(0);
     refresh();
+}
 
+void init_values(){
     Tab_Size = DEFAULT_TAB_SIZE;
 
     Screen_Width = getmaxx(stdscr);
@@ -48,7 +50,9 @@ void init_display(){
     Relative_Line_Number = false;
 
     init_color_pairs();
+}
 
+void start_display(){
     render_background(stdscr , 0 , 0 , Screen_Width , Screen_Height , BACKGROUND);
     refresh();
 
