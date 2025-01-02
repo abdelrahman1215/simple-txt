@@ -1,10 +1,11 @@
 #include "../headers/parse_term_args.h"
 #include "../headers/simple_globals.h"
 #include "../headers/curses_header.h"
-#include "../headers/init_display.h"
+#include "../headers/open_files.h"
 #include "../headers/msg_fmt.h"
 #include "../headers/display.h"
 #include "../headers/input.h"
+#include "../headers/init.h"
 
 #include <stdlib.h>
 
@@ -15,6 +16,10 @@
 int main(int argc , char **argv){
     parse_term_args(argc , argv);
     display_messages();
+    while(Current_File == NULL){
+        open_dir("./" , stdscr , 1 , Screen_Width - 1 , 2 , Screen_Height);
+        display_messages();
+    }
 
     if(Current_File == NULL){
         if(stdscr != NULL){
@@ -28,7 +33,9 @@ int main(int argc , char **argv){
     Quit = false;
 
     if(stdscr == NULL){
-        init_display();
+        init_display_attrs();
+        init_values();
+        start_display();
     }
 
     Hist_Size = DEFAULT_HIST_SIZE;
