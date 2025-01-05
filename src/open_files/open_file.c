@@ -37,16 +37,17 @@ void open_file(const char *file_name){
             return;
         }
 
+        memset(Last_Opened_Path , 0 , PATH_MAX + 1);
+        size_t path_len = strlen(file_name);
+        size_t dir_path_len;
+        for(dir_path_len = path_len ; dir_path_len > 0 ; dir_path_len--){
+            if(file_name[dir_path_len - 1] == '\\' || file_name[dir_path_len - 1] == '/') break;
+        }
+
+        strncpy(Last_Opened_Path , file_name , dir_path_len);
+        
         const char *type = magic_file(cookie , file_name);
         if(!is_valid_type(type)){
-            memset(Last_Opened_Path , 0 , PATH_MAX + 1);
-            size_t path_len = strlen(file_name);
-            size_t dir_path_len;
-            for(dir_path_len = path_len ; dir_path_len > 0 ; dir_path_len--){
-                if(file_name[dir_path_len - 1] == '\\' || file_name[dir_path_len - 1] == '/') break;
-            }
-
-            strncpy(Last_Opened_Path , file_name , dir_path_len);
             
             if(strncmp(type , "cannot" , 6) != 0){
                 loading_error(file_name , Invalid_File_Type);
