@@ -160,7 +160,7 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
             wattroff(info_ptr -> window , COLOR_PAIR(info_ptr -> side_strip_pair));
             wattron(info_ptr -> window , COLOR_PAIR(info_ptr -> side_strip_highlight_pair));
 
-            //x --;
+            x --;
         }
 
         if(info_ptr -> start_line + i >= line_no){
@@ -176,8 +176,8 @@ void disp_line_no(text_display_info *info_ptr , bool highlight_current_line){
 
         if(info_ptr -> start_line + i == info_ptr -> line_pos && highlight_current_line){
             //wattron(info_ptr -> window , A_REVERSE);
-            wprintw(info_ptr -> window , " ");
-            mvwprintw(info_ptr -> window , y , 1 , "%c" , 221);
+            mvwprintw(info_ptr -> window , y , info_ptr -> txt_start_x - 2 , "  ");
+            mvwprintw(info_ptr -> window , y , info_ptr -> disp_start_x , "%c" , 221);
             //wattroff(info_ptr -> window , A_REVERSE);
             
             wattroff(info_ptr -> window , COLOR_PAIR(info_ptr -> side_strip_highlight_pair));
