@@ -1,0 +1,1 @@
+rm -r ~/Desktop/simple-txt/bin/ ~/Desktop/simple-txt/c_datastructures/bin/
