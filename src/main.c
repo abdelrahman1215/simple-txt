@@ -8,12 +8,14 @@
 #include "../headers/init.h"
 
 #include <stdlib.h>
+#include <locale.h>
 
 //reminder : when using ctrl - v results may vary , in windows terminal
 //it captures it then sends the copied text to the input stream
 //while in other terminals you will get a ^V
 
 int main(int argc , char **argv){
+    setlocale(LC_ALL, "");
     parse_term_args(argc , argv);
     display_messages();
 
