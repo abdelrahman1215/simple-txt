@@ -276,22 +276,8 @@ simple_file *load_file(const char *file_name , bool create_if_not_found , loadin
     __load_from_str__(ret , file_text);
     if(file_text != NULL) if(file_text[0] != '\000') free(file_text);
 
-    /*the save function exits if all changes were saved
-    but in the case the file doesn't exist (and is a valid path)
-    we don't want it to exit because then the file won't be created by the editor
-    so we set changes saved to false so that save function would try to write into that path
-    thus creating that file*/
-
-    FILE *check = fopen(file_name , "r");
-    if(check == NULL){
-        ret -> changes_saved = false;
-    }else{
-        ret -> changes_saved = true;
-        fclose(check);
-    }
-    
-
     ret -> max_reached_column = 0;
+    ret -> changes_saved = true;
     ret -> column = 0;
     ret -> line = 0;
 
