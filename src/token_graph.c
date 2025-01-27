@@ -154,6 +154,7 @@ void token_graph_add_letter(char ch , unsigned int line , unsigned int column , 
     }else{
         line_st **line_ptr = dynamic_array_get_element(graph_ptr -> lines , line);
         line_st *target_line = *line_ptr;
+        free(line_ptr);
 
         
         for(letter_node *nd = target_line -> first_letter ; nd != NULL ; nd = nd -> next_in_line){
@@ -169,7 +170,7 @@ void token_graph_add_letter(char ch , unsigned int line , unsigned int column , 
                 break;
             }
             
-            if(nd -> next_in_line -> column > column){
+            if(nd -> next_in_line -> column >= column){
                 new_node -> next_in_line = nd -> next_in_line;
                 nd -> next_in_line = new_node;
 
@@ -180,8 +181,6 @@ void token_graph_add_letter(char ch , unsigned int line , unsigned int column , 
         for(letter_node *nd = new_node -> next_in_line ; nd != NULL ; nd = nd -> next_in_line){
             nd -> column ++;
         }
-
-        free(line_ptr);
     }
 
     int root_index = FIND_ROOT(ch);
@@ -206,4 +205,73 @@ void token_graph_add_letter(char ch , unsigned int line , unsigned int column , 
     }
 }
 
-void token_graph_add_new_line(unsigned int line , unsigned int column);//TODO
+void token_graph_add_newline(unsigned int line , unsigned int column , token_graph *graph_ptr){
+    if(line >= graph_ptr -> line_no) return ;
+
+    line_st **line_ptr = dynamic_array_get_element(graph_ptr -> lines , line);
+    line_st *target_line = *line_ptr;
+    free(line_ptr);
+
+    letter_node *target_node = NULL;
+    size_t line_len = 0;
+    if(column == 0){
+        target_node = target_line -> first_letter;
+        target_line -> first_letter = NULL;
+    }else for(letter_node *nd = target_line -> first_letter ; nd != NULL ; nd = nd -> next_in_line , line_len ++){
+        if(nd -> next_in_line == NULL){
+            line_len ++;
+            break;
+        }
+
+        if(nd -> next_in_line -> column == column){
+            target_node = nd -> next_in_line;
+            nd -> next_in_line = NULL;
+
+            break;
+        }
+    }
+
+    if(target_node == NULL && line_len < column) return;
+
+    line_st **new_line_ptr = (line_st **)calloc(1 , sizeof(line_st *));
+    if(new_line_ptr == NULL) return ;
+
+    *new_line_ptr = calloc(1 , sizeof(line_st));
+    line_st *new_line = *new_line_ptr;
+    free(new_line_ptr);
+
+    new_line -> line_no = line + 1;
+    new_line -> first_letter = target_node;
+
+    for(letter_node *nd = new_line -> first_letter ; nd != NULL ; nd = nd -> next_in_line){
+        nd -> line++;
+        nd -> column -= column;
+    }
+
+    line_st *empty_line = (line_st *)calloc(1 , sizeof(line_st));
+    if(empty_line == NULL){
+        free(new_line);
+
+        return;
+    }
+
+    dynamic_array_add_element(graph_ptr -> lines , &empty_line);
+
+    //adding the new line in its place
+    line_st **line1 = NULL , **line2 = NULL;
+    for(long long i = dynamic_array_get_elements_no(graph_ptr -> lines) - 1 ; i - 1 > line ; i--){
+        line1 = dynamic_array_get_element(graph_ptr -> lines , i - 1);
+        line2 = dynamic_array_get_element(graph_ptr -> lines , i);
+
+        (*line2) -> line_no = (*line1) -> line_no + 1;
+        (*line2) -> first_letter = (*line1) -> first_letter;
+        for(letter_node *nd = (*line2) -> first_letter ; nd != NULL ; nd = nd -> next_in_line){
+            nd -> line++;
+        }
+
+        free(line1);
+        free(line2);
+    }
+
+    dynamic_array_edit_element(graph_ptr -> lines , line + 1 , &new_line);
+}
