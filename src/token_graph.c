@@ -129,7 +129,7 @@ void destroy_token_graph(token_graph *graph_ptr){
     free(graph_ptr);
 }
 
-void token_graph_add_letter(char ch , unsigned int line , unsigned int column , token_graph *graph_ptr){
+void token_graph_add_letter(token_graph *graph_ptr , char ch , unsigned int line , unsigned int column){
     if(!IS_VALID(ch) || graph_ptr == NULL) return ;
     if(line > graph_ptr -> line_no || (line == graph_ptr -> line_no && column > 0)) return ;
 
@@ -205,7 +205,8 @@ void token_graph_add_letter(char ch , unsigned int line , unsigned int column , 
     }
 }
 
-void token_graph_add_newline(unsigned int line , unsigned int column , token_graph *graph_ptr){
+void token_graph_add_newline(token_graph *graph_ptr , unsigned int line , unsigned int column){
+    if(graph_ptr == NULL) return ;
     if(line >= graph_ptr -> line_no) return ;
 
     line_st **line_ptr = dynamic_array_get_element(graph_ptr -> lines , line);
@@ -231,7 +232,7 @@ void token_graph_add_newline(unsigned int line , unsigned int column , token_gra
         }
     }
 
-    if(target_node == NULL && line_len < column) return;
+    if(target_node == NULL && line_len < column) return ;
 
     line_st **new_line_ptr = (line_st **)calloc(1 , sizeof(line_st *));
     if(new_line_ptr == NULL) return ;
@@ -276,6 +277,41 @@ void token_graph_add_newline(unsigned int line , unsigned int column , token_gra
     dynamic_array_edit_element(graph_ptr -> lines , line + 1 , &new_line);
 }
 
+void token_graph_delete_letter(token_graph *graph_ptr , unsigned int line , unsigned int column){
+    if(graph_ptr == NULL) return ;
+    if(line >= graph_ptr -> line_no) return ;
+
+    line_st **line_ptr = dynamic_array_get_element(graph_ptr -> lines , line);
+    if(line_ptr == NULL) return ;
+
+    line_st *target_line = *line_ptr;
+    free(line_ptr);
+
+    letter_node *target_node = NULL;
+    for(letter_node **nd_ptr = &(target_line -> first_letter) ; *nd_ptr != NULL ; nd_ptr = &((*nd_ptr) -> next_in_line)){
+        if((*nd_ptr) -> column == column){
+            target_node = *nd_ptr;
+
+            *nd_ptr = (*nd_ptr) -> next_in_line;
+            for( ; *nd_ptr != NULL ; nd_ptr = &((*nd_ptr) -> next_in_line)){
+                (*nd_ptr) -> column --;
+            }
+
+            break;
+        }
+    }
+
+    if(target_node == NULL) return;
+
+    int root_index = FIND_ROOT(target_node -> ch);
+    for(letter_node **nd_ptr = &(graph_ptr -> roots[root_index]) ; *nd_ptr != NULL ; nd_ptr = &((*nd_ptr) -> daughter_node)){
+        if((*nd_ptr) -> line == line && (*nd_ptr) -> column == column){
+            *nd_ptr = (*nd_ptr) -> daughter_node;
+
+            break;
+        }
+    }
+}
+
 //TODO :
-//  a function to delete a letter
 //  a function to delete a newline character
