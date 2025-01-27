@@ -275,3 +275,7 @@ void token_graph_add_newline(unsigned int line , unsigned int column , token_gra
 
     dynamic_array_edit_element(graph_ptr -> lines , line + 1 , &new_line);
 }
+
+//TODO :
+//  a function to delete a letter
+//  a function to delete a newline character
