@@ -275,6 +275,7 @@ void token_graph_add_newline(token_graph *graph_ptr , unsigned int line , unsign
     }
 
     dynamic_array_edit_element(graph_ptr -> lines , line + 1 , &new_line);
+    graph_ptr -> line_no++;
 }
 
 void token_graph_delete_letter(token_graph *graph_ptr , unsigned int line , unsigned int column){
@@ -294,7 +295,7 @@ void token_graph_delete_letter(token_graph *graph_ptr , unsigned int line , unsi
 
             *nd_ptr = (*nd_ptr) -> next_in_line;
             for( ; *nd_ptr != NULL ; nd_ptr = &((*nd_ptr) -> next_in_line)){
-                (*nd_ptr) -> column --;
+                (*nd_ptr) -> column--;
             }
 
             break;
@@ -313,5 +314,35 @@ void token_graph_delete_letter(token_graph *graph_ptr , unsigned int line , unsi
     }
 }
 
+//removes the newline at the end of a line
+void token_graph_delete_newline(token_graph *graph_ptr , unsigned int line){
+    if(graph_ptr == NULL) return ;
+    if(line + 1 >= graph_ptr -> line_no) return ;
+
+    line_st **line_ptr = dynamic_array_get_element(graph_ptr -> lines , line);
+    letter_node **last_node_ptr;
+    size_t column_add = 0;
+    for(last_node_ptr = &((*line_ptr) -> first_letter) ; *last_node_ptr != NULL ; last_node_ptr = &((*last_node_ptr) -> next_in_line) , column_add++){}
+    free(line_ptr);
+
+    line_ptr = dynamic_array_get_element(graph_ptr -> lines , line + 1);
+    *last_node_ptr = (*line_ptr) -> first_letter;
+    free(line_ptr);
+    for(letter_node *nd = *last_node_ptr ; nd != NULL ; nd = nd -> next_in_line){
+        nd -> line--;
+        nd -> column += column_add;
+    }
+
+    dynamic_array_remove_element(graph_ptr -> lines , line + 1);
+    graph_ptr -> line_no--;
+
+    line_ptr = dynamic_array_get_element(graph_ptr -> lines , line + 1);
+    for(size_t i = line + 1 ; i < graph_ptr -> line_no ; i++ , line_ptr = dynamic_array_get_element(graph_ptr -> lines , i)){
+        for(letter_node *nd = (*line_ptr) -> first_letter ; nd != NULL ; nd = nd -> next_in_line){
+            nd -> line--;
+        }
+    }
+}
+
 //TODO :
-//  a function to delete a newline character
+//  make the searching functions
