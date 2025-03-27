@@ -26,6 +26,18 @@ struct token_graph{
     letter_node *roots[ROOT_NO];
 };
 
+typedef struct tk_mention_node tk_mention_node ;
+struct tk_mention_node{
+    unsigned int line , column;
+    tk_mention_node *next_mention;
+};
+
+typedef struct tk_mention_list tk_mention_list;
+struct tk_mention_list{
+    char *tk;
+    tk_mention_node *first_mention;
+};
+
 letter_node *alloc_letter_node(char ch , unsigned int line , unsigned int column){
     letter_node *ret = (letter_node *)calloc(1 , sizeof(letter_node));
     if(ret == NULL) return NULL;
