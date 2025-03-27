@@ -18,6 +18,8 @@ typedef struct letter_node{
 typedef struct line_st{
     unsigned int line_no;
     letter_node *first_letter;
+    letter_node *last_letter;
+    letter_node *last_added_letter;
 }line_st;
 
 struct token_graph{
@@ -160,39 +162,43 @@ void token_graph_add_letter(token_graph *graph_ptr , char ch , unsigned int line
 
         (*new_line) -> line_no = line;
         (*new_line) -> first_letter = new_node;
+        (*new_line) -> last_letter = new_node;
+        (*new_line) -> last_added_letter = new_node;
         dynamic_array_add_element(graph_ptr -> lines , new_line);
 
         graph_ptr -> line_no ++;
     }else{
         line_st **line_ptr = dynamic_array_get_element(graph_ptr -> lines , line);
         line_st *target_line = *line_ptr;
+        size_t line_len = target_line -> last_letter -> column + 1;
         free(line_ptr);
 
-        
-        for(letter_node *nd = target_line -> first_letter ; nd != NULL ; nd = nd -> next_in_line){
-            if(nd -> next_in_line == NULL){
-                if(column - nd -> column > 1){
-                    free_letter_node(new_node);
+        if(column == target_line -> last_added_letter -> column + 1){
+            new_node -> next_in_line = target_line -> last_added_letter -> next_in_line;
+            target_line -> last_added_letter -> next_in_line = new_node;
+        }else if(column > line_len){
+            free_letter_node(new_node);
 
-                    return;
+            return;
+        }else if(column == line_len){
+            target_line -> last_letter -> next_in_line = new_node;
+            target_line -> last_letter = new_node;
+        }else{
+            for(letter_node *nd = target_line -> first_letter ; nd != NULL ; nd = nd -> next_in_line){
+                if(nd -> next_in_line -> column >= column){
+                    new_node -> next_in_line = nd -> next_in_line;
+                    nd -> next_in_line = new_node;
+    
+                    break;
                 }
-
-                nd -> next_in_line = new_node;
-
-                break;
-            }
-            
-            if(nd -> next_in_line -> column >= column){
-                new_node -> next_in_line = nd -> next_in_line;
-                nd -> next_in_line = new_node;
-
-                break;
             }
         }
 
         for(letter_node *nd = new_node -> next_in_line ; nd != NULL ; nd = nd -> next_in_line){
             nd -> column ++;
         }
+
+        target_line -> last_added_letter = new_node;
     }
 
     int root_index = FIND_ROOT(ch);
