@@ -75,7 +75,7 @@ void display_messages(){
         }
     }
 
-    unsigned int win_height = line_no + 1;//+1 bec "press esc to exit" wil be printed in the upper line
+    unsigned int win_height = line_no + 1;//+1 bec "press any key" wil be printed in the upper line
     if(win_height > max_win_height) win_height = max_win_height;
 
     show_panel(Msg_Panel);
@@ -92,7 +92,7 @@ void display_messages(){
 
     wattron(Msg_Window , COLOR_PAIR(MESSAGE_TEXT));
 
-    mvwprintw(Msg_Window , 0 , 1 , "press escape to exit");
+    mvwprintw(Msg_Window , 0 , 1 , "press any key");
 
     wattroff(Msg_Window , COLOR_PAIR(MESSAGE_TEXT));
 
@@ -161,7 +161,7 @@ void display_messages(){
     update_panels();
     doupdate();
 
-    for(int ch = wgetch(Msg_Window) ; ch != '\e' ; ch = wgetch(Msg_Window)){
+    for(int ch = wgetch(Msg_Window) , brk = 0 ; ch != '\e' && !brk ; ch = wgetch(Msg_Window)){
         if(ch == ERR) continue;
 
         switch(ch){
@@ -178,7 +178,12 @@ void display_messages(){
                 }
 
                 break;
+
+            default :
+                if(ch != KEY_RIGHT && ch != KEY_LEFT) brk = true;
         }
+
+        if(brk) break;
 
         size_t j = 0;
         for(size_t k = 0 ; k < start_line ; k++){
