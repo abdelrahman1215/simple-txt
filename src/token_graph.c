@@ -357,16 +357,6 @@ void token_graph_delete_newline(token_graph *graph_ptr , unsigned int line){
     }
 }
 
-tk_mention_coord *new_mention_node(unsigned int line , unsigned int column){
-    tk_mention_coord *ret = calloc(1 , sizeof(tk_mention_coord));
-    if(ret == NULL) return NULL;
-
-    ret -> line = line;
-    ret -> column = column;
-
-    return ret;
-}
-
 linked_list *token_graph_search(token_graph *graph_ptr , const char *token){
     if(token == NULL) return NULL;
     if(token[0] == '\000') return NULL;
