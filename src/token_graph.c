@@ -16,7 +16,6 @@ typedef struct letter_node{
 }letter_node;
 
 typedef struct line_st{
-    unsigned int line_no;
     letter_node *first_letter;
     letter_node *last_letter;
     letter_node *last_added_letter;
@@ -72,8 +71,6 @@ token_graph *new_token_graph(char *src){
         return NULL;
     }
 
-    ret -> line_no = 1;
-    
     int root_index;
         
     line_st **curr_line;
@@ -85,8 +82,6 @@ token_graph *new_token_graph(char *src){
                 column = 0;
                 line ++;
                 tmp = NULL;
-
-                ret -> line_no++;
             }
 
             continue;
@@ -94,14 +89,19 @@ token_graph *new_token_graph(char *src){
 
         root_index = FIND_ROOT(src[i]);
         new_node = alloc_letter_node(src[i] , line , column);
-        if(tmp != NULL) tmp -> next_in_line = new_node;
-        else{
+        if(tmp != NULL){
+            tmp -> next_in_line = new_node;
+            (*curr_line) -> last_letter = new_node;
+            (*curr_line) -> last_added_letter = new_node;
+        }else{
             curr_line = (line_st **)calloc(1 , sizeof(line_st *));
             *curr_line = (line_st *)calloc(1 , sizeof(line_st));
-            (*curr_line) -> line_no = line;
             (*curr_line) -> first_letter = new_node;
+            (*curr_line) -> last_letter = new_node;
+            (*curr_line) -> last_added_letter = new_node;
 
             dynamic_array_add_element(ret -> lines , curr_line);
+            ret -> line_no++;
         }
 
         letter_node *root = ret -> roots[root_index];
@@ -160,7 +160,6 @@ void token_graph_add_letter(token_graph *graph_ptr , char ch , unsigned int line
         line_st **new_line = (line_st **)calloc(1 , sizeof(line_st *));
         *new_line = (line_st *)calloc(1 , sizeof(line_st));
 
-        (*new_line) -> line_no = line;
         (*new_line) -> first_letter = new_node;
         (*new_line) -> last_letter = new_node;
         (*new_line) -> last_added_letter = new_node;
@@ -170,19 +169,25 @@ void token_graph_add_letter(token_graph *graph_ptr , char ch , unsigned int line
     }else{
         line_st **line_ptr = dynamic_array_get_element(graph_ptr -> lines , line);
         line_st *target_line = *line_ptr;
-        size_t line_len = target_line -> last_letter -> column + 1;
+        size_t line_len = 0;
+        if(target_line -> last_letter != NULL) line_len = target_line -> last_letter -> column + 1;
         free(line_ptr);
 
-        if(column == target_line -> last_added_letter -> column + 1){
-            new_node -> next_in_line = target_line -> last_added_letter -> next_in_line;
-            target_line -> last_added_letter -> next_in_line = new_node;
-        }else if(column > line_len){
+        if(column > line_len){
             free_letter_node(new_node);
 
             return;
+        }else if (column == 0){
+            new_node -> next_in_line = target_line -> first_letter;
+            target_line -> first_letter = new_node;
         }else if(column == line_len){
-            target_line -> last_letter -> next_in_line = new_node;
+            if(target_line -> last_letter != NULL){
+                target_line -> last_letter -> next_in_line = new_node;
+            }else target_line -> first_letter = new_node;
             target_line -> last_letter = new_node;
+        }else if(column == target_line -> last_added_letter -> column + 1){
+            new_node -> next_in_line = target_line -> last_added_letter -> next_in_line;
+            target_line -> last_added_letter -> next_in_line = new_node;
         }else{
             for(letter_node *nd = target_line -> first_letter ; nd != NULL ; nd = nd -> next_in_line){
                 if(nd -> next_in_line -> column >= column){
@@ -230,6 +235,9 @@ void token_graph_add_newline(token_graph *graph_ptr , unsigned int line , unsign
     line_st **line_ptr = dynamic_array_get_element(graph_ptr -> lines , line);
     line_st *target_line = *line_ptr;
     free(line_ptr);
+    if(target_line -> last_letter != NULL){
+        if(column > target_line -> last_letter -> column + 1) return ;
+    }
 
     letter_node *target_node = NULL;
     size_t line_len = 0;
@@ -245,21 +253,15 @@ void token_graph_add_newline(token_graph *graph_ptr , unsigned int line , unsign
         if(nd -> next_in_line -> column == column){
             target_node = nd -> next_in_line;
             nd -> next_in_line = NULL;
+            target_line -> last_letter = nd;
+            if(target_line -> last_added_letter -> column >= target_node -> column) target_line -> last_added_letter = nd;
 
             break;
         }
     }
 
-    if(target_node == NULL && line_len < column) return ;
+    line_st *new_line = calloc(1 , sizeof(line_st));
 
-    line_st **new_line_ptr = (line_st **)calloc(1 , sizeof(line_st *));
-    if(new_line_ptr == NULL) return ;
-
-    *new_line_ptr = calloc(1 , sizeof(line_st));
-    line_st *new_line = *new_line_ptr;
-    free(new_line_ptr);
-
-    new_line -> line_no = line + 1;
     new_line -> first_letter = target_node;
 
     for(letter_node *nd = new_line -> first_letter ; nd != NULL ; nd = nd -> next_in_line){
@@ -282,7 +284,6 @@ void token_graph_add_newline(token_graph *graph_ptr , unsigned int line , unsign
         line1 = dynamic_array_get_element(graph_ptr -> lines , i - 1);
         line2 = dynamic_array_get_element(graph_ptr -> lines , i);
 
-        (*line2) -> line_no = (*line1) -> line_no + 1;
         (*line2) -> first_letter = (*line1) -> first_letter;
         for(letter_node *nd = (*line2) -> first_letter ; nd != NULL ; nd = nd -> next_in_line){
             nd -> line++;
@@ -361,6 +362,3 @@ void token_graph_delete_newline(token_graph *graph_ptr , unsigned int line){
         }
     }
 }
-
-//TODO :
-//  make the searching functions
