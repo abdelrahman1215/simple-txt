@@ -1,4 +1,5 @@
 #include "../c_datastructures/headers/dynamic_array.h"
+#include "../c_datastructures/headers/linked_list.h"
 #include "../headers/token_graph.h"
 
 #include <stdbool.h>
@@ -27,16 +28,9 @@ struct token_graph{
     letter_node *roots[ROOT_NO];
 };
 
-typedef struct tk_mention_node tk_mention_node ;
-struct tk_mention_node{
+typedef struct tk_mention_coord tk_mention_coord ;
+struct tk_mention_coord{
     unsigned int line , column;
-    tk_mention_node *next_mention;
-};
-
-typedef struct tk_mention_list tk_mention_list;
-struct tk_mention_list{
-    char *tk;
-    tk_mention_node *first_mention;
 };
 
 letter_node *alloc_letter_node(char ch , unsigned int line , unsigned int column){
@@ -363,8 +357,8 @@ void token_graph_delete_newline(token_graph *graph_ptr , unsigned int line){
     }
 }
 
-tk_mention_node *new_mention_node(unsigned int line , unsigned int column){
-    tk_mention_node *ret = calloc(1 , sizeof(tk_mention_node));
+tk_mention_coord *new_mention_node(unsigned int line , unsigned int column){
+    tk_mention_coord *ret = calloc(1 , sizeof(tk_mention_coord));
     if(ret == NULL) return NULL;
 
     ret -> line = line;
@@ -373,22 +367,7 @@ tk_mention_node *new_mention_node(unsigned int line , unsigned int column){
     return ret;
 }
 
-void free_tk_mention_list(tk_mention_list *list_ptr){
-    free(list_ptr -> tk);
-    if(list_ptr -> first_mention == NULL){
-        free(list_ptr);
-
-        return;
-    }
-
-    for(tk_mention_node *nd = list_ptr -> first_mention , *tmp = nd -> next_mention  ; tmp != NULL ; nd = tmp , tmp = nd -> next_mention){
-        free(nd);
-    }
-    
-    free(list_ptr);
-}
-
-tk_mention_list *token_graph_search(token_graph *graph_ptr , const char *token){
+linked_list *token_graph_search(token_graph *graph_ptr , const char *token){
     if(token == NULL) return NULL;
     if(token[0] == '\000') return NULL;
     size_t len = 0;
@@ -396,20 +375,12 @@ tk_mention_list *token_graph_search(token_graph *graph_ptr , const char *token){
         if(!IS_VALID(token[len])) return NULL;
     }
 
-    tk_mention_list *ret = calloc(1 , sizeof(tk_mention_list));
+    linked_list *ret = new_linked_list();
     if(ret == NULL) return NULL;
-
-    ret -> tk = calloc(len + 1 , sizeof(char));
-    if(ret -> tk == NULL){
-        free(ret);
-
-        return NULL;
-    }
-    strcpy(ret -> tk , token);
 
     size_t index = FIND_ROOT(token[0]);
     letter_node *root = graph_ptr -> roots[index];
-    tk_mention_node *last_added = NULL;
+    tk_mention_coord *last_added = NULL;
     for(letter_node *nd = root ; nd != NULL ; nd = nd -> daughter_node){
         size_t i = 1;
         bool add_node = true;
@@ -421,19 +392,8 @@ tk_mention_list *token_graph_search(token_graph *graph_ptr , const char *token){
         }
 
         if(add_node){
-            tk_mention_node *new_node = new_mention_node(nd -> line , nd -> column);
-            if(new_node == NULL){
-                free_tk_mention_list(ret);
-                return NULL;    
-            }
-
-            if(last_added == NULL){
-                ret -> first_mention = new_node;
-                last_added = new_node;
-            }else{
-                last_added -> next_mention = new_node;
-                last_added = new_node;
-            }
+            tk_mention_coord mention = {.line = nd -> line , .column = nd -> column};
+            linked_list_add_node(&mention , sizeof(tk_mention_coord) , NULL , ret);
         }
     }
 
