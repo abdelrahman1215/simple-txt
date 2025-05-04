@@ -21,6 +21,11 @@ a vim inspired text editor written from scratch in c using the curses library (p
 * for linux :
     * ncurses and libmagic packages
 
+## cloning
+```
+git clone https://github.com/abdelrahman1215/simple-txt --recurse-submodules
+```
+
 ## compiling
 * for windows
 ```
