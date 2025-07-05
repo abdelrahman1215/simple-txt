@@ -2,5 +2,8 @@ ordered according to level of importance
 
 add a search feature
 add a way for the user to know if an individual line is saved or edited
+add the following members to the command struct :
+    - a boolean that determines if the "too few" error will be displayed or not
+    - a failsafe function that will be given the arguments passed to the main function
 
 #turns out the color pairs can be redefined
