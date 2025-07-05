@@ -25,6 +25,12 @@ bool is_valid_type(const char *type){
 void open_file(const char *file_name){
     if(file_name[0] == '\000') return ;
     if(is_dir(file_name)) {
+        if(stdscr == NULL){
+            init_display_attrs();
+            init_values();
+            start_display();
+        }
+        
         open_dir(file_name , stdscr , 1 , Screen_Width - 1 , 2 , Screen_Height);
 
         return;

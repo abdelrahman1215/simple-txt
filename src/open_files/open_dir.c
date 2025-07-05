@@ -33,6 +33,7 @@ dir_entry *get_entries(const char *dir_name , size_t *get_entry_no){
 
     closedir(directory);
     directory = opendir(dir_name);
+    if(directory == NULL) return NULL;
 
     bool add_slash = true;
     size_t dir_name_len = 0;
@@ -161,7 +162,7 @@ void open_dir(const char *dir_name , WINDOW *disp_window , unsigned int start_x 
     render_background(stdscr , 0 , 0 , Screen_Width , Screen_Height , BACKGROUND);
 
     bool Break = false;
-    simple_str *file_path = new_simple_str(dir_name);
+    simple_str *file_path = new_simple_str((char *)dir_name);
 
     if(dir_name[strlen(dir_name) - 1] != '/' && dir_name[strlen(dir_name) - 1] != '\\'){
         simple_str_add(file_path , "/" , simple_str_get_strlen(file_path));
