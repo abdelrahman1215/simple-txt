@@ -12,7 +12,8 @@
 bool is_valid_type(const char *type){
     char *valid_types[] = {
         "text",//any text file
-        "inode/x-empty"//an empty file with no extesions
+        "inode/x-empty",//an empty file with no extesions
+        "inode/symlink"// ??
     };
 
     for(int i = 0 ; i < arr_size(valid_types) ; i++){
@@ -57,6 +58,7 @@ void open_file(const char *file_name){
             
             if(strncmp(type , "cannot" , 6) != 0){
                 loading_error(file_name , Invalid_File_Type);
+                //custom_msg(Message , type);
                 magic_close(cookie);
 
 
