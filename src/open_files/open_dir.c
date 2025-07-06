@@ -37,7 +37,7 @@ dir_entry *get_entries(const char *dir_name , size_t *get_entry_no){
 
     bool add_slash = true;
     size_t dir_name_len = 0;
-    for(size_t i = 0 ; dir_name[i] != '\000' ; i++ , dir_name_len++){
+    for(size_t i = 0 ; dir_name[i] != '\000' && add_slash ; i++ , dir_name_len++){
         if((dir_name[i] == '\\' || dir_name[i] == '/') && dir_name[i + 1] == '\000') add_slash = false;
     }
 
