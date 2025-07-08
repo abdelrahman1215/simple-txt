@@ -106,16 +106,18 @@ char *__get_file_text__(const char *file_name , bool create_if_not_found , loadi
     if(buff == NULL){
         destroy_dynamic_array(file_ptr -> lines);
         free(file_ptr -> file_name);
+        fclose(target_file);
         free(file_ptr);
-
+        
         *get_err = Alloc_Err;
         return NULL;
     }
-
+    
     simple_str *file_buff = new_simple_str(NULL);
     if(file_buff == NULL){
+        fclose(target_file);
         free(buff);
-
+        
         destroy_dynamic_array(file_ptr -> lines);
         free(file_ptr -> file_name);
         free(file_ptr);
@@ -137,9 +139,10 @@ char *__get_file_text__(const char *file_name , bool create_if_not_found , loadi
     }while(read_bytes == buff_size);
 
     free(buff);
-
+    
     char *ret = simple_str_get_string(file_buff);
     if(ret == NULL){
+        fclose(target_file);
         free(file_buff);
 
         destroy_dynamic_array(file_ptr -> lines);
@@ -289,6 +292,8 @@ void save_file(simple_file *file_ptr){
     if(file_ptr -> changes_saved == true || file_ptr -> file_name == NULL) return ;
 
     FILE *target_file = fopen(file_ptr -> file_name , "w");
+    if(target_file == NULL) return ;
+
     simple_str **line_ptr;
     char *tmp;
     size_t len = 0;
