@@ -1,5 +1,4 @@
 #include "../c_datastructures/headers/dynamic_array.h"
-#include "../c_datastructures/headers/linked_list.h"
 #include "../headers/token_graph.h"
 
 #include <stdbool.h>
@@ -26,11 +25,6 @@ struct token_graph{
     unsigned int line_no;
     dynamic_array *lines;
     letter_node *roots[ROOT_NO];
-};
-
-typedef struct tk_mention_coord tk_mention_coord ;
-struct tk_mention_coord{
-    unsigned int line , column;
 };
 
 letter_node *alloc_letter_node(char ch , unsigned int line , unsigned int column){
@@ -300,15 +294,20 @@ void token_graph_delete_letter(token_graph *graph_ptr , unsigned int line , unsi
 
     line_st *target_line = *line_ptr;
     free(line_ptr);
+    if(target_line -> first_letter == NULL) return ;
+    if(column > target_line -> last_letter -> column) return ;
 
     letter_node *target_node = NULL;
-    for(letter_node **nd_ptr = &(target_line -> first_letter) ; *nd_ptr != NULL ; nd_ptr = &((*nd_ptr) -> next_in_line)){
-        if((*nd_ptr) -> column == column){
-            target_node = *nd_ptr;
+    for(letter_node *nd = target_line -> first_letter ; nd -> next_in_line != NULL ; nd = nd -> next_in_line){
+        if(nd -> next_in_line -> column == column){
+            if(nd -> next_in_line == target_line -> last_letter) target_line -> last_letter = nd;
+            if(nd -> next_in_line == target_line -> last_added_letter) target_line -> last_added_letter = nd;
 
-            *nd_ptr = (*nd_ptr) -> next_in_line;
-            for( ; *nd_ptr != NULL ; nd_ptr = &((*nd_ptr) -> next_in_line)){
-                (*nd_ptr) -> column--;
+            nd = nd -> next_in_line;
+            target_node = nd;
+            
+            for(nd = nd -> next_in_line ; nd != NULL ; nd = nd -> next_in_line){
+                nd -> column--;
             }
 
             break;
@@ -325,6 +324,8 @@ void token_graph_delete_letter(token_graph *graph_ptr , unsigned int line , unsi
             break;
         }
     }
+
+    free(target_node);
 }
 
 //removes the newline at the end of a line
@@ -333,18 +334,17 @@ void token_graph_delete_newline(token_graph *graph_ptr , unsigned int line){
     if(line + 1 >= graph_ptr -> line_no) return ;
 
     line_st **line_ptr = dynamic_array_get_element(graph_ptr -> lines , line);
-    letter_node **last_node_ptr;
-    size_t column_add = 0;
-    for(last_node_ptr = &((*line_ptr) -> first_letter) ; *last_node_ptr != NULL ; last_node_ptr = &((*last_node_ptr) -> next_in_line) , column_add++){}
+    letter_node *last_node = (*line_ptr) -> last_letter;
+    size_t column_add = last_node -> column + 1;
     free(line_ptr);
 
     line_ptr = dynamic_array_get_element(graph_ptr -> lines , line + 1);
-    *last_node_ptr = (*line_ptr) -> first_letter;
-    free(line_ptr);
-    for(letter_node *nd = *last_node_ptr ; nd != NULL ; nd = nd -> next_in_line){
+    last_node -> next_in_line = (*line_ptr) -> first_letter;
+    for(letter_node *nd = (*line_ptr) -> first_letter ; nd != NULL ; nd = nd -> next_in_line){
         nd -> line--;
         nd -> column += column_add;
     }
+    free(line_ptr);
 
     dynamic_array_remove_element(graph_ptr -> lines , line + 1);
     graph_ptr -> line_no--;
