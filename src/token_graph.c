@@ -132,7 +132,8 @@ void destroy_token_graph(token_graph *graph_ptr){
 }
 
 void token_graph_add_letter(token_graph *graph_ptr , char ch , unsigned int line , unsigned int column){
-    if(!IS_VALID(ch) || graph_ptr == NULL) return ;
+    if(!IS_VALID(ch)) return ;
+    if(graph_ptr == NULL) return ;
     if(line > graph_ptr -> line_no || (line == graph_ptr -> line_no && column > 0)) return ;
 
     letter_node *new_node = alloc_letter_node(ch , line , column);
@@ -198,6 +199,7 @@ void token_graph_add_letter(token_graph *graph_ptr , char ch , unsigned int line
     letter_node *root = graph_ptr -> roots[root_index];
     if(root == NULL || root -> line > line || (root -> line == line && root -> column > column)){
         graph_ptr -> roots[root_index] = new_node;
+        new_node -> daughter_node = root;
     }else{
         for(letter_node *nd = root ; ; nd = nd -> daughter_node){
             if(nd -> daughter_node == NULL){
