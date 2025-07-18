@@ -10,8 +10,8 @@ typedef struct file_struct simple_file;
 
 bool is_dir(const char *file_name);
 
-simple_file *load_file(const char *file_name , bool create_if_not_found , loading_err *get_err);
-simple_file *load_from_str(const char *src , loading_err *get_err);
+simple_file *load_file(const char *file_name , bool create_token_graph , bool create_if_not_found , loading_err *get_err);
+simple_file *load_from_str(const char *src , bool create_token_graph , loading_err *get_err);
 void save_file(simple_file *file_ptr);
 void destroy_simple_file(simple_file *file_ptr);
 
