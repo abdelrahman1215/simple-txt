@@ -1,5 +1,6 @@
 #include "../../headers/simple_globals.h"
 #include "../../headers/simple_file.h"
+#include "../../headers/token_graph.h"
 #include "../../headers/simple_str.h"
 #include "simple_file_struct.c"
 
@@ -73,6 +74,8 @@ simple_file *__allocate_simple_file__(const char *file_name){
 
         return NULL;
     }
+
+    ret -> tk_graph = NULL;
 
     return ret;
 }
@@ -209,7 +212,7 @@ void __load_from_str__(simple_file *file_ptr , char *src){
     dynamic_array_add_element(file_ptr -> lines , &line);    
 }
 
-simple_file *load_from_str(const char *src , loading_err *get_err){
+simple_file *load_from_str(const char *src , bool create_token_graph , loading_err *get_err){
     if(get_err == NULL) return NULL;
 
     *get_err = Ok;
@@ -219,29 +222,27 @@ simple_file *load_from_str(const char *src , loading_err *get_err){
         return NULL;
     }
 
-    size_t len = strlen(src);
-    char *copy = calloc(len + 1 , sizeof(char));
-    if(copy == NULL){
-        destroy_simple_file(ret);
+    __load_from_str__(ret , (char *)src);
 
-        *get_err = Alloc_Err;
-        return NULL;
+    if(create_token_graph){
+        ret -> tk_graph = new_token_graph((char *)src);
+        if(ret -> tk_graph == NULL){
+            destroy_simple_file(ret);
+        
+            *get_err = Alloc_Err;
+            return NULL;
+        }
     }
-
-    strncpy(copy , src , len);
-    __load_from_str__(ret , copy);
 
     ret -> max_reached_column = 0;
     ret -> changes_saved = false;
     ret -> column = 0;
     ret -> line = 0;
 
-    free(copy);
-
     return ret;
 }
 
-simple_file *load_file(const char *file_name , bool create_if_not_found , loading_err *get_err){
+simple_file *load_file(const char *file_name , bool create_token_graph , bool create_if_not_found , loading_err *get_err){
     if(get_err == NULL) return NULL;
 
     *get_err = Ok;
@@ -277,6 +278,19 @@ simple_file *load_file(const char *file_name , bool create_if_not_found , loadin
     }
 
     __load_from_str__(ret , file_text);
+    
+    if(create_token_graph){
+        ret -> tk_graph = new_token_graph(file_text);
+        if(file_text == NULL) ret -> tk_graph = new_token_graph("");
+
+        if(ret -> tk_graph == NULL){
+            destroy_simple_file(ret);
+            
+            *get_err = Alloc_Err;
+            return NULL;
+        }
+    }
+
     if(file_text != NULL) if(file_text[0] != '\000') free(file_text);
 
     ret -> max_reached_column = 0;
@@ -333,6 +347,7 @@ void destroy_simple_file(simple_file *file_ptr){
     destroy_dynamic_array(file_ptr -> lines);
     destroy_linked_list(file_ptr -> changes_stack);
     destroy_linked_list(file_ptr -> undone_stack);
+    destroy_token_graph(file_ptr -> tk_graph);
 
     free(file_ptr -> file_name);
     free(file_ptr);
