@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-#define IS_VALID(ch) (bool)(ch == 9 || (ch >= 20 && ch <= 255 && ch != 127))
+#define IS_VALID(ch) (bool)(ch == 9 || (ch >= 20 && ch != 127))
 #define FIND_ROOT(ch) ch == 9 ? 0 : (ch - 20) + (ch < 127)
 #define ROOT_NO 236
 
