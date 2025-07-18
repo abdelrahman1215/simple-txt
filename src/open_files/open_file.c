@@ -70,7 +70,7 @@ void open_file(const char *file_name){
     }
 
     loading_err error;
-    simple_file *tmp = load_file(file_name , true , &error);
+    simple_file *tmp = load_file(file_name , true , true , &error);
 
     if(tmp != NULL){
         if(Current_File != NULL){

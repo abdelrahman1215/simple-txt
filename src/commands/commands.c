@@ -115,7 +115,7 @@ void manual(char **args){
     unsigned int disp_width = Screen_Width - 2;
 
     loading_err error;
-    simple_file *display_file = load_from_str("" , &error);
+    simple_file *display_file = load_from_str("" , false , &error);
 
     size_t line_no = 0;
     char buffer[disp_width + 1];

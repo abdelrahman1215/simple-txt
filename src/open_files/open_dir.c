@@ -107,7 +107,7 @@ dir_entry *get_entries(const char *dir_name , size_t *get_entry_no){
 
 simple_file *make_disp_file(dir_entry *entries , size_t entry_no){
     loading_err error;
-    simple_file *ret = load_from_str("" , &error);
+    simple_file *ret = load_from_str("" , false , &error);
     if(ret == NULL){
         return NULL;
     }

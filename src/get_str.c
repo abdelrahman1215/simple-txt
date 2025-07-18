@@ -60,7 +60,7 @@ char *get_str(WINDOW *inp_window , input_history *history_ptr , autocomp_func au
     if(end_x > win_width || end_y > win_height) return NULL;
 
     loading_err error;
-    simple_file *buffer = load_from_str("" , &error);
+    simple_file *buffer = load_from_str("" , false , &error);
     if(buffer == NULL){
         return NULL;
     }
@@ -220,7 +220,7 @@ char *get_str(WINDOW *inp_window , input_history *history_ptr , autocomp_func au
                 if(temp_file == NULL){
                     temp_file = buffer;
                     loading_err error;
-                    buffer = load_from_str(text , &error);
+                    buffer = load_from_str(text , false , &error);
                     simple_file_move_ncols_right(buffer , simple_file_get_line_len(buffer , 0));
                 }else{
                     simple_file_delete(buffer , 0 , 0 , simple_file_get_line_len(buffer , 0));

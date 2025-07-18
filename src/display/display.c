@@ -79,7 +79,7 @@ void display_recorded_binding(WINDOW *disp_window , char *recorded_binding){
     wattroff(disp_window , COLOR_PAIR(MODE));
 
     loading_err get_err;
-    simple_file *binding = load_from_str(recorded_binding , &get_err);
+    simple_file *binding = load_from_str(recorded_binding , false , &get_err);
     if(get_err != OK) return ;
 
     update_text_display(binding , NULL , disp_window , LOWER_STRIP_BACKGROUND , LOWER_STRIP_TEXT , 0 , 0 , 0 , 0 , 0 , false , false , false , false , false , 12 , win_width , 0 , 0);
