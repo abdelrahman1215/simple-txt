@@ -60,6 +60,7 @@ SIMPLE_GLOBAL unsigned short Lower_Strip_Background_Color;
 SIMPLE_GLOBAL unsigned short Message_Text_Color;
 SIMPLE_GLOBAL unsigned short Message_Background_Color;
 
+//color pairs
 #define TEXT 1
 #define SIDE_STRIPS 2
 #define BACKGROUND 3
