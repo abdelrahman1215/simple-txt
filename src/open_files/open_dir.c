@@ -116,6 +116,7 @@ simple_file *make_disp_file(dir_entry *entries , size_t entry_no){
     for(size_t i = 1/*skip the ./ folder*/ ; i < entry_no ; i++){
         line = simple_file_get_curr_line(ret);
         col = simple_file_get_curr_column(ret);
+        simple_file_add(ret , line , col++ , " ");
         simple_file_add(ret , line , col , entries[i].entry_name);
 
         col = simple_file_get_curr_column(ret);
