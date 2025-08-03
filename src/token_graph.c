@@ -303,6 +303,10 @@ void token_graph_delete_letter(token_graph *graph_ptr , unsigned int line , unsi
     letter_node *target_node = NULL;
     letter_node *nd = target_line -> first_letter;
     if(nd -> column == column){
+        if(nd == target_line -> last_letter) target_line -> last_letter = NULL;
+        if(nd == target_line -> last_added_letter) target_line -> last_added_letter = NULL;
+
+        target_node = nd;
         target_line -> first_letter = nd -> next_in_line;
         for(nd = nd -> next_in_line ; nd != NULL ; nd = nd -> next_in_line){
             nd -> column--;
