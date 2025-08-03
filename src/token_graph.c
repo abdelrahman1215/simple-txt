@@ -301,7 +301,13 @@ void token_graph_delete_letter(token_graph *graph_ptr , unsigned int line , unsi
     if(column > target_line -> last_letter -> column) return ;
 
     letter_node *target_node = NULL;
-    for(letter_node *nd = target_line -> first_letter ; nd -> next_in_line != NULL ; nd = nd -> next_in_line){
+    letter_node *nd = target_line -> first_letter;
+    if(nd -> column == column){
+        target_line -> first_letter = nd -> next_in_line;
+        for(nd = nd -> next_in_line ; nd != NULL ; nd = nd -> next_in_line){
+            nd -> column--;
+        }
+    } else for( ; nd -> next_in_line != NULL ; nd = nd -> next_in_line){
         if(nd -> next_in_line -> column == column){
             if(nd -> next_in_line == target_line -> last_letter) target_line -> last_letter = nd;
             if(nd -> next_in_line == target_line -> last_added_letter) target_line -> last_added_letter = nd;
