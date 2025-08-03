@@ -200,6 +200,10 @@ char *_delete_(simple_file *file_ptr , size_t line_index , size_t start_pos , si
     free(target_line_ptr);
     free(text);
 
+	for(size_t i = 0 ; i < count ; i++){
+		token_graph_delete_letter(file_ptr -> tk_graph , line_index , start_pos);
+	}
+
     file_ptr -> line = line_index;
     file_ptr -> column = start_pos;
 
@@ -216,7 +220,7 @@ void simple_file_delete(simple_file *file_ptr , size_t line_index , size_t start
     clear_undone_stack(file_ptr);
 }
 
-//if a logical error happens in the future look at the else statement
+//if a logical error happens in the future look at the else statement after if(line_index + 1 > line_no)
 
 char *_delete_lines_(simple_file *file_ptr , size_t line_index , size_t line_count){
     if(file_ptr == NULL) return NULL;
@@ -230,11 +234,12 @@ char *_delete_lines_(simple_file *file_ptr , size_t line_index , size_t line_cou
     }
 
     size_t line_no = simple_file_get_line_no(file_ptr);
+	size_t line_len; 
 
     simple_str **line = NULL;
     char *line_text = NULL;
     for(size_t i = 0 ; i < line_count ; i++){
-        line = (simple_str **)dynamic_array_get_element(content , line_index);
+        line = (simple_str **)dynamic_array_get_element(content , line_index);	
 
         line_text = simple_str_get_string(*line);
         if(line_text == NULL){
@@ -248,9 +253,24 @@ char *_delete_lines_(simple_file *file_ptr , size_t line_index , size_t line_cou
         if(i + 1 < line_count) simple_str_add(deleted_lines , "\n" , simple_str_get_strlen(deleted_lines));
 
         free(line_text);
-        free(line);
 
+		line_len = simple_file_get_line_len(file_ptr , line_index);
+        free(line);
+        
         dynamic_array_remove_element(content , line_index);
+
+		for(size_t j = 0 ; j < line_len ; j++){
+			token_graph_delete_letter(file_ptr -> tk_graph , line_index , 0);
+		}
+
+        if(line_index == 0 && simple_file_get_line_len(file_ptr , line_index) == 1) continue;
+
+        if(line_index + 1 < simple_file_get_line_len(file_ptr , line_index)){
+            token_graph_delete_newline(file_ptr -> tk_graph , line_index);
+        } else {
+            token_graph_delete_newline(file_ptr -> tk_graph , line_index - 1);
+        }
+
     }
 
     char *ret = simple_str_get_string(deleted_lines);
@@ -268,7 +288,7 @@ char *_delete_lines_(simple_file *file_ptr , size_t line_index , size_t line_cou
         file_ptr -> line = line_index;
     }
 
-    size_t line_len = simple_file_get_line_len(file_ptr , file_ptr -> line);
+    line_len = simple_file_get_line_len(file_ptr , file_ptr -> line);
     if(file_ptr -> column > line_len){
         file_ptr -> column = line_len;
     }
