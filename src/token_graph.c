@@ -170,6 +170,7 @@ void token_graph_add_letter(token_graph *graph_ptr , char ch , unsigned int line
         }else if (column == 0){
             new_node -> next_in_line = target_line -> first_letter;
             target_line -> first_letter = new_node;
+            if(target_line -> last_letter == NULL) target_line -> last_letter = new_node;
         }else if(column == line_len){
             if(target_line -> last_letter != NULL){
                 target_line -> last_letter -> next_in_line = new_node;
@@ -254,10 +255,14 @@ void token_graph_add_newline(token_graph *graph_ptr , unsigned int line , unsign
     line_st *new_line = calloc(1 , sizeof(line_st));
 
     new_line -> first_letter = target_node;
-
-    for(letter_node *nd = new_line -> first_letter ; nd != NULL ; nd = nd -> next_in_line){
+	new_line -> last_letter = target_line -> last_letter;
+	new_line -> last_added_letter = target_line -> last_added_letter;
+    
+	for(letter_node *nd = new_line -> first_letter ; nd != NULL ; nd = nd -> next_in_line){
         nd -> line++;
         nd -> column -= column;
+
+        if(nd -> next_in_line == NULL) new_line -> last_letter = nd;
     }
 
     line_st *empty_line = (line_st *)calloc(1 , sizeof(line_st));
@@ -276,6 +281,8 @@ void token_graph_add_newline(token_graph *graph_ptr , unsigned int line , unsign
         line2 = dynamic_array_get_element(graph_ptr -> lines , i);
 
         (*line2) -> first_letter = (*line1) -> first_letter;
+        (*line2) -> last_letter = (*line1) -> last_letter;
+        (*line2) -> last_added_letter = (*line1) -> last_added_letter;
         for(letter_node *nd = (*line2) -> first_letter ; nd != NULL ; nd = nd -> next_in_line){
             nd -> line++;
         }
@@ -297,12 +304,13 @@ void token_graph_delete_letter(token_graph *graph_ptr , unsigned int line , unsi
 
     line_st *target_line = *line_ptr;
     free(line_ptr);
+    
     if(target_line -> first_letter == NULL) return ;
     if(column > target_line -> last_letter -> column) return ;
 
     letter_node *target_node = NULL;
     letter_node *nd = target_line -> first_letter;
-    if(nd -> column == column){
+    if(column == 0){
         if(nd == target_line -> last_letter) target_line -> last_letter = NULL;
         if(nd == target_line -> last_added_letter) target_line -> last_added_letter = NULL;
 
@@ -316,7 +324,9 @@ void token_graph_delete_letter(token_graph *graph_ptr , unsigned int line , unsi
             if(nd -> next_in_line == target_line -> last_letter) target_line -> last_letter = nd;
             if(nd -> next_in_line == target_line -> last_added_letter) target_line -> last_added_letter = nd;
 
-            nd = nd -> next_in_line;
+            letter_node *tmp = nd -> next_in_line;
+            nd -> next_in_line = nd -> next_in_line -> next_in_line;
+            nd = tmp;
             target_node = nd;
             
             for(nd = nd -> next_in_line ; nd != NULL ; nd = nd -> next_in_line){
@@ -348,11 +358,20 @@ void token_graph_delete_newline(token_graph *graph_ptr , unsigned int line){
 
     line_st **line_ptr = dynamic_array_get_element(graph_ptr -> lines , line);
     letter_node *last_node = (*line_ptr) -> last_letter;
-    size_t column_add = last_node -> column + 1;
-    free(line_ptr);
+    size_t column_add = 0;
+    if((*line_ptr) -> last_letter != NULL) column_add = last_node -> column + 1;
+    line_st **tmp = NULL;
+    if(last_node == NULL) tmp = line_ptr;
+    //free(line_ptr);
 
     line_ptr = dynamic_array_get_element(graph_ptr -> lines , line + 1);
-    last_node -> next_in_line = (*line_ptr) -> first_letter;
+    if(last_node != NULL){
+        last_node -> next_in_line = (*line_ptr) -> first_letter;
+    }else{
+        (*tmp) -> first_letter = (*line_ptr) -> first_letter;
+        (*tmp) -> last_letter = (*line_ptr) -> last_letter;
+    }
+
     for(letter_node *nd = (*line_ptr) -> first_letter ; nd != NULL ; nd = nd -> next_in_line){
         nd -> line--;
         nd -> column += column_add;
@@ -421,6 +440,18 @@ void print_graph(token_graph *graph_ptr){
 		for(letter_node *nd = (*line) -> first_letter ; nd != NULL ; nd = nd -> next_in_line){
 			printf("%c" , nd -> ch);
 		}
+
+        printf("\n    .first_letter : ");
+        if((*line) -> first_letter != NULL) printf("%c\n" , (*line) -> first_letter -> ch);
+        else printf("NULL\n");
+        
+        printf("    .last_letter : ");
+        if((*line) -> last_letter != NULL) printf("%c\n" , (*line) -> last_letter -> ch);
+        else printf("NULL\n");
+        
+        printf("    .last_added_letter : ");
+        if((*line) -> last_added_letter != NULL) printf("%c\n" , (*line) -> last_added_letter -> ch);
+        else printf("NULL\n");
 
 		printf("\n");
 
