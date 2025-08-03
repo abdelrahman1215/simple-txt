@@ -148,6 +148,14 @@ add_end _add_(simple_file *file_ptr , size_t line_index , size_t pos_index , cha
     }else{
         file_ptr -> column = pos_index + strlen(divided[0]);
     }
+	
+	for(size_t i = 0 , j = 0 ; i < line_no ; i++ , j = 0){
+		for(char ch = divided[i][j] ; ch != 0 ; j++ , ch = divided[i][j]){
+			token_graph_add_letter(file_ptr -> tk_graph , ch , line_index + i , pos_index + j);
+		}
+
+		if(i + 1 < line_no)token_graph_add_newline(file_ptr -> tk_graph , line_index + i , pos_index + j);
+	}
 
     free(divided[0]);
     free(divided);
