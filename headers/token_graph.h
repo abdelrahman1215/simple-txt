@@ -18,4 +18,6 @@ void token_graph_delete_newline(token_graph *graph_ptr , unsigned int line);
 
 linked_list *token_graph_search(token_graph *graph_ptr , const char *token);
 
+void print_graph(token_graph *graph_ptr);
+
 #endif

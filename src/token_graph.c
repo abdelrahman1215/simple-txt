@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #define IS_VALID(ch) (bool)(ch == 9 || (ch >= 20 && ch != 127))
 #define FIND_ROOT(ch) ch == 9 ? 0 : (ch - 20) + (ch < 127)
@@ -390,4 +391,42 @@ linked_list *token_graph_search(token_graph *graph_ptr , const char *token){
     }
 
     return ret;
+}
+
+void print_graph(token_graph *graph_ptr){
+	if(graph_ptr == NULL) return ;
+	if(graph_ptr -> line_no == 0) return ;
+
+	//print lines
+	dynamic_array *lines = graph_ptr -> lines;
+	line_st **line = NULL;
+
+	printf("lines :\n");
+	for(size_t i = 0 ; i < graph_ptr -> line_no ; i++){
+		line = dynamic_array_get_element(lines , i);
+		if(line == NULL) return ;
+		
+		printf("ln %lli : " , i);
+
+		for(letter_node *nd = (*line) -> first_letter ; nd != NULL ; nd = nd -> next_in_line){
+			printf("%c" , nd -> ch);
+		}
+
+		printf("\n");
+
+		free(line);
+	}
+
+	//print roots
+	printf("\nroots:\n");
+	for(size_t  i = 0 ; i < ROOT_NO ; i++){
+		if(graph_ptr -> roots[i] == NULL) continue;
+		
+		printf("root %c : " , graph_ptr -> roots[i] -> ch);
+		for(letter_node *nd = graph_ptr -> roots[i] ; nd != NULL ; nd = nd -> daughter_node){
+			printf("(%i , %i) -> " , nd -> line , nd -> column);
+		}
+
+		printf("\n");
+	}
 }
