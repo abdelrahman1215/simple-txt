@@ -128,7 +128,7 @@ void disp_file_name(text_display_info *info_ptr){
 
     wattron(info_ptr -> window , COLOR_PAIR(TITLE));
 
-    mvwprintw(info_ptr -> window , info_ptr -> disp_start_y , info_ptr -> disp_start_x + ((info_ptr -> disp_end_x - info_ptr -> disp_start_x)/2) - (strlen(file_name)/2) , "%s" , file_name);
+    mvwprintw(info_ptr -> window , info_ptr -> disp_start_y , info_ptr -> disp_start_x + ((info_ptr -> disp_end_x - info_ptr -> disp_start_x)/2) - (strlen(file_name)/2) - 1 , " %s " , file_name);
     
     wattroff(info_ptr -> window , COLOR_PAIR(TITLE));
 
