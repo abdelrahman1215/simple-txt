@@ -1,6 +1,7 @@
 #include "display_txt.c"
 #include "display_msg.c"
 
+#include <pdcurses/curses.h>
 #include <string.h>
 
 void render_background(WINDOW *disp_window , unsigned int start_x , unsigned int start_y , unsigned int end_x , unsigned int end_y , int color_pair){
@@ -35,7 +36,7 @@ void init_color_pairs(){
     if(stdscr == NULL) return ;
 
     init_pair(TEXT , Text_Color , Background_Color);
-    init_pair(TITLE , Title_Color , Background_Color);
+    init_pair(TITLE , Title_Color , Title_Background_Color);
     init_pair(SIDE_STRIPS , Outline_Color , Background_Color);
     init_pair(BACKGROUND , Background_Color , Background_Color);
     init_pair(TEXT_BACKGROUND , Background_Color , Background_Color);

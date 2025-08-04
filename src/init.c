@@ -28,6 +28,7 @@ void init_values(){
     Outline_Color = DEFAULT_OUTLINE_COLOR;
     Background_Color = DEFAULT_BACKGROUND_COLOR;
     Line_Highlight_Color = DEFAULT_LINE_HIGHLIGHT_COLOR;
+	Title_Background_Color = DEFAULT_TITLE_BACKGROUNG_COLOR;
     Outline_Highlight_Color = DEFAULT_OUTLINE_HIGHLIGHT_COLOR;
 
     Mode_Text_Color = DEFAULT_MODE_TEXT_COLOR;

@@ -21,6 +21,7 @@ SIMPLE_GLOBAL editor_mode Current_Mode;
 #define DEFAULT_OUTLINE_COLOR 0xED
 #define DEFAULT_BACKGROUND_COLOR 0xE9
 #define DEFAULT_LINE_HIGHLIGHT_COLOR 0xEA
+#define DEFAULT_TITLE_BACKGROUNG_COLOR 0xE9
 #define DEFAULT_OUTLINE_HIGHLIGHT_COLOR 0xD7
 
 //lower strip
@@ -40,13 +41,13 @@ SIMPLE_GLOBAL editor_mode Current_Mode;
 #define DEFAULT_MESSAGE_TEXT_COLOR 0xEF
 #define DEFAULT_MESSAGE_BACKGROUND_COLOR 0xEA
 
-
-//test display
+//text display
 SIMPLE_GLOBAL unsigned short Text_Color;
 SIMPLE_GLOBAL unsigned short Title_Color;
 SIMPLE_GLOBAL unsigned short Outline_Color;
 SIMPLE_GLOBAL unsigned short Background_Color;
 SIMPLE_GLOBAL unsigned short Line_Highlight_Color;
+SIMPLE_GLOBAL unsigned short Title_Background_Color;
 SIMPLE_GLOBAL unsigned short Outline_Highlight_Color;
 
 //lower strip
