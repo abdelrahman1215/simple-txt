@@ -1,7 +1,7 @@
 #include "display_txt.c"
 #include "display_msg.c"
+#include "../../headers/curses_header.h"
 
-#include <pdcurses/curses.h>
 #include <string.h>
 
 void render_background(WINDOW *disp_window , unsigned int start_x , unsigned int start_y , unsigned int end_x , unsigned int end_y , int color_pair){
